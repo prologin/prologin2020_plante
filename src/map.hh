@@ -16,6 +16,7 @@ class Map
 {
 public:
     Map(std::istream& stream);
+    std::optional<plante> plant_at(position pos) const;
 
 private:
     Grid<std::array<int, NB_TYPES_RESSOURCES>> ressources;
