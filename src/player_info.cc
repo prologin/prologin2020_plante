@@ -11,6 +11,11 @@ int PlayerInfo::get_key() const
     return this->rules_player_->id;
 }
 
+int PlayerInfo::get_score() const
+{
+    return score_;
+}
+
 const std::vector<internal_action>& PlayerInfo::get_internal_history() const
 {
     return internal_hist_;
@@ -28,5 +33,6 @@ void PlayerInfo::add_internal_action(internal_action action)
 
 void PlayerInfo::update_score(const Map& map)
 {
-    // TODO
+    for (const Plant& plant : map.player_plants(this->rules_player_->id))
+        score_ += plant.elegance;
 }
