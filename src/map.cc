@@ -44,10 +44,65 @@ Map::Map(std::istream& stream)
     }
 }
 
+std::vector<plante> Map::all_plants() const
+{
+    std::vector<plante> result;
+
+    for (const auto& row : plants)
+        for (const auto& cell : row)
+            if (const auto plant = cell)
+                result.push_back(*plant);
+
+    return result;
+}
+
 std::optional<plante> Map::plant_at(position pos) const
 {
     assert(position_in_bounds(pos));
     return plants[pos.x][pos.y];
+}
+
+// TODO: cache result
+Grid<bool> Map::build_has_enough_ressources() const
+{
+    // Compute cumulated weight of close plants for all cells of the grid
+
+    Grid<std::array<int, NB_TYPES_RESSOURCES>> collect_total_weight =
+        init_grid(std::array<int, NB_TYPES_RESSOURCES>({0, 0, 0}));
+
+    for (plante plant : all_plants())
+        for (position cell : circle(plant.pos, plant.rayon_collecte))
+            for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+                collect_total_weight[cell.x][cell.y][k] +=
+                    plant.consommation[k];
+
+    // Check if plants have enough ressources
+
+    Grid<bool> result = init_grid(true);
+
+    for (plante plant : all_plants())
+    {
+        const auto neighbours = circle(plant.pos, plant.rayon_deplacement);
+
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+        {
+            int quotient = 0;
+            int divisor = 0;
+
+            for (position cell : neighbours)
+            {
+                divisor += collect_total_weight[cell.x][cell.y][k];
+                quotient +=
+                    ressources[cell.x][cell.y][k] * plant.consommation[k];
+            }
+
+            // We need quotient / divisor <= plant.consommation[k]
+            result[plant.pos.x][plant.pos.y] &=
+                quotient <= plant.consommation[k] * divisor;
+        }
+    }
+
+    return result;
 }
 
 void Map::move_plant(position from, position to)

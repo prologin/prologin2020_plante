@@ -13,7 +13,11 @@ class Map
 {
 public:
     Map(std::istream& stream);
+
+    std::vector<plante> all_plants() const;
     std::optional<plante> plant_at(position pos) const;
+    Grid<bool> build_has_enough_ressources() const;
+
     void move_plant(position from, position to);
     void destroy_plant(position pos);
 

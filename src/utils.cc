@@ -21,8 +21,8 @@ std::vector<std::string> split(std::string text, const std::string& delim)
 
 bool position_in_bounds(const position& position)
 {
-    return position.x < 0 || position.y < 0 || position.x >= TAILLE_GRILLE ||
-           position.y >= TAILLE_GRILLE;
+    return position.x >= 0 && position.y >= 0 && position.x < TAILLE_GRILLE &&
+           position.y < TAILLE_GRILLE;
 }
 
 int distance(position pos1, position pos2)
@@ -35,12 +35,7 @@ std::vector<position> circle(position center, int radius)
     if (radius < 0)
         return {};
 
-    Grid<bool> visited;
-
-    for (auto& row : visited)
-        for (bool& cell : row)
-            cell = false;
-
+    Grid<bool> visited = init_grid(false);
     visited[center.x][center.y] = true;
 
     std::vector<position> circle = {center};
