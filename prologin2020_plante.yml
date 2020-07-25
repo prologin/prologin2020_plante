@@ -1,0 +1,299 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Copyright 2020 Prologin <info@prologin.org>
+# Copyright 2020 Rémi Dupré
+# Copyright 2020 Garance Gourdel
+# Copyright 2020 Paul Guénézan
+---
+name: prologin2020_plante
+rules_type: turnbased
+player_count: 2
+
+constant:
+  -
+    cst_name: TAILLE_GRILLE
+    cst_val: 20
+    cst_comment: Largeur et hauteur de la grille
+  -
+    cst_name: NB_TOURS
+    cst_val: 100
+    cst_comment: Nombre de tours à jouer avant la fin de la partie
+  -
+    cst_name: AGE_MAX
+    cst_val: 10
+    cst_comment: Durée de vie maximale d'une plante
+  -
+    cst_name: AGE_DE_POUSSE
+    cst_val: 3
+    cst_comment: Âge auquel la plante atteint la maturité et peut donc être
+                 arrosée
+  -
+    cst_name: PORTEE_BAFFE
+    cst_val: 6
+    cst_comment: Portée maximale d'une baffe
+  -
+    cst_name: NB_TYPES_RESSOURCES
+    cst_val: 3
+    cst_comment: Types de ressources existantes
+  -
+    cst_name: APPORT_CARACTERISTIQUE
+    cst_val: 10
+    cst_comment: Apport pour une caractéristique lors de l'arrosage
+
+enum:
+  -
+    enum_name: erreur
+    enum_summary: "Erreurs possibles"
+    enum_field:
+      - [ok, "L'action s'est effectuée avec succès"]
+      - [hors_tour, "Il est interdit de faire des actions hors de jouer_tour"]
+      - [hors_potager, "La case désignée n'est pas dans le potager"]
+      - [case_occupee, "Il y a déjà une plante sur la case ciblée"]
+      - [pas_de_plante, "Il n'y a pas de plante sur la case ciblée"]
+      - [mauvais_jardinier, "La plante n'appartient pas au bon jardinier"]
+      - [sans_pot, "La plante est déjà dépotée"]
+      - [deja_arrosee, "La plante a déjà été arrosée"]
+      - [pas_encore_arrosee, "La plante n'as pas encore été arrosée"]
+      - [pas_encore_adulte, "La plante ne peut pas encore être arrosée"]
+      - [plante_invalide, "Les caractéristiques de la plante sont invalides"]
+  -
+    enum_name: action_type
+    enum_summary: "Types d'actions"
+    enum_field:
+      - [action_depoter, "Action ``depoter``"]
+      - [action_baffer, "Action ``baffer``"]
+      - [action_arroser, "Action ``arroser``"]
+  -
+    enum_name: caracteristique
+    enum_summary: "Caractéristiques améliorables d'une plante"
+    enum_field:
+      - [caracteristique_force, "Force"]
+      - [caracteristique_vie, "Vie "]
+      - [caracteristique_elegance, "Élégance"]
+      - [caracteristique_rayon_deplacement, "Portée de dépotage"]
+  -
+    enum_name: debug_chien
+    enum_summary: "Types de chien de débug"
+    enum_field:
+      - [aucun_drapeau, "Aucun chien, enlève le chien présent"]
+      - [chien_bleu, "Chien bleu"]
+      - [chien_vert, "Chien vert"]
+      - [chien_rouge, "Chien rouge"]
+
+
+struct:
+  -
+    str_name: position
+    str_summary: Position dans le jardin, donnée par deux coordonnées.
+    str_tuple: yes
+    str_field:
+      - [x, int, "Coordonnée : x"]
+      - [y, int, "Coordonnée : y"]
+  -
+    str_name: plante
+    str_summary: Une plante
+    str_tuple: no
+    str_field:
+      - [pos, position, "Position de la plante"]
+      - [jardinier, int, "Jardinier ayant planté la plante"]
+      - [adulte, bool, "La plante est adulte"]
+      - [enracinee, bool, "La plante a déjà déjà été dépotée"]
+      - [vie, int, "Point(s) de vie restant(s) de la plante"]
+      - [vie_max, int, "Point(s) de vie maximumde la plante"]
+      - [force, int, "Force de la baffe de la plante"]
+      - [elegance, int, "Élégance de la plante"]
+      - [rayon_deplacement, int, "Distance maximale parcourable par la plante
+                                  en creusant"]
+      - [rayon_collecte, int, "Rayon de collecte des ressources pour la
+                               plante"]
+      - [consommation, int array, "Quantité de ressources consommées par la
+                                   plante"]
+      - [age, int, "Âge de la plante"]
+  -
+    str_name: action_hist
+    str_summary: Représentation d'une action dans l'historique
+    str_tuple: no
+    str_field:
+      - [atype, action_type, "Type de l'action"]
+      - [position_baffante, position, "Position de la plante baffante (si type
+                                       d'action ``action_baffer``)"]
+      - [position_baffee, position, "Position de la plante baffée (si type
+                                     d'action ``action_baffer``)"]
+      - [position_depart, position, "Position de la plante à déplacer (si type
+                                     d'action ``action_depoter``)"]
+      - [position_arrivee, position, "Position où déplacer la plante (si type
+                                      d'action ``action_depoter``)"]
+      - [position_plante, position, "Position de la plante  (si type d'action
+                                     ``action_arroser``)"]
+      - [amelioration, caracteristique, "Caractéristique à améliorer (si type
+                                         d'action ``action_arroser``)"]
+
+
+function:
+
+# Actions
+
+  -
+    fct_name: depoter
+    fct_summary: La plante creuse vers une destination donnée
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [position_depart, position, "Position de la plante à déplacer"]
+      - [position_arrivee, position, "Position où déplacer la plante"]
+  -
+    fct_name: arroser
+    fct_summary: Arrose une plante
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [position_plante, position, "Position de la plante"]
+      - [amelioration, caracteristique, "Caractéristique à améliorer"]
+  -
+    fct_name: baffer
+    fct_summary: Une plante en gifle une autre
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [position_baffante, position, "Position de la plante baffante"]
+      - [position_baffee, position, "Position de la plante baffée"]
+
+# Actions de débug
+
+  -
+    fct_name: debug_afficher_chien
+    fct_summary: Affiche le chien spécifié sur la case indiquée
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [pos, position, "Case ciblée"]
+      - [chien, debug_chien, "Chien à afficher sur la case"]
+
+# Fonctions de requête de l'état du jeu
+
+  -
+    fct_name: plantes_jardinier
+    fct_summary: Renvoie la liste des plantes du jardinier
+    fct_ret_type: plante array
+    fct_arg:
+      - [jardinier, int, "ID du jardinier concerné"]
+  -
+    fct_name: plante_sur_case
+    fct_summary: Renvoie la plante sur la position donnée, s'il n'y en a pas
+                 tous les champs sont initialisés à -1
+    fct_ret_type: plante
+    fct_arg:
+      - [pos, position, "Case ciblée"]
+  -
+    fct_name: plantes_arrosables
+    fct_summary: Renvoie la liste des plantes du jardinier qui peuvent être
+                 arrosées
+    fct_ret_type: plante array
+    fct_arg:
+      - [joueur, int, "ID du jardinier concerné"]
+  -
+    fct_name: plantes_adultes
+    fct_summary: Renvoie la liste des plantes du jardinier qui sont adultes
+    fct_ret_type: plante array
+    fct_arg:
+      - [joueur, int, "ID du jardinier concerné"]
+  -
+    fct_name: plantes_depotables
+    fct_summary: Renvoie la liste des plantes du jardinier qui peuvent être
+                 dépotées
+    fct_ret_type: plante array
+    fct_arg:
+      - [joueur, int, "ID du jardinier concerné"]
+  -
+    fct_name: ressources_sur_case
+    fct_summary: Renvoie les ressources disponibles sur une case donnée
+    fct_ret_type: int array
+    fct_arg:
+      - [pos, position, "Case ciblée"]
+  -
+    fct_name: reproduction_possible
+    fct_summary: Vérifie si une plante à la position donnée aura suffisamment
+                 de ressources pour se reproduire. S'il n'y a pas déjà une
+                plante, le calcul supposera qu'une plante est apparu à cette
+                position
+    fct_ret_type: bool
+    fct_arg:
+      - [pos, position, "Case ciblée"]
+      - [rayon_collecte, int, "Rayon de collecte des ressources pour la plante"]
+      - [consommation, int array, "Quantité de ressources consommées par la plante"]
+  -
+    fct_name: plante_reproductible
+    fct_summary: Vérifie si une plante à la position donnée peut se reproduire,
+                 retourne faux s'il n'y pas de plante à la position donnée
+    fct_ret_type: bool
+    fct_arg:
+      - [pos, position, "Case ciblée"]
+
+# Utilitaire
+
+  -
+    fct_name: croisement
+    fct_summary: Caractéristiques d'une plante résultant du croisement de
+                 plusieurs parents donnés. Les champs sont initialisés à -1 si
+                 aucune plante n'est donnée en paramètre
+    fct_ret_type: plante
+    fct_arg:
+      - [parents, plante array, "Les plantes qui sont croisées"]
+
+# Historique (actions de l'adversaire durant le tour précédent)
+
+  -
+    fct_name: historique
+    fct_summary: Renvoie la liste des actions effectuées par l’adversaire
+                 durant son tour, dans l'ordre chronologique. Les actions de
+                 débug n'apparaissent pas dans cette liste.
+    fct_ret_type: action_hist array
+    fct_arg: []
+
+# Autres
+
+  -
+    fct_name: score
+    fct_summary: Renvoie le score du joueur ``id_joueur``.
+                 Renvoie -1 si le joueur est invalide.
+    fct_ret_type: int
+    fct_arg:
+        - [id_joueur, int, "Numéro du joueur"]
+  -
+    fct_name: moi
+    fct_summary: Renvoie votre numéro de joueur.
+    fct_ret_type: int
+    fct_arg: []
+  -
+    fct_name: adversaire
+    fct_summary: Renvoie le numéro de joueur de votre adversaire.
+    fct_ret_type: int
+    fct_arg: []
+  -
+    fct_name: annuler
+    fct_summary: Annule la dernière action.
+                 Renvoie faux quand il n'y a pas d'action à annuler ce tour ci.
+    fct_ret_type: bool
+    fct_arg: []
+  -
+    fct_name: tour_actuel
+    fct_summary: Retourne le numéro du tour actuel.
+    fct_ret_type: int
+    fct_arg: []
+
+
+user_function:
+  -
+    fct_name: partie_init
+    fct_summary: Fonction appelée au début de la partie.
+    fct_ret_type: void
+    fct_arg: []
+  -
+    fct_name: jouer_tour
+    fct_summary: Fonction appelée à chaque tour.
+    fct_ret_type: void
+    fct_arg: []
+  -
+    fct_name: partie_fin
+    fct_summary: Fonction appelée à la fin de la partie.
+    fct_ret_type: void
+    fct_arg: []
