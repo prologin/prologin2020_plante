@@ -3,9 +3,25 @@
 
 #include "game_state.hh"
 
+std::array<PlayerInfo, NB_PLAYERS> init_players(const rules::Players& players)
+{
+    std::vector<PlayerInfo> result;
+    result.reserve(NB_PLAYERS);
+
+    for (const auto& player : players)
+        if (player->type == rules::PLAYER)
+            result.emplace_back(player);
+
+    if (result.size() != NB_PLAYERS)
+        FATAL("this game requires exactly two players");
+
+    return {result[0], result[1]};
+}
+
 GameState::GameState(std::istream& map_stream, const rules::Players& players)
     : rules::GameState()
     , map_(map_stream)
+    , players_(init_players(players))
     , init_(false)
     , round_(0)
 {
@@ -14,6 +30,7 @@ GameState::GameState(std::istream& map_stream, const rules::Players& players)
 GameState::GameState(const GameState& st)
     : rules::GameState()
     , map_(st.map_)
+    , players_(st.players_)
     , init_(st.init_)
     , round_(st.round_)
 {
@@ -24,7 +41,7 @@ GameState* GameState::copy() const
     return new GameState(*this);
 }
 
-const Map& GameState::get_map_const() const
+const Map& GameState::get_map() const
 {
     return map_;
 }
@@ -37,6 +54,67 @@ Map& GameState::get_map()
 int GameState::get_round() const
 {
     return round_;
+}
+
+int GameState::get_player_id_by_key(int player_key) const
+{
+    for (int player_id = 0; player_id < 2; player_id++)
+        if (get_player_key_by_id(player_id) == player_key)
+            return player_id;
+
+    assertm(false, "unknown player_key");
+}
+
+int GameState::get_player_key_by_id(int player_id) const
+{
+    assert(player_id == 0 || player_id == 1);
+    return players_[player_id].get_key();
+}
+
+const PlayerInfo& GameState::get_player_by_key(int player_key) const
+{
+    for (int player_id = 0; player_id < 2; player_id++)
+        if (get_player_key_by_id(player_id) == player_key)
+            return players_[player_id];
+
+    assertm(false, "unknown player_key");
+}
+
+PlayerInfo& GameState::get_player_by_key(int player_key)
+{
+    for (int player_id = 0; player_id < 2; player_id++)
+        if (get_player_key_by_id(player_id) == player_key)
+            return players_[player_id];
+
+    assertm(false, "unknown player_key");
+}
+
+int GameState::get_opponent_id(int player_id) const
+{
+    assertm(player_id == 0 || player_id == 1, "wrong player id");
+    return 1 - player_id;
+}
+
+const std::vector<internal_action>&
+GameState::get_internal_history(int player_id) const
+{
+    assertm(player_id == 0 || player_id == 1, "wrong player id");
+    return players_[player_id].get_internal_history();
+}
+
+const std::vector<action_hist> GameState::get_history(int player_id) const
+{
+    assertm(player_id == 0 || player_id == 1, "wrong player id");
+
+    std::vector<action_hist> hist;
+    std::vector<internal_action> internal_hist =
+        get_internal_history(player_id);
+
+    for (auto action : internal_hist)
+        if (action.type == standard_action)
+            hist.push_back(action.action);
+
+    return hist;
 }
 
 bool GameState::is_init() const

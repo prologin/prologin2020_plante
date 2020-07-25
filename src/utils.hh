@@ -10,6 +10,9 @@
 
 #include "constant.hh"
 
+// Assertion with message
+#define assertm(exp, msg) assert(((void)msg, exp))
+
 template <typename T>
 using Grid = std::array<std::array<T, TAILLE_GRILLE>, TAILLE_GRILLE>;
 

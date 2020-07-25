@@ -24,7 +24,7 @@ std::vector<plante> Api::plantes_jardinier(int jardinier)
 }
 plante Api::plante_sur_case(position pos)
 {
-    return *game_state_->get_map_const().plant_at(pos);
+    return *game_state_->get_map().plant_at(pos);
 }
 std::vector<plante> Api::plantes_arrosables(int joueur)
 {

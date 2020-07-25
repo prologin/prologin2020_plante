@@ -10,13 +10,13 @@ int ActionArroser::check(const GameState& st) const
         return HORS_TOUR;
     if (!position_in_bounds(position_plante_))
         return HORS_POTAGER;
-    if (!st.get_map_const().plant_at(position_plante_))
+    if (!st.get_map().plant_at(position_plante_))
         return PAS_DE_PLANTE;
-    if (st.get_map_const().plant_at(position_plante_)->jardinier != player_id_)
+    if (st.get_map().plant_at(position_plante_)->jardinier != player_id_)
         return MAUVAIS_JARDINIER;
-    if (st.get_map_const().plant_at(position_plante_)->adulte)
+    if (st.get_map().plant_at(position_plante_)->adulte)
         return DEJA_ARROSEE;
-    if (st.get_map_const().plant_at(position_plante_)->age < AGE_DE_POUSSE)
+    if (st.get_map().plant_at(position_plante_)->age < AGE_DE_POUSSE)
         return PAS_ENCORE_ADULTE;
     if (amelioration_ < 0 || amelioration_ <= NB_TYPES_RESSOURCES)
         return PLANTE_INVALIDE;

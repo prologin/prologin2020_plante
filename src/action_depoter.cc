@@ -11,15 +11,15 @@ int ActionDepoter::check(const GameState& st) const
     if (!position_in_bounds(position_depart_) ||
         !position_in_bounds(position_arrivee_))
         return HORS_POTAGER;
-    if (st.get_map_const().plant_at(position_arrivee_))
+    if (st.get_map().plant_at(position_arrivee_))
         return CASE_OCCUPEE;
-    if (!st.get_map_const().plant_at(position_depart_))
+    if (!st.get_map().plant_at(position_depart_))
         return PAS_DE_PLANTE;
-    if (st.get_map_const().plant_at(position_depart_)->jardinier != player_id_)
+    if (st.get_map().plant_at(position_depart_)->jardinier != player_id_)
         return MAUVAIS_JARDINIER;
-    if (st.get_map_const().plant_at(position_depart_)->enracinee)
+    if (st.get_map().plant_at(position_depart_)->enracinee)
         return SANS_POT;
-    if (!st.get_map_const().plant_at(position_depart_)->adulte)
+    if (!st.get_map().plant_at(position_depart_)->adulte)
         return PAS_ENCORE_ARROSEE;
     // TODO check range
     return OK;
