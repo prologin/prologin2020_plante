@@ -6,7 +6,7 @@
 
 int ActionDebugAfficherChien::check(const GameState& st) const
 {
-    if (position_out_bound(pos_))
+    if (!position_in_bounds(pos_))
         return HORS_POTAGER;
     // TODO check chien_
     return OK;
@@ -17,7 +17,8 @@ void ActionDebugAfficherChien::apply_on(GameState* st) const
     // FIXME
 }
 
-void ActionDebugAfficherChien::dump_json(const GameState& st, std::ostream& ss) const
+void ActionDebugAfficherChien::dump_json(const GameState& st,
+                                         std::ostream& ss) const
 {
     // FIXME: optional function that dumps the action
 }

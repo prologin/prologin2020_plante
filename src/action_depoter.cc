@@ -8,8 +8,8 @@ int ActionDepoter::check(const GameState& st) const
 {
     if (!st.is_init())
         return HORS_TOUR;
-    if (position_out_bound(position_depart_)
-            || position_out_bound(position_arrivee_))
+    if (!position_in_bounds(position_depart_) ||
+        !position_in_bounds(position_arrivee_))
         return HORS_POTAGER;
     if (st.get_map().plant_at(position_arrivee_))
         return CASE_OCCUPEE;

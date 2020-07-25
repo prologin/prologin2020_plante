@@ -8,8 +8,8 @@ int ActionBaffer::check(const GameState& st) const
 {
     if (!st.is_init())
         return HORS_TOUR;
-    if (position_out_bound(position_baffante_)
-            || position_out_bound(position_baffee_))
+    if (!position_in_bounds(position_baffante_) ||
+        !position_in_bounds(position_baffee_))
         return HORS_POTAGER;
     if (!st.get_map().plant_at(position_baffante_))
         return PAS_DE_PLANTE;

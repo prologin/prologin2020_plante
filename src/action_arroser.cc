@@ -8,7 +8,7 @@ int ActionArroser::check(const GameState& st) const
 {
     if (!st.is_init())
         return HORS_TOUR;
-    if (position_out_bound(position_plante_))
+    if (!position_in_bounds(position_plante_))
         return HORS_POTAGER;
     if (!st.get_map().plant_at(position_plante_))
         return PAS_DE_PLANTE;

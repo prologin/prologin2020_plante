@@ -3,14 +3,11 @@
 
 #pragma once
 
-#include <array>
 #include <istream>
 #include <optional>
 
 #include "constant.hh"
-
-template <typename T>
-using Grid = std::array<std::array<T, TAILLE_GRILLE>, TAILLE_GRILLE>;
+#include "utils.hh"
 
 class Map
 {
