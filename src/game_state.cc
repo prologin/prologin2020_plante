@@ -34,6 +34,11 @@ Map& GameState::get_map()
     return map_;
 }
 
+int GameState::get_round() const
+{
+    return round_;
+}
+
 bool GameState::is_init() const
 {
     return init_;

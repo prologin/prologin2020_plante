@@ -18,6 +18,7 @@ public:
     // Getters
     const Map& get_map_const() const;
     Map& get_map();
+    int get_round() const;
 
     // Init
     bool is_init() const;

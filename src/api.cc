@@ -23,8 +23,7 @@ std::vector<plante> Api::plantes_jardinier(int jardinier)
 }
 plante Api::plante_sur_case(position pos)
 {
-    // TODO
-    abort();
+    return *game_state_->get_map_const().plant_at(pos);
 }
 std::vector<plante> Api::plantes_arrosables(int joueur)
 {
@@ -73,8 +72,7 @@ int Api::score(int id_joueur)
 }
 int Api::moi()
 {
-    // TODO
-    abort();
+    return player_->id;
 }
 int Api::adversaire()
 {
@@ -88,41 +86,5 @@ bool Api::annuler()
 }
 int Api::tour_actuel()
 {
-    // TODO
-    abort();
-}
-void Api::afficher_erreur(erreur v)
-{
-    // TODO
-    abort();
-}
-void Api::afficher_action_type(action_type v)
-{
-    // TODO
-    abort();
-}
-void Api::afficher_caracteristique(caracteristique v)
-{
-    // TODO
-    abort();
-}
-void Api::afficher_debug_chien(debug_chien v)
-{
-    // TODO
-    abort();
-}
-void Api::afficher_position(position v)
-{
-    // TODO
-    abort();
-}
-void Api::afficher_plante(plante v)
-{
-    // TODO
-    abort();
-}
-void Api::afficher_action_hist(action_hist v)
-{
-    // TODO
-    abort();
+    return game_state_->get_round();
 }
