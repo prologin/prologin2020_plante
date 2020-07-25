@@ -3,6 +3,7 @@
 
 #include "api.hh"
 
+#include <algorithm>
 #include <memory>
 #include <utility>
 
@@ -45,7 +46,8 @@ std::vector<int> Api::ressources_sur_case(position pos)
     // TODO
     abort();
 }
-bool Api::reproduction_possible(position pos, int rayon_collecte, std::vector<int> consommation)
+bool Api::reproduction_possible(position pos, int rayon_collecte,
+                                std::vector<int> consommation)
 {
     // TODO
     abort();

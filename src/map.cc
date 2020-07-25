@@ -44,16 +44,29 @@ Map::Map(std::istream& stream)
     }
 }
 
-std::vector<plante> Map::all_plants() const
+std::vector<plante>
+Map::all_plants_with(std::function<bool(const plante&)> predicate) const
 {
     std::vector<plante> result;
 
     for (const auto& row : plants)
         for (const auto& cell : row)
             if (const auto plant = cell)
-                result.push_back(*plant);
+                if (predicate(*plant))
+                    result.push_back(*plant);
 
     return result;
+}
+
+std::vector<plante> Map::all_plants() const
+{
+    return all_plants_with([](auto) { return true; });
+}
+
+std::vector<plante> Map::player_plants(int player) const
+{
+    return all_plants_with(
+        [player](const plante& plant) { return plant.jardinier == player; });
 }
 
 std::optional<plante> Map::plant_at(position pos) const

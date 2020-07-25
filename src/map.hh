@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <functional>
 #include <istream>
 #include <optional>
 
@@ -14,7 +15,11 @@ class Map
 public:
     Map(std::istream& stream);
 
+    std::vector<plante>
+    all_plants_with(std::function<bool(const plante&)> predicate) const;
     std::vector<plante> all_plants() const;
+    std::vector<plante> player_plants(int player) const;
+
     std::optional<plante> plant_at(position pos) const;
     Grid<bool> build_has_enough_ressources() const;
 
