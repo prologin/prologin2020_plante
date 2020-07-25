@@ -11,9 +11,13 @@ int ActionBaffer::check(const GameState& st) const
     if (position_out_bound(position_baffante_)
             || position_out_bound(position_baffee_))
         return HORS_POTAGER;
-
-    // FIXME
-    return 0;
+    if (!st.get_map().plant_at(position_baffante_))
+        return PAS_DE_PLANTE;
+    if (st.get_map().plant_at(position_baffante_)->jardinier != player_id_)
+        return MAUVAIS_JARDINIER;
+    if (!st.get_map().plant_at(position_baffante_)->adulte)
+        return PAS_ENCORE_ARROSEE;
+    return OK;
 }
 
 void ActionBaffer::apply_on(GameState* st) const

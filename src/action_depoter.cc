@@ -11,10 +11,17 @@ int ActionDepoter::check(const GameState& st) const
     if (position_out_bound(position_depart_)
             || position_out_bound(position_arrivee_))
         return HORS_POTAGER;
-
-
-    // FIXME
-    return 0;
+    if (st.get_map().plant_at(position_arrivee_))
+        return CASE_OCCUPEE;
+    if (!st.get_map().plant_at(position_depart_))
+        return PAS_DE_PLANTE;
+    if (st.get_map().plant_at(position_depart_)->jardinier != player_id_)
+        return MAUVAIS_JARDINIER;
+    if (st.get_map().plant_at(position_depart_)->enracinee)
+        return SANS_POT;
+    if (!st.get_map().plant_at(position_depart_)->adulte)
+        return PAS_ENCORE_ARROSEE;
+    return OK;
 }
 
 void ActionDepoter::apply_on(GameState* st) const

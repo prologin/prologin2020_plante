@@ -2,11 +2,14 @@
 // Copyright (c) 2012-2020 Association Prologin <association@prologin.org>
 
 #include "actions.hh"
+#include "utils.hh"
 
 int ActionDebugAfficherChien::check(const GameState& st) const
 {
-    // FIXME
-    return 0;
+    if (position_out_bound(pos_))
+        return HORS_POTAGER;
+    // TODO check chien_
+    return OK;
 }
 
 void ActionDebugAfficherChien::apply_on(GameState* st) const
