@@ -16,7 +16,8 @@ public:
     GameState* copy() const override;
 
     // Getters
-    const Map& get_map() const;
+    const Map& get_map_const() const;
+    Map& get_map();
 
     // Init
     bool is_init() const;

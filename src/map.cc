@@ -46,7 +46,21 @@ Map::Map(std::istream& stream)
 
 std::optional<plante> Map::plant_at(position pos) const
 {
-    assert(pos.x < TAILLE_GRILLE);
-    assert(pos.y < TAILLE_GRILLE);
+    assert(position_in_bounds(pos));
     return plants[pos.x][pos.y];
+}
+
+void Map::move_plant(position from, position to)
+{
+    assert(position_in_bounds(from));
+    assert(position_in_bounds(to));
+    assert(plants[from.x][from.y]);
+    assert(!plants[to.x][to.y]);
+    plants[from.x][from.y].swap(plants[to.x][to.y]);
+}
+
+void Map::destroy_plant(position pos)
+{
+    assert(position_in_bounds(pos));
+    plants[pos.x][pos.y].reset();
 }

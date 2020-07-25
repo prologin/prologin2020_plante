@@ -14,6 +14,8 @@ class Map
 public:
     Map(std::istream& stream);
     std::optional<plante> plant_at(position pos) const;
+    void move_plant(position from, position to);
+    void destroy_plant(position pos);
 
 private:
     Grid<std::array<int, NB_TYPES_RESSOURCES>> ressources;

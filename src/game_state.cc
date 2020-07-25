@@ -24,7 +24,12 @@ GameState* GameState::copy() const
     return new GameState(*this);
 }
 
-const Map& GameState::get_map() const
+const Map& GameState::get_map_const() const
+{
+    return map_;
+}
+
+Map& GameState::get_map()
 {
     return map_;
 }
