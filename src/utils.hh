@@ -6,4 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "constant.hh"
+
 std::vector<std::string> split(std::string text, const std::string& delim);
+bool position_out_bound(const position& position);

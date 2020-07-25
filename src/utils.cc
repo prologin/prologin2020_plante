@@ -18,3 +18,9 @@ std::vector<std::string> split(std::string text, const std::string& delim)
     parts.push_back(text);
     return parts;
 }
+
+bool position_out_bound(const position& position)
+{
+    return position.x < 0 || position.y < 0
+        || position.x >= TAILLE_GRILLE || position.y >= TAILLE_GRILLE;
+}

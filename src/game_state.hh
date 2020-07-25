@@ -6,14 +6,24 @@
 #include <rules/game-state.hh>
 #include <rules/player.hh>
 
+#include "map.hh"
+
 class GameState final : public rules::GameState
 {
 public:
-    // FIXME
-    // additional parameters? for instance map
-    GameState(const rules::Players& players);
+    GameState(std::istream& map_stream, const rules::Players& players);
     GameState(const GameState& st);
-    ~GameState();
-
     GameState* copy() const override;
+
+    // Getters
+    const Map& get_map() const;
+
+    // Init
+    bool is_init() const;
+
+
+private:
+    Map map_;
+    int round_;
+    bool init_;
 };

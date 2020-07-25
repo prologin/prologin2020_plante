@@ -3,6 +3,7 @@
 
 #include "rules.hh"
 
+#include <fstream>
 #include <memory>
 #include <utility>
 
@@ -19,7 +20,12 @@ Rules::Rules(const rules::Options opt)
         // FIXME: register user functions
     }
 
-    auto game_state = std::make_unique<GameState>(opt.players);
+    std::ifstream ifs(opt.map_file);
+
+    if (!ifs.is_open())
+        FATAL("Cannot open file: %s", opt.map_file.c_str());
+
+    auto game_state = std::make_unique<GameState>(ifs, opt.players);
     api_ = std::make_unique<Api>(std::move(game_state), opt.player);
     register_actions();
 }

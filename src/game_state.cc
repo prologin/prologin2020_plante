@@ -3,24 +3,33 @@
 
 #include "game_state.hh"
 
-GameState::GameState(const rules::Players& players)
-    : rules::GameState(players)
+GameState::GameState(std::istream& map_stream, const rules::Players& players)
+    : rules::GameState()
+    , map_(map_stream)
+    , init_(false)
+    , round_(0)
 {
-    // FIXME
 }
 
 GameState::GameState(const GameState& st)
-    : rules::GameState(st)
+    : rules::GameState()
+    , map_(st.map_)
+    , init_(st.init_)
+    , round_(st.round_)
 {
-    // FIXME
-}
-
-GameState::~GameState()
-{
-    // FIXME
 }
 
 GameState* GameState::copy() const
 {
     return new GameState(*this);
+}
+
+const Map& GameState::get_map() const
+{
+    return map_;
+}
+
+bool GameState::is_init() const
+{
+    return init_;
 }
