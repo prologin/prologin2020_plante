@@ -58,6 +58,7 @@ std::vector<position> circle(position center, int radius)
 
         for (position neighbour : neighbours)
             if (position_in_bounds(neighbour) &&
+                distance(center, neighbour) <= radius &&
                 !visited[neighbour.x][neighbour.y])
             {
                 visited[neighbour.x][neighbour.y] = true;
