@@ -32,8 +32,6 @@ std::vector<std::string> split(std::string text, const std::string& delim);
 
 bool position_in_bounds(const position& position);
 
-std::vector<std::string> split(std::string text, const std::string& delim);
-
 int distance(position pos1, position pos2);
 
 std::vector<position> circle(position center, int radius);

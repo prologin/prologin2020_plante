@@ -32,7 +32,7 @@ int distance(position pos1, position pos2)
 
 std::vector<position> circle(position center, int radius)
 {
-    if (radius < 0)
+    if (radius < 0 || !position_in_bounds(center))
         return {};
 
     Grid<bool> visited = init_grid(false);

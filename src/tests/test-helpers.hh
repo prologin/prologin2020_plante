@@ -1,6 +1,10 @@
 #pragma once
 
+#include <algorithm>
 #include <string>
+#include <vector>
+
+#include "../constant.hh"
 
 static const std::string test_map = R"(
     0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,3 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0
@@ -27,3 +31,18 @@ static const std::string test_map = R"(
     1
     2 2 110 60 42 8 5
 )";
+
+template <typename T>
+bool same_sets(const std::vector<T>& set1, const std::vector<T>& set2)
+{
+    std::vector<T> all_items;
+    all_items.insert(all_items.end(), set1.begin(), set1.end());
+    all_items.insert(all_items.end(), set2.begin(), set2.end());
+
+    for (position pos : all_items)
+        if (std::count(set1.begin(), set1.end(), pos) !=
+            std::count(set2.begin(), set2.end(), pos))
+            return false;
+
+    return true;
+}
