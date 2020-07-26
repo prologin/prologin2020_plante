@@ -33,5 +33,5 @@ void ActionDepoter::apply_on(GameState* st) const
 
 void ActionDepoter::dump_json(const GameState& st, std::ostream& ss) const
 {
-    // FIXME: optional function that dumps the action
+    // TODO: optional function that dumps the action
 }
