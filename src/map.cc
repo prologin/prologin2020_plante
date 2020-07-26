@@ -33,6 +33,7 @@ Map::Map(std::istream& stream)
             for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
                 stream >> plant.consommation[k];
 
+            // TODO: we should not expose internal ID
             plant.jardinier = player;
             plant.adulte = true;
             plant.enracinee = false;
@@ -42,6 +43,17 @@ Map::Map(std::istream& stream)
             plants[plant.pos.x][plant.pos.y] = plant;
         }
     }
+}
+
+void Map::new_turn()
+{
+    plants_already_hit = init_grid(false);
+}
+
+std::array<int, NB_TYPES_RESSOURCES> Map::ressources_at(position pos) const
+{
+    assert(position_in_bounds(pos));
+    return ressources[pos.x][pos.y];
 }
 
 std::vector<plante>
@@ -91,10 +103,11 @@ Grid<bool> Map::build_has_enough_ressources() const
 
     // Check if plants have enough ressources
 
-    Grid<bool> result = init_grid(true);
+    Grid<bool> result = init_grid(false);
 
     for (plante plant : all_plants())
     {
+        result[plant.pos.x][plant.pos.y] = true;
         const auto neighbours = circle(plant.pos, plant.rayon_deplacement);
 
         for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
@@ -118,6 +131,18 @@ Grid<bool> Map::build_has_enough_ressources() const
     return result;
 }
 
+bool Map::has_enough_ressources(position pos) const
+{
+    assert(position_in_bounds(pos));
+    return build_has_enough_ressources()[pos.x][pos.y];
+}
+
+bool Map::already_hit(position pos) const
+{
+    assert(position_in_bounds(pos));
+    return plants_already_hit[pos.x][pos.y];
+}
+
 void Map::move_plant(position from, position to)
 {
     assert(position_in_bounds(from));
@@ -125,6 +150,27 @@ void Map::move_plant(position from, position to)
     assert(plants[from.x][from.y]);
     assert(!plants[to.x][to.y]);
     plants[from.x][from.y].swap(plants[to.x][to.y]);
+}
+
+bool Map::hit(position attacker_pos, position victim_pos)
+{
+    assert(plant_at(attacker_pos).has_value());
+    assert(plant_at(victim_pos).has_value());
+    assert(!already_hit(attacker_pos));
+
+    plante& attacker = *plants[attacker_pos.x][attacker_pos.y];
+    plante& victim = *plants[victim_pos.x][victim_pos.y];
+
+    plants_already_hit[attacker.pos.x][attacker.pos.y] = true;
+    victim.vie -= attacker.force;
+
+    if (victim.vie <= 0)
+    {
+        destroy_plant(victim.pos);
+        return true;
+    }
+
+    return false;
 }
 
 void Map::destroy_plant(position pos)

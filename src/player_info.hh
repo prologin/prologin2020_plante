@@ -9,9 +9,9 @@
 #include <rules/player.hh>
 
 #include "constant.hh"
+#include "history.hh"
 #include "map.hh"
 #include "utils.hh"
-#include "history.hh"
 
 class PlayerInfo
 {
@@ -30,5 +30,8 @@ public:
     void update_score(const Map& map);
 
 private:
+    std::shared_ptr<rules::Player> rules_player_;
+    std::vector<internal_action> internal_hist_;
+
     int score_;
 };

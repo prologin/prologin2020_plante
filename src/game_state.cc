@@ -56,6 +56,15 @@ int GameState::get_round() const
     return round_;
 }
 
+bool GameState::player_valid(int player_key) const
+{
+    for (int player_id = 0; player_id < 2; player_id++)
+        if (get_player_key_by_id(player_id) == player_key)
+            return true;
+
+    assertm(false, "unknown player_key");
+}
+
 int GameState::get_player_id_by_key(int player_key) const
 {
     for (int player_id = 0; player_id < 2; player_id++)

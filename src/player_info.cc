@@ -33,6 +33,6 @@ void PlayerInfo::add_internal_action(internal_action action)
 
 void PlayerInfo::update_score(const Map& map)
 {
-    for (const Plant& plant : map.player_plants(this->rules_player_->id))
+    for (const plante& plant : map.player_plants(this->rules_player_->id))
         score_ += plant.elegance;
 }

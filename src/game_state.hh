@@ -26,6 +26,7 @@ public:
     PlayerInfo& get_player_by_key(int player_key);
 
     // Player ids manipulation
+    bool player_valid(int player_id) const;
     int get_player_id_by_key(int player_key) const;
     int get_player_key_by_id(int player_id) const;
     int get_opponent_id(int player_id) const;
@@ -37,7 +38,6 @@ public:
 
     // Init
     bool is_init() const;
-
 
 private:
     Map map_;

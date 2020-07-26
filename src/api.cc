@@ -7,12 +7,6 @@
 #include <memory>
 #include <utility>
 
-inline bool player_valid(int player_id)
-{
-    // TODO check if == moi() || adversaire()
-    return player_id != -1;
-}
-
 // global used in interface.cc
 Api* api;
 
@@ -25,8 +19,11 @@ Api::Api(std::unique_ptr<GameState> game_state,
 
 std::vector<plante> Api::plantes_jardinier(int jardinier)
 {
-    // TODO
-    abort();
+    if (!game_state_->player_valid(jardinier))
+        return {};
+
+    int player_id = game_state().get_player_id_by_key(jardinier);
+    return game_state().get_map().player_plants(player_id);
 }
 
 plante Api::plante_sur_case(position pos)
@@ -34,28 +31,59 @@ plante Api::plante_sur_case(position pos)
     return *game_state_->get_map().plant_at(pos);
 }
 
+// TODO: joueur should be called jardinier
 std::vector<plante> Api::plantes_arrosables(int joueur)
 {
-    // TODO
-    abort();
+    if (!game_state_->player_valid(joueur))
+        return {};
+
+    int player_id = game_state().get_player_id_by_key(joueur);
+
+    const auto filter = [=](const plante& plant) {
+        return plant.jardinier == player_id && plant.age >= AGE_DE_POUSSE;
+    };
+
+    return game_state().get_map().all_plants_with(filter);
 }
 
+// TODO: joueur should be called jardinier
 std::vector<plante> Api::plantes_adultes(int joueur)
 {
-    // TODO
-    abort();
+    if (!game_state_->player_valid(joueur))
+        return {};
+
+    int player_id = game_state().get_player_id_by_key(joueur);
+
+    const auto filter = [=](const plante& plant) {
+        return plant.jardinier == player_id && plant.adulte;
+    };
+
+    return game_state().get_map().all_plants_with(filter);
 }
 
+// TODO: joueur should be called jardinier
 std::vector<plante> Api::plantes_depotables(int joueur)
 {
-    // TODO
-    abort();
+    if (!game_state_->player_valid(joueur))
+        return {};
+
+    int player_id = game_state().get_player_id_by_key(joueur);
+
+    const auto filter = [=](const plante& plant) {
+        return plant.jardinier == player_id && !plant.enracinee;
+    };
+
+    return game_state().get_map().all_plants_with(filter);
 }
 
 std::vector<int> Api::ressources_sur_case(position pos)
 {
-    // TODO
-    abort();
+    // TODO: should we return {0, 0, 0} instead?
+    if (!position_in_bounds(pos))
+        return {};
+
+    const auto ressources = game_state().get_map().ressources_at(pos);
+    return std::vector(ressources.begin(), ressources.end());
 }
 
 bool Api::reproduction_possible(position pos, int rayon_collecte,
@@ -67,8 +95,11 @@ bool Api::reproduction_possible(position pos, int rayon_collecte,
 
 bool Api::plante_reproductible(position pos)
 {
-    // TODO
-    abort();
+    if (!position_in_bounds(pos) ||
+        !game_state().get_map().plant_at(pos).has_value())
+        return false;
+
+    return game_state().get_map().has_enough_ressources(pos);
 }
 
 plante Api::croisement(std::vector<plante> parents)
@@ -85,7 +116,7 @@ std::vector<action_hist> Api::historique()
 
 int Api::score(int id_joueur)
 {
-    if (!player_valid(id_joueur))
+    if (!game_state_->player_valid(id_joueur))
         return -1;
 
     return game_state_->get_player_by_key(id_joueur).get_score();
@@ -101,6 +132,12 @@ int Api::adversaire()
     const int player_id = game_state_->get_player_id_by_key(moi());
     const int opponent_id = game_state_->get_opponent_id(player_id);
     return game_state_->get_player_key_by_id(opponent_id);
+}
+
+bool Api::annuler()
+{
+    // TODO
+    abort();
 }
 
 int Api::tour_actuel()

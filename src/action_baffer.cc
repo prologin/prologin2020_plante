@@ -17,17 +17,18 @@ int ActionBaffer::check(const GameState& st) const
         return MAUVAIS_JARDINIER;
     if (!st.get_map().plant_at(position_baffante_)->adulte)
         return PAS_ENCORE_ARROSEE;
-    // TODO add deja baffée ce tour
+    if (st.get_map().already_hit(position_baffante_))
+        ; // TODO add deja baffée ce tour
+
     return OK;
 }
 
 void ActionBaffer::apply_on(GameState* st) const
 {
-    st->get_map().plant_at(position_baffee_)->vie
-        -= st->get_map().plant_at(position_baffante_)->force;
-    if (st->get_map().plant_at(position_baffee_)->vie <= 0)
-        st->get_map().destroy_plant(position_baffee_);
-    // TODO add internal event plant dies
+    if (st->get_map().hit(position_baffante_, position_baffee_))
+    {
+        // TODO add internal event plant dies
+    }
 }
 
 void ActionBaffer::dump_json(const GameState& st, std::ostream& ss) const

@@ -19,17 +19,18 @@ def configure(cfg):
 def build(bld):
     bld.shlib(
         source='''
-            src/action_depoter.cc
             src/action_arroser.cc
             src/action_baffer.cc
             src/action_debug_afficher_chien.cc
+            src/action_depoter.cc
             src/api.cc
             src/entry.cc
             src/game_state.cc
             src/interface.cc
+            src/map.cc
+            src/player_info.cc
             src/rules.cc
             src/utils.cc
-            src/map.cc
         ''',
         defines=['MODULE_COLOR=ANSI_COL_BROWN', 'MODULE_NAME="rules"'],
         target='prologin2020_plante',
