@@ -144,7 +144,8 @@ Grid<bool> Map::build_has_enough_ressources() const
         result[plant.pos.x][plant.pos.y] = true;
         const auto neighbours = circle(plant.pos, plant.rayon_deplacement);
 
-        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES
+                && result[plant.pos.x][plant.pos.y]; k++)
         {
             int quotient = 0;
             int divisor = 0;
@@ -156,9 +157,9 @@ Grid<bool> Map::build_has_enough_ressources() const
                     ressources[cell.x][cell.y][k] * plant.consommation[k];
             }
 
-            // We need quotient / divisor <= plant.consommation[k]
+            // We need quotient / divisor >= plant.consommation[k]
             result[plant.pos.x][plant.pos.y] &=
-                quotient <= plant.consommation[k] * divisor;
+                quotient >= plant.consommation[k] * divisor;
         }
     }
 
