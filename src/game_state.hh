@@ -22,6 +22,7 @@ public:
     const Map& get_map() const;
     Map& get_map();
     int get_round() const;
+    bool is_finished() const;
     const PlayerInfo& get_player_by_key(int player_key) const;
     PlayerInfo& get_player_by_key(int player_key);
 
@@ -38,6 +39,7 @@ public:
 
     // Init
     bool is_init() const;
+    void set_init(bool init);
 
 private:
     Map map_;

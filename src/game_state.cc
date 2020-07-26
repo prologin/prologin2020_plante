@@ -56,6 +56,12 @@ int GameState::get_round() const
     return round_;
 }
 
+bool GameState::is_finished() const
+{
+    // TODO
+    return false;
+}
+
 bool GameState::player_valid(int player_key) const
 {
     for (int player_id = 0; player_id < 2; player_id++)
@@ -129,4 +135,9 @@ const std::vector<action_hist> GameState::get_history(int player_id) const
 bool GameState::is_init() const
 {
     return init_;
+}
+
+void GameState::set_init(bool init)
+{
+    init_ = init;
 }

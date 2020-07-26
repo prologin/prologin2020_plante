@@ -17,7 +17,12 @@ Rules::Rules(const rules::Options opt)
     {
         champion_dll_ = std::make_unique<utils::DLL>(opt.champion_lib);
 
-        // FIXME: register user functions
+        champion_partie_init_ =
+            champion_dll_->get<f_champion_partie_init>("partie_init");
+        champion_jouer_tour_ =
+            champion_dll_->get<f_champion_jouer_tour>("jouer_tour");
+        champion_partie_fin_ =
+            champion_dll_->get<f_champion_partie_fin>("partie_fin");
     }
 
     std::ifstream ifs(opt.map_file);
@@ -64,6 +69,71 @@ void Rules::apply_action(const rules::IAction& action)
 
 bool Rules::is_finished()
 {
-    // FIXME
-    return true;
+    return api_->game_state().is_finished();
 }
+
+void Rules::at_player_start(rules::ClientMessenger_sptr)
+{
+    try
+    {
+        sandbox_.execute(champion_partie_init_);
+    }
+    catch (utils::SandboxTimeout&)
+    {
+        FATAL("player_start: timeout");
+    }
+}
+
+void Rules::at_spectator_start(rules::ClientMessenger_sptr)
+{
+    champion_partie_init_();
+}
+
+void Rules::at_player_end(rules::ClientMessenger_sptr)
+{
+    api_->game_state().set_init(false);
+    try
+    {
+        sandbox_.execute(champion_partie_fin_);
+    }
+    catch (utils::SandboxTimeout&)
+    {
+        FATAL("player_end: timeout");
+    }
+}
+
+void Rules::at_spectator_end(rules::ClientMessenger_sptr)
+{
+    champion_partie_fin_();
+}
+
+void Rules::player_turn()
+{
+    try
+    {
+        sandbox_.execute(champion_jouer_tour_);
+    }
+    catch (utils::SandboxTimeout&)
+    {
+        FATAL("player_turn: timeout");
+    }
+}
+
+void Rules::spectator_turn()
+{
+    champion_jouer_tour_();
+}
+
+void Rules::start_of_player_turn(unsigned int player_key) {}
+
+void Rules::end_of_player_turn(unsigned int /* player_id */)
+{
+    // Clear the previous game states at the end of each turn (half-round)
+    // We need the previous game states only for undo and history, therefore
+    // old states are not needed anymore after the turn ends.
+    api_->clear_old_game_states();
+}
+
+void Rules::start_of_round() {}
+
+void Rules::end_of_round() {}
