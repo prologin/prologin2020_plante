@@ -34,6 +34,7 @@ Map::Map(std::istream& stream, std::array<int, 2> player_keys)
             assert(position_in_bounds(plant.pos));
             assert(plant.vie_max > 0);
 
+            plant.consommation.resize(NB_TYPES_RESSOURCES);
             for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
                 stream >> plant.consommation[k];
 
