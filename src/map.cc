@@ -7,8 +7,8 @@
 Map::Map(std::istream& stream, std::array<int, 2> player_keys)
     : player_keys(player_keys)
 {
-    for (size_t x = 0; x < TAILLE_GRILLE; x++)
-        for (size_t y = 0; y < TAILLE_GRILLE; y++)
+    for (size_t y = 0; y < TAILLE_GRILLE; y++)
+        for (size_t x = 0; x < TAILLE_GRILLE; x++)
         {
             std::string cell_ressources_str;
             stream >> cell_ressources_str;
@@ -56,7 +56,9 @@ void Map::new_player_turn()
 
 void Map::end_player_turn(int player_id)
 {
+    assert(player_id == 0 || player_id == 1);
     const int key = player_key(player_id);
+
     breed_player_plants(player_id);
 
     for (auto& plant : player_plants(key))
@@ -98,6 +100,7 @@ std::vector<plante> Map::all_plants() const
 
 std::vector<plante> Map::player_plants(int player_id) const
 {
+    assert(player_id == 0 || player_id == 1);
     const int key = player_key(player_id);
 
     return all_plants_with(
@@ -179,6 +182,7 @@ void Map::move_plant(position from, position to)
     assert(position_in_bounds(to));
     assert(plants[from.x][from.y]);
     assert(!plants[to.x][to.y]);
+
     plants[from.x][from.y].swap(plants[to.x][to.y]);
     plants[to.x][to.y]->pos = to;
     plants[to.x][to.y]->enracinee = true;
@@ -213,6 +217,7 @@ void Map::destroy_plant(position pos)
 
 void Map::breed_player_plants(int player_id)
 {
+    assert(player_id == 0 || player_id == 1);
     const int key = player_key(player_id);
     const auto has_enough_ressources = build_has_enough_ressources();
 

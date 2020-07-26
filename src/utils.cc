@@ -80,11 +80,6 @@ int round_div(int x, int q)
     return result;
 }
 
-plante invalid_plant()
-{
-    return {{-1, -1}, -1, false, false, -1, -1, -1, -1, -1, -1, {}, -1};
-}
-
 std::optional<plante> breed(const std::vector<plante>& parents)
 {
     if (parents.size() <= 1)

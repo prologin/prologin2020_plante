@@ -28,7 +28,10 @@ std::vector<plante> Api::plantes_jardinier(int jardinier)
 
 plante Api::plante_sur_case(position pos)
 {
-    return *game_state_->get_map().plant_at(pos);
+    if (!position_in_bounds(pos))
+        return INVALID_PLANT;
+
+    return game_state_->get_map().plant_at(pos).value_or(INVALID_PLANT);
 }
 
 // TODO: joueur should be called jardinier
@@ -78,9 +81,8 @@ std::vector<plante> Api::plantes_depotables(int joueur)
 
 std::vector<int> Api::ressources_sur_case(position pos)
 {
-    // TODO: should we return {0, 0, 0} instead?
     if (!position_in_bounds(pos))
-        return {};
+        return {0, 0, 0};
 
     const auto ressources = game_state().get_map().ressources_at(pos);
     return std::vector(ressources.begin(), ressources.end());
@@ -104,8 +106,7 @@ bool Api::plante_reproductible(position pos)
 
 plante Api::croisement(std::vector<plante> parents)
 {
-    // TODO
-    abort();
+    return breed(parents).value_or(INVALID_PLANT);
 }
 
 std::vector<action_hist> Api::historique()

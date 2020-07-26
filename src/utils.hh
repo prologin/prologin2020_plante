@@ -14,6 +14,10 @@
 // Assertion with message
 #define assertm(exp, msg) assert(((void)msg, exp))
 
+// Statistics of a plant for invalid outputs
+const plante INVALID_PLANT = {{-1, -1}, -1, false, false, -1, -1,
+                              -1,       -1, -1,    -1,    {}, -1};
+
 // Any information attached to all cells of the map
 template <typename T>
 using Grid = std::array<std::array<T, TAILLE_GRILLE>, TAILLE_GRILLE>;
@@ -47,9 +51,6 @@ std::vector<position> circle(position center, int radius);
 // Return rounded result of x / q.
 int round_div(int x, int q);
 
-// Statistics of a plant for invalid outputs
-plante invalid_plant();
-
 // Get the statistics of a plant breeded by a set of parents.
 std::optional<plante> breed(const std::vector<plante>& parents);
 
@@ -65,4 +66,19 @@ inline bool operator==(const position& pos1, const position& pos2)
 inline bool operator!=(const position& pos1, const position& pos2)
 {
     return !(pos1 == pos2);
+}
+
+// ---
+// --- Plants operators
+// ---
+
+inline bool operator==(const plante& p1, const plante& p2)
+{
+    return p1.pos == p2.pos && p1.jardinier == p2.jardinier &&
+           p1.adulte == p2.adulte && p1.enracinee == p2.enracinee &&
+           p1.vie == p2.vie && p1.vie_max == p2.vie_max &&
+           p1.force == p2.force && p1.elegance == p2.elegance &&
+           p1.rayon_deplacement == p2.rayon_deplacement &&
+           p1.rayon_collecte == p2.rayon_collecte &&
+           p1.consommation == p2.consommation && p1.age == p2.age;
 }
