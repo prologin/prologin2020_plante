@@ -202,3 +202,37 @@ void Map::destroy_plant(position pos)
     assert(position_in_bounds(pos));
     plants[pos.x][pos.y].reset();
 }
+
+void Map::breed_player_plants(int player)
+{
+    const auto has_enough_ressources = build_has_enough_ressources();
+
+    for (int x = 0; x < TAILLE_GRILLE; x++)
+        for (int y = 0; y < TAILLE_GRILLE; y++)
+        {
+            // The cell must be empty in order to breed
+            if (plant_at({x, y}).has_value())
+                continue;
+
+            // Collect adjacent plants that belong to current player, with
+            // enough ressources.
+            std::vector<plante> adjacents;
+
+            for (position adj_pos : circle({x, y}, 1))
+                if (adj_pos != position{x, y} &&
+                    plant_at(adj_pos).has_value() &&
+                    plant_at(adj_pos)->jardinier == player &&
+                    has_enough_ressources[adj_pos.x][adj_pos.y])
+                {
+                    adjacents.push_back(*plant_at(adj_pos));
+                }
+
+            // If there is at least two plants to breed, create a child
+            if (adjacents.size() >= 2)
+            {
+                plante new_plant = *breed(adjacents);
+                new_plant.pos = {x, y};
+                plants[x][y] = new_plant;
+            }
+        }
+}

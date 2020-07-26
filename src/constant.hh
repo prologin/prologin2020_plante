@@ -73,11 +73,6 @@ typedef struct position
 {
     int x; ///< Coordonnée : x
     int y; ///< Coordonnée : y
-
-    bool operator==(const position& other) const
-    {
-        return x == other.x && y == other.y;
-    }
 } position;
 
 /// Une plante

@@ -5,6 +5,7 @@
 
 #include <array>
 #include <cmath>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -50,4 +51,18 @@ int round_div(int x, int q);
 plante invalid_plant();
 
 // Get the statistics of a plant breeded by a set of parents.
-plante breed(const std::vector<plante>& parents);
+std::optional<plante> breed(const std::vector<plante>& parents);
+
+// ---
+// --- Position operators
+// ---
+
+inline bool operator==(const position& pos1, const position& pos2)
+{
+    return pos1.x == pos2.x && pos1.y == pos2.y;
+}
+
+inline bool operator!=(const position& pos1, const position& pos2)
+{
+    return !(pos1 == pos2);
+}
