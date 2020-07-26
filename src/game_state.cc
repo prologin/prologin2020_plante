@@ -58,8 +58,7 @@ int GameState::get_round() const
 
 bool GameState::is_finished() const
 {
-    // TODO
-    return false;
+    return round_ >= NB_TOURS;
 }
 
 bool GameState::player_valid(int player_key) const
@@ -140,4 +139,14 @@ bool GameState::is_init() const
 void GameState::set_init(bool init)
 {
     init_ = init;
+}
+
+void GameState::start_round()
+{
+    init_ = true;
+}
+
+void GameState::end_round()
+{
+    ++round_;
 }

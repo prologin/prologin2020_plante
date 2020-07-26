@@ -134,6 +134,12 @@ void Rules::end_of_player_turn(unsigned int /* player_id */)
     api_->clear_old_game_states();
 }
 
-void Rules::start_of_round() {}
+void Rules::start_of_round()
+{
+    api_->game_state().start_round();
+}
 
-void Rules::end_of_round() {}
+void Rules::end_of_round()
+{
+    api_->game_state().end_round();
+}

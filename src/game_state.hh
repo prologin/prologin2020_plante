@@ -40,6 +40,9 @@ public:
     // Init
     bool is_init() const;
     void set_init(bool init);
+    void start_round();
+    void end_round();
+
 
 private:
     Map map_;
