@@ -51,16 +51,17 @@ void Map::new_player_turn()
     plants_already_hit = init_grid(false);
 }
 
-#include <iostream>
 void Map::end_player_turn(int player_key)
 {
-    std::cout << "player_key = " << player_key << std::endl;
     for (auto& plant : player_plants(player_key))
     {
         ++plant.age;
         update_plant(plant);
         if (plant.age >= AGE_MAX)
+        {
             destroy_plant(plant.pos);
+            // TODO add death internal_action
+        }
     }
 }
 

@@ -3,6 +3,7 @@
 
 #include "actions.hh"
 #include "utils.hh"
+#include "history.hh"
 
 int ActionBaffer::check(const GameState& st) const
 {
@@ -25,9 +26,14 @@ int ActionBaffer::check(const GameState& st) const
 
 void ActionBaffer::apply_on(GameState* st) const
 {
+    PlayerInfo& player_ = st->get_player_by_key(player_id_);
     if (st->get_map().hit(position_baffante_, position_baffee_))
     {
-        // TODO add internal event plant dies
+        internal_action death_action;
+        death_action.type = death;
+        death_action.death.pos = position_baffee_;
+
+        player_.add_internal_action(death_action);
     }
 }
 
