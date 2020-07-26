@@ -17,9 +17,17 @@ TEST(UtilsTest, init_grid)
 
 TEST(UtilsTest, split)
 {
-    std::string text = "Hello, how are you?";
-    std::vector<std::string> expected = {"Hello,", "how", "are", "you?"};
-    EXPECT_EQ(split(text, " "), expected);
+    {
+        std::string text = "Hello, how are you?";
+        std::vector<std::string> expected = {"Hello,", "how", "are", "you?"};
+        EXPECT_EQ(split(text, " "), expected);
+    }
+
+    {
+        std::string text = "";
+        std::vector<std::string> expected = {""};
+        EXPECT_EQ(split(text, " "), expected);
+    }
 }
 
 TEST(UtilsTest, position_in_bounds)
