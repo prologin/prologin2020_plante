@@ -134,12 +134,6 @@ int Api::adversaire()
     return game_state_->get_player_key_by_id(opponent_id);
 }
 
-bool Api::annuler()
-{
-    // TODO
-    abort();
-}
-
 int Api::tour_actuel()
 {
     return game_state_->get_round();

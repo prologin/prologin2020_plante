@@ -113,7 +113,7 @@ extern "C" int api_adversaire()
 
 extern "C" bool api_annuler()
 {
-    return api->annuler();
+    return api->cancel();
 }
 
 extern "C" int api_tour_actuel()
