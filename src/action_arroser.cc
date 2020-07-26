@@ -47,6 +47,18 @@ void ActionArroser::apply_on(GameState* st) const
               += APPORT_CARACTERISTIQUE;
           break;
     }
+
+    PlayerInfo& player_ = st->get_player_by_key(player_id_);
+    internal_action action;
+    action.type = standard_action;
+    action.action.atype = ACTION_ARROSER;
+    action.action.position_baffante = {-1, -1};
+    action.action.position_baffee = {-1, -1};
+    action.action.position_depart = {-1, -1};
+    action.action.position_arrivee = {-1, -1};
+    action.action.position_plante = position_plante_;
+    action.action.amelioration = amelioration_;
+    player_.add_internal_action(action);
 }
 
 void ActionArroser::dump_json(const GameState& st, std::ostream& ss) const

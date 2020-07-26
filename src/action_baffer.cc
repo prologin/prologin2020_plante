@@ -35,6 +35,17 @@ void ActionBaffer::apply_on(GameState* st) const
 
         player_.add_internal_action(death_action);
     }
+
+    internal_action action;
+    action.type = standard_action;
+    action.action.atype = ACTION_BAFFER;
+    action.action.position_baffante = position_baffante_;
+    action.action.position_baffee = position_baffee_;
+    action.action.position_depart = {-1, -1};
+    action.action.position_arrivee = {-1, -1};
+    action.action.position_plante = {-1, -1};
+    action.action.amelioration = (caracteristique) -1;
+    player_.add_internal_action(action);
 }
 
 void ActionBaffer::dump_json(const GameState& st, std::ostream& ss) const

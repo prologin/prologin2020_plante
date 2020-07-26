@@ -12,7 +12,15 @@ int ActionDebugAfficherChien::check(const GameState& st) const
     return OK;
 }
 
-void ActionDebugAfficherChien::apply_on(GameState* st) const {}
+void ActionDebugAfficherChien::apply_on(GameState* st) const
+{
+    PlayerInfo& player_ = st->get_player_by_key(player_id_);
+    internal_action action;
+    action.type = flag;
+    action.flag.pos = pos_;
+    action.flag.ctype = chien_;
+    player_.add_internal_action(action);
+}
 
 void ActionDebugAfficherChien::dump_json(const GameState& st,
                                          std::ostream& ss) const

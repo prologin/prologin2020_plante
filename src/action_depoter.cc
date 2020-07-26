@@ -29,9 +29,21 @@ void ActionDepoter::apply_on(GameState* st) const
 {
     st->get_map().move_plant(position_depart_, position_arrivee_);
     st->get_map().plant_at(position_arrivee_)->enracinee = true;
+
+    PlayerInfo& player_ = st->get_player_by_key(player_id_);
+    internal_action action;
+    action.type = standard_action;
+    action.action.atype = ACTION_DEPOTER;
+    action.action.position_baffante = {-1, -1};
+    action.action.position_baffee = {-1, -1};
+    action.action.position_depart = position_depart_;
+    action.action.position_arrivee = position_arrivee_;
+    action.action.position_plante = {-1, -1};
+    action.action.amelioration = (caracteristique) -1;
+    player_.add_internal_action(action);
 }
 
 void ActionDepoter::dump_json(const GameState& st, std::ostream& ss) const
 {
-    // TODO: optional function that dumps the action
+    // TODO
 }
