@@ -172,6 +172,8 @@ void Map::move_plant(position from, position to)
     assert(plants[from.x][from.y]);
     assert(!plants[to.x][to.y]);
     plants[from.x][from.y].swap(plants[to.x][to.y]);
+    plants[to.x][to.y]->pos = to;
+    plants[to.x][to.y]->enracinee = true;
 }
 
 bool Map::hit(position attacker_pos, position victim_pos)
