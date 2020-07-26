@@ -51,11 +51,14 @@ void Map::new_player_turn()
     plants_already_hit = init_grid(false);
 }
 
-void Map::end_player_turn(int player)
+#include <iostream>
+void Map::end_player_turn(int player_key)
 {
-    for (auto& plant : player_plants(player))
+    std::cout << "player_key = " << player_key << std::endl;
+    for (auto& plant : player_plants(player_key))
     {
         ++plant.age;
+        update_plant(plant);
         if (plant.age >= AGE_MAX)
             destroy_plant(plant.pos);
     }
@@ -96,6 +99,13 @@ std::optional<plante> Map::plant_at(position pos) const
 {
     assert(position_in_bounds(pos));
     return plants[pos.x][pos.y];
+}
+
+void Map::update_plant(const plante& plant)
+{
+    assert(position_in_bounds(plant.pos));
+    assert(plants[plant.pos.x][plant.pos.y]);
+    plants[plant.pos.x][plant.pos.y] = plant;
 }
 
 // TODO: cache result

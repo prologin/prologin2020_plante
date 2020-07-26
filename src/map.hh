@@ -15,7 +15,7 @@ class Map
 public:
     Map(std::istream& stream);
     void new_player_turn();
-    void end_player_turn(int player);
+    void end_player_turn(int player_key);
 
     std::array<int, NB_TYPES_RESSOURCES> ressources_at(position pos) const;
 
@@ -24,6 +24,7 @@ public:
     std::vector<plante> all_plants() const;
     std::vector<plante> player_plants(int player) const;
     std::optional<plante> plant_at(position pos) const;
+    void update_plant(const plante& plant);
 
     Grid<bool> build_has_enough_ressources() const;
     bool has_enough_ressources(position pos) const;
