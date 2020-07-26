@@ -8,6 +8,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <ostream>
 
 #include "constant.hh"
 
@@ -82,3 +83,5 @@ inline bool operator==(const plante& p1, const plante& p2)
            p1.rayon_collecte == p2.rayon_collecte &&
            p1.consommation == p2.consommation && p1.age == p2.age;
 }
+
+void to_json(std::ostream& o, const position& pos);

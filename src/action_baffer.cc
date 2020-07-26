@@ -50,5 +50,9 @@ void ActionBaffer::apply_on(GameState* st) const
 
 void ActionBaffer::dump_json(const GameState& st, std::ostream& ss) const
 {
-    // TODO: optional function that dumps the action
+    ss << "{ \"action_type\": \"baffer\", \"position_baffante\": ";
+    to_json(ss, position_baffante_);
+    ss << ", \"position_baffée\": ";
+    to_json(ss, position_baffee_);
+    ss << "}";
 }

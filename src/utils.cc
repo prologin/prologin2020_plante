@@ -117,3 +117,8 @@ std::optional<plante> breed(const std::vector<plante>& parents)
              consommation,
              0}};
 }
+
+void to_json(std::ostream& o, const position& pos)
+{
+    o << "{\"x\": " << pos.x << ", \"y\": " << pos.y << "}";
+}

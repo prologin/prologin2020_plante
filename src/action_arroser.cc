@@ -63,5 +63,7 @@ void ActionArroser::apply_on(GameState* st) const
 
 void ActionArroser::dump_json(const GameState& st, std::ostream& ss) const
 {
-    // TODO: optional function that dumps the action
+    ss << "{ \"action_type\": \"arroser\", \"position\": ";
+    to_json(ss, position_plante_);
+    ss << ", \"amélioration\": \"" << amelioration_ << "\"}";
 }

@@ -25,5 +25,7 @@ void ActionDebugAfficherChien::apply_on(GameState* st) const
 void ActionDebugAfficherChien::dump_json(const GameState& st,
                                          std::ostream& ss) const
 {
-    // TODO: optional function that dumps the action
+    ss << "{ \"action_type\": \"afficher_debug_chien\", \"position\": ";
+    to_json(ss, pos_);
+    ss << ", \"debug_chien\": \"" << chien_ << "\"}";
 }
