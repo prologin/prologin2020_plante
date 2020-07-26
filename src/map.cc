@@ -36,6 +36,7 @@ Map::Map(std::istream& stream)
             // TODO: we should not expose internal ID
             plant.jardinier = player;
             plant.adulte = true;
+            // TODO: add as map argument
             plant.enracinee = false;
             plant.age = AGE_DE_POUSSE;
             plant.vie = plant.vie_max;
