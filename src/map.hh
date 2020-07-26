@@ -13,7 +13,7 @@
 class Map
 {
 public:
-    Map(std::istream& stream);
+    Map(std::istream& stream, std::array<int, 2> player_keys);
     void new_player_turn();
     void end_player_turn(int player_key);
 
@@ -36,7 +36,10 @@ public:
     bool has_enough_ressources(position pos) const;
 
 private:
+    std::array<int, 2> player_keys;
     Grid<std::array<int, NB_TYPES_RESSOURCES>> ressources;
     Grid<std::optional<plante>> plants;
     Grid<bool> plants_already_hit;
+
+    int player_key(int player_id) const;
 };

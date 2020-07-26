@@ -20,7 +20,7 @@ std::array<PlayerInfo, NB_PLAYERS> init_players(const rules::Players& players)
 
 GameState::GameState(std::istream& map_stream, const rules::Players& players)
     : rules::GameState()
-    , map_(map_stream)
+    , map_(map_stream, {(int)players[0]->id, (int)players[1]->id})
     , players_(init_players(players))
     , init_(false)
     , round_(0)

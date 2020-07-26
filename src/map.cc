@@ -4,7 +4,8 @@
 #include <cassert>
 #include <string>
 
-Map::Map(std::istream& stream)
+Map::Map(std::istream& stream, std::array<int, 2> player_keys)
+    : player_keys(player_keys)
 {
     for (size_t x = 0; x < TAILLE_GRILLE; x++)
         for (size_t y = 0; y < TAILLE_GRILLE; y++)
@@ -17,7 +18,7 @@ Map::Map(std::istream& stream)
                 ressources[x][y][k] = std::stoi(cell_ressources[k]);
         }
 
-    for (const int player : {0, 1})
+    for (const int player_key : player_keys)
     {
         size_t nb_plants;
         stream >> nb_plants;
@@ -30,11 +31,13 @@ Map::Map(std::istream& stream)
                 plant.force >> plant.elegance >> plant.rayon_deplacement >>
                 plant.rayon_collecte;
 
+            assert(position_in_bounds(plant.pos));
+            assert(plant.vie_max > 0);
+
             for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
                 stream >> plant.consommation[k];
 
-            // TODO: we should not expose internal ID
-            plant.jardinier = player;
+            plant.jardinier = player_key;
             plant.adulte = true;
             // TODO: add as map argument
             plant.enracinee = false;
@@ -51,17 +54,20 @@ void Map::new_player_turn()
     plants_already_hit = init_grid(false);
 }
 
-void Map::end_player_turn(int player_key)
+void Map::end_player_turn(int player_id)
 {
-    for (auto& plant : player_plants(player_key))
+    const int key = player_key(player_id);
+    breed_player_plants(player_id);
+
+    for (auto& plant : player_plants(key))
     {
         ++plant.age;
-        update_plant(plant);
+
         if (plant.age >= AGE_MAX)
-        {
-            destroy_plant(plant.pos);
             // TODO add death internal_action
-        }
+            destroy_plant(plant.pos);
+        else
+            update_plant(plant);
     }
 }
 
@@ -90,10 +96,12 @@ std::vector<plante> Map::all_plants() const
     return all_plants_with([](auto) { return true; });
 }
 
-std::vector<plante> Map::player_plants(int player) const
+std::vector<plante> Map::player_plants(int player_id) const
 {
+    const int key = player_key(player_id);
+
     return all_plants_with(
-        [player](const plante& plant) { return plant.jardinier == player; });
+        [=](const plante& plant) { return plant.jardinier == key; });
 }
 
 std::optional<plante> Map::plant_at(position pos) const
@@ -203,8 +211,9 @@ void Map::destroy_plant(position pos)
     plants[pos.x][pos.y].reset();
 }
 
-void Map::breed_player_plants(int player)
+void Map::breed_player_plants(int player_id)
 {
+    const int key = player_key(player_id);
     const auto has_enough_ressources = build_has_enough_ressources();
 
     for (int x = 0; x < TAILLE_GRILLE; x++)
@@ -221,7 +230,7 @@ void Map::breed_player_plants(int player)
             for (position adj_pos : circle({x, y}, 1))
                 if (adj_pos != position{x, y} &&
                     plant_at(adj_pos).has_value() &&
-                    plant_at(adj_pos)->jardinier == player &&
+                    plant_at(adj_pos)->jardinier == key &&
                     has_enough_ressources[adj_pos.x][adj_pos.y])
                 {
                     adjacents.push_back(*plant_at(adj_pos));
@@ -235,4 +244,10 @@ void Map::breed_player_plants(int player)
                 plants[x][y] = new_plant;
             }
         }
+}
+
+int Map::player_key(int player_id) const
+{
+    assert(player_id == 0 || player_id == 1);
+    return player_keys[player_id];
 }
