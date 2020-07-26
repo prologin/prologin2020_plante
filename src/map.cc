@@ -46,9 +46,19 @@ Map::Map(std::istream& stream)
     }
 }
 
-void Map::new_turn()
+void Map::new_player_turn()
 {
     plants_already_hit = init_grid(false);
+}
+
+void Map::end_player_turn(int player)
+{
+    for (auto& plant : player_plants(player))
+    {
+        ++plant.age;
+        if (plant.age >= AGE_MAX)
+            destroy_plant(plant.pos);
+    }
 }
 
 std::array<int, NB_TYPES_RESSOURCES> Map::ressources_at(position pos) const

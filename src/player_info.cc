@@ -4,6 +4,7 @@ PlayerInfo::PlayerInfo(std::shared_ptr<rules::Player> player)
     : rules_player_(std::move(player))
     , score_(0)
 {
+    rules_player_->score = 0;
 }
 
 int PlayerInfo::get_key() const
@@ -35,4 +36,10 @@ void PlayerInfo::update_score(const Map& map)
 {
     for (const plante& plant : map.player_plants(this->rules_player_->id))
         score_ += plant.elegance;
+    sync_score();
+}
+
+void PlayerInfo::sync_score()
+{
+    rules_player_->score = score_;
 }

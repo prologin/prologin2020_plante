@@ -28,6 +28,7 @@ public:
     void reset_internal_history();
 
     void update_score(const Map& map);
+    void sync_score();
 
 private:
     std::shared_ptr<rules::Player> rules_player_;

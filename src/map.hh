@@ -14,7 +14,8 @@ class Map
 {
 public:
     Map(std::istream& stream);
-    void new_turn();
+    void new_player_turn();
+    void end_player_turn(int player);
 
     std::array<int, NB_TYPES_RESSOURCES> ressources_at(position pos) const;
 

@@ -124,10 +124,15 @@ void Rules::spectator_turn()
     champion_jouer_tour_();
 }
 
-void Rules::start_of_player_turn(unsigned int player_key) {}
-
-void Rules::end_of_player_turn(unsigned int /* player_id */)
+void Rules::start_of_player_turn(unsigned int /* player_key */)
 {
+    api_->game_state().new_player_turn();
+}
+
+void Rules::end_of_player_turn(unsigned int player_id)
+{
+    api_->game_state().end_player_turn(player_id);
+
     // Clear the previous game states at the end of each turn (half-round)
     // We need the previous game states only for undo and history, therefore
     // old states are not needed anymore after the turn ends.

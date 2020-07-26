@@ -150,3 +150,15 @@ void GameState::end_round()
 {
     ++round_;
 }
+
+void GameState::new_player_turn()
+{
+    map_.new_player_turn();
+}
+
+void GameState::end_player_turn(int player)
+{
+    PlayerInfo& player_ = get_player_by_key(player);
+    player_.update_score(map_);
+    map_.end_player_turn(player_.get_key());
+}
