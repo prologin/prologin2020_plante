@@ -33,38 +33,34 @@ class Cell {
 }
 
 class Plant {
-  constructor(pos_x, pos_y, vie_max, force, elegance, rayon_deplacement, rayon_collecte) {
-    this.pos_x = pos_x;
-    this.pos_y = pos_y;
-    this.vie_max = vie_max;
-    this.force = force;
-    this.elegance = elegance;
-    this.rayon_deplacement = rayon_deplacement;
-    this.rayon_collecte = rayon_collecte;
+  constructor(plant) {
+    console.log('plant', plant);
+    this.pos_x = plant.pos.x;
+    this.pos_y = plant.pos.y;
+    this.vie_max = plant.vie_max;
+    this.force = plant.force;
+    this.elegance = plant.élégance;
+    this.rayon_deplacement = plant.rayon_déplacement;
+    this.rayon_collecte = plant.rayon_collecte;
     this.sprite = new PIXI.Sprite(PIXI.loader.resources["sprites/plant_y.png"].texture);
     this.sprite.height = TILE_SIZE;
     this.sprite.width = TILE_SIZE;
-    this.sprite.x = pos_x * TILE_SIZE;
-    this.sprite.y = pos_y * TILE_SIZE;
-  }
-
-  static from_str(str) {
-    let split = str.split(" ").map(x => parseInt(x));
-    return new Plant(... split);
+    this.sprite.x = this.pos_x * TILE_SIZE;
+    this.sprite.y = this.pos_y * TILE_SIZE;
   }
 }
 
 class Map {
-  constructor(file_content) {
+  constructor(dump) {
     this.cells = [];
     this.p1_plants = [];
     this.p2_plants = [];
     this.sprite = square(TILE_SIZE * 20, 0x000000);
-    this.load(file_content);
+    this.load(dump);
   }
 
-  load(file_content) {
-    let lines = file_content.split("\n");
+  load(dump) {
+    let lines = dump.carte.split("\n");
     let line_index = 0;
     for (; line_index < 20; line_index++) {
       let row = [];
@@ -78,25 +74,23 @@ class Map {
       }
       this.cells.push(row);
     }
-    let p1_n_plants = parseInt(lines[line_index++]);
-    for (let i = 0; i < p1_n_plants; i++) {
-      let plant = Plant.from_str(lines[line_index++]);
-      this.p1_plants.push(plant);
-      this.sprite.addChild(plant.sprite);
-    }
-    let p2_n_plants = parseInt(lines[line_index++]);
-    for (let i = 0; i < p2_n_plants; i++) {
-      let plant = Plant.from_str(lines[line_index++]);
-      this.p2_plants.push(plant);
-      this.sprite.addChild(plant.sprite);
-    }
+    dump.joueurs[0].plantes.forEach(plant => {
+      let plant_obj = new Plant(plant);
+      this.p1_plants.push(plant_obj);
+      this.sprite.addChild(plant_obj.sprite);
+    });
+    dump.joueurs[1].plantes.forEach(plant => {
+      let plant_obj = new Plant(plant);
+      this.p2_plants.push(plant_obj);
+      this.sprite.addChild(plant_obj.sprite);
+    });
   }
 }
 
 
 
 
-PIXI.loader.add('map', "test.map");
+PIXI.loader.add("dump", "dump.json");
 PIXI.loader.add("sprites/dog_blue.png");
 PIXI.loader.add("sprites/plant_y.png");
 PIXI.loader.load(setup);
@@ -108,8 +102,8 @@ function setup(loader, resources) {
   dog.height = 75;
 
 
-  let map_txt = resources['map'].data;
-  let map = new Map(map_txt);
+  console.log(resources["dump"].data);
+  let map = new Map(resources["dump"].data);
   app.stage.addChild(map.sprite);
 
   app.stage.addChild(dog);
