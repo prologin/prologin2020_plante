@@ -1,5 +1,6 @@
 #include "map.hh"
 #include "utils.hh"
+#include "history.hh"
 
 #include <cassert>
 #include <string>
@@ -249,6 +250,12 @@ void Map::breed_player_plants(int player_id)
                 plante new_plant = *breed(adjacents);
                 new_plant.pos = {x, y};
                 plants[x][y] = new_plant;
+
+                //PlayerInfo& player_ = st->get_player_by_key(player_id_);
+                internal_action action;
+                action.type = birth;
+                action.birth.pos = {x, y};
+                //player_.add_internal_action(action);
             }
         }
 }

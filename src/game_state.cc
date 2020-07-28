@@ -109,6 +109,11 @@ int GameState::get_opponent_id(int player_id) const
     return 1 - player_id;
 }
 
+const std::array<PlayerInfo, 2>& GameState::get_player_info() const
+{
+    return players_;
+}
+
 const std::vector<internal_action>&
 GameState::get_internal_history(int player_id) const
 {

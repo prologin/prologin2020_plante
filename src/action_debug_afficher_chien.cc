@@ -19,10 +19,13 @@ void ActionDebugAfficherChien::apply_on(GameState* st) const
     action.type = flag;
     action.flag.pos = pos_;
     action.flag.ctype = chien_;
+    std::ostringstream stream;
+    this->dump_json(*st, stream);
+    action.json = stream.str();
     player_.add_internal_action(action);
 }
 
-void ActionDebugAfficherChien::dump_json(const GameState& st,
+void ActionDebugAfficherChien::dump_json(const GameState& /* st */,
                                          std::ostream& ss) const
 {
     ss << "{ \"action_type\": \"afficher_debug_chien\", \"position\": ";

@@ -21,6 +21,7 @@ public:
     // Getters
     int get_key() const;
     int get_score() const;
+    const std::string& get_name() const;
 
     // History
     const std::vector<internal_action>& get_internal_history() const;

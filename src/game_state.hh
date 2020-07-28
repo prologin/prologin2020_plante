@@ -31,6 +31,7 @@ public:
     int get_player_id_by_key(int player_key) const;
     int get_player_key_by_id(int player_id) const;
     int get_opponent_id(int player_id) const;
+    const std::array<PlayerInfo, 2>& get_player_info() const;
 
     // History
     const std::vector<internal_action>&

@@ -45,10 +45,13 @@ void ActionBaffer::apply_on(GameState* st) const
     action.action.position_arrivee = {-1, -1};
     action.action.position_plante = {-1, -1};
     action.action.amelioration = (caracteristique) -1;
+    std::ostringstream stream;
+    this->dump_json(*st, stream);
+    action.json = stream.str();
     player_.add_internal_action(action);
 }
 
-void ActionBaffer::dump_json(const GameState& st, std::ostream& ss) const
+void ActionBaffer::dump_json(const GameState& /* st */, std::ostream& ss) const
 {
     ss << "{ \"action_type\": \"baffer\", \"position_baffante\": ";
     to_json(ss, position_baffante_);

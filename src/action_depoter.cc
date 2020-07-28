@@ -40,10 +40,13 @@ void ActionDepoter::apply_on(GameState* st) const
     action.action.position_arrivee = position_arrivee_;
     action.action.position_plante = {-1, -1};
     action.action.amelioration = (caracteristique) -1;
+    std::ostringstream stream;
+    this->dump_json(*st, stream);
+    action.json = stream.str();
     player_.add_internal_action(action);
 }
 
-void ActionDepoter::dump_json(const GameState& st, std::ostream& ss) const
+void ActionDepoter::dump_json(const GameState& /* st */, std::ostream& ss) const
 {
     ss << "{ \"action_type\": \"dépoter\", \"position_départ\": ";
     to_json(ss, position_depart_);

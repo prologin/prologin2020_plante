@@ -58,10 +58,13 @@ void ActionArroser::apply_on(GameState* st) const
     action.action.position_arrivee = {-1, -1};
     action.action.position_plante = position_plante_;
     action.action.amelioration = amelioration_;
+    std::ostringstream stream;
+    this->dump_json(*st, stream);
+    action.json = stream.str();
     player_.add_internal_action(action);
 }
 
-void ActionArroser::dump_json(const GameState& st, std::ostream& ss) const
+void ActionArroser::dump_json(const GameState& /* st */, std::ostream& ss) const
 {
     ss << "{ \"action_type\": \"arroser\", \"position\": ";
     to_json(ss, position_plante_);

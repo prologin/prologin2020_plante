@@ -24,6 +24,7 @@ def build(bld):
             src/action_debug_afficher_chien.cc
             src/action_depoter.cc
             src/api.cc
+            src/dumper.cc
             src/entry.cc
             src/game_state.cc
             src/interface.cc
