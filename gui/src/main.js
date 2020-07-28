@@ -1,6 +1,6 @@
 'use strict';
 
-let TILE_SIZE = 32
+let TILE_SIZE = 75
 
 let app = new PIXI.Application({
     width: TILE_SIZE * 20,
@@ -41,7 +41,7 @@ class Plant {
     this.elegance = elegance;
     this.rayon_deplacement = rayon_deplacement;
     this.rayon_collecte = rayon_collecte;
-    this.sprite = new PIXI.Sprite(PIXI.loader.resources["sprites/flower.gif"].texture);
+    this.sprite = new PIXI.Sprite(PIXI.loader.resources["sprites/plant_y.png"].texture);
     this.sprite.height = TILE_SIZE;
     this.sprite.width = TILE_SIZE;
     this.sprite.x = pos_x * TILE_SIZE;
@@ -97,15 +97,15 @@ class Map {
 
 
 PIXI.loader.add('map', "test.map");
-PIXI.loader.add("sprites/dog.gif");
-PIXI.loader.add("sprites/flower.gif");
+PIXI.loader.add("sprites/dog_blue.png");
+PIXI.loader.add("sprites/plant_y.png");
 PIXI.loader.load(setup);
 
 function setup(loader, resources) {
 
-  let dog = new PIXI.Sprite(PIXI.loader.resources["sprites/dog.gif"].texture);
-  dog.width = 64;
-  dog.height = 64;
+  let dog = new PIXI.Sprite(PIXI.loader.resources["sprites/dog_blue.png"].texture);
+  dog.width = 75;
+  dog.height = 75;
 
 
   let map_txt = resources['map'].data;
