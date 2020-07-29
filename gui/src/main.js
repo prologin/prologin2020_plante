@@ -71,6 +71,26 @@ class Map {
     this.sprite = square(TILE_SIZE * 20, 0x000000);
     this.load(dump);
     this.update_plants(dump);
+    this.selected_x = undefined;
+    this.selected_y = undefined;
+    this.select_square = square(TILE_SIZE, 0xAA0000);
+    this.select_square.visible = false;
+    this.select_square.alpha = 0.2;
+    this.sprite.addChild(this.select_square);
+  }
+
+  select_tile(x, y) {
+    if (x < 20 && y < 20 && x >= 0 && y >= 0) {
+      this.selected_x = x;
+      this.selected_y = y;
+      this.select_square.visible = true;
+      this.select_square.x = TILE_SIZE * x;
+      this.select_square.y = TILE_SIZE * y;
+    } else {
+      this.selected_x = undefined;
+      this.selected_y = undefined;
+      this.select_square.visible = false;
+    }
   }
 
   update_plants(dump) {
@@ -145,6 +165,16 @@ function setup(loader, resources) {
 
   turnText = new PIXI.Text("turn = " + lastTurn, {font:"50px Arial", fill:"red"});
   app.stage.addChild(turnText);
+
+  var clickHandler = function(e){
+    let mouse_x = app.renderer.plugins.interaction.mouse.global.x;
+    let mouse_y = app.renderer.plugins.interaction.mouse.global.y;
+    let index_x = Math.floor(mouse_x / TILE_SIZE);
+    let index_y = Math.floor(mouse_y / TILE_SIZE);
+    map.select_tile(index_x, index_y);
+  }
+  app.stage.interactive = true;
+  app.stage.on("pointerdown", clickHandler);
 
   app.ticker.add(delta => gameLoop(delta));
 }
