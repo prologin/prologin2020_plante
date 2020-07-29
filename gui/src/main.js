@@ -124,7 +124,7 @@ class Map {
           txt += `\telegance: ${p.elegance}\n`;
           txt += `\trayon déplacement: ${p.rayon_deplacement}\n`;
           txt += `\trayon collecte: ${p.rayon_collecte}\n`;
-          txt += `\tjardinier: ${p.jardinier}\n`;
+          txt += `\tjardinier: ${dump[0].joueurs[p.jardinier].name}\n`;
         }
       }
 
