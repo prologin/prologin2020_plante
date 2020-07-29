@@ -1,0 +1,54 @@
+/*
+
+SPDX-License-Identifier: GPL-2.0-or-later
+ 
+Copyright 2018 Alexandre Macabies
+Copyright 2019 Kilian Guillaume
+Copyright 2020 Paul Guénézan
+
+*/
+
+/*************/
+/* Variables */
+/*************/
+
+body {
+    --accent-color: #222;
+    --background-color: #FFF;
+    --background-color-2: #eee;
+    --background-darker: rgba(0,0,0,0.02);
+    --border-color: #111;
+    --text-color: #000;
+}
+
+/**********/
+/* Global */
+/**********/
+
+body {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+
+/**********/
+/* panels */
+/**********/
+
+.panel-primary, .panel-default {
+    background: var(--background-darker);
+    border-color: var(--border-color);
+}
+
+.panel-primary > .panel-heading {
+    background-color: var(--accent-color);
+    border-color: var(--border-color);
+    color: var(--background-color);
+}
+
+.panel-default > .panel-heading {
+    background: transparent;
+    border-color: var(--border-color);
+    border-bottom: 2px dotted;
+    color: var(--text-color);
+}
