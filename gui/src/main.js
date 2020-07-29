@@ -124,7 +124,10 @@ for (var i = 1; i <= 6; ++i)
 PIXI.loader.load(setup);
 
 
-let dog, dump, map;
+let dog, dump, map, turnText;
+
+let lastTurn = 0;
+
 function setup(loader, resources) {
 
   dog = new PIXI.Sprite(PIXI.loader.resources["sprites/dog_blue.png"].texture);
@@ -140,11 +143,13 @@ function setup(loader, resources) {
 
   app.stage.addChild(dog);
 
+  turnText = new PIXI.Text("turn = " + lastTurn, {font:"50px Arial", fill:"red"});
+  app.stage.addChild(turnText);
+
   app.ticker.add(delta => gameLoop(delta));
 }
 
 let counter = 0;
-let lastTurn = 0;
 function gameLoop(delta)
 {
   counter += delta;
@@ -154,6 +159,7 @@ function gameLoop(delta)
   {
       console.log('currentTurn = ', currentTurn);
       map.update_plants(dump[currentTurn]);
+      turnText.text = "turn = " + currentTurn;
   }
   lastTurn = currentTurn;
 }
