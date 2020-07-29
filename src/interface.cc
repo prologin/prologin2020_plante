@@ -164,6 +164,9 @@ std::ostream& operator<<(std::ostream& os, erreur v)
     case PLANTE_INVALIDE:
         os << "PLANTE_INVALIDE";
         break;
+    case TROP_LOIN:
+        os << "TROP_LOIN";
+        break;
     }
     return os;
 }

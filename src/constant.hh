@@ -8,6 +8,9 @@
 /// Nombre de jardiniers
 #define NB_JARDINIERS 2
 
+/// Nombre de jardiniers
+#define NB_JARDINIERS 2
+
 /// Largeur et hauteur de la grille
 #define TAILLE_GRILLE 20
 
@@ -48,6 +51,7 @@ typedef enum erreur
     PAS_ENCORE_ARROSEE, ///< La plante n'as pas encore été arrosée
     PAS_ENCORE_ADULTE,  ///< La plante ne peut pas encore être arrosée
     PLANTE_INVALIDE,    ///< Les caractéristiques de la plante sont invalides
+    TROP_LOIN,          ///< La plante n'a pas un assez grand rayon de dépotage
 } erreur;
 
 /// Types d'actions
