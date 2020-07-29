@@ -208,20 +208,20 @@ pre, input[type=text], input[type=password], textarea.form-control {
 }
 
 /* easter */
-.easter-peng {
+.easter-egg {
     position: fixed;
     bottom: -128px;
     transition: all .35s ease;
     cursor: pointer;
 }
-.easter-peng.peak {
+.easter-egg.peak {
     bottom: -64px;
 }
-.easter-peng.visible {
+.easter-egg.visible {
     bottom: -12px;
     animation: poop-dance .8s infinite alternate ease-in-out;
 }
-.easter-peng:not(.visible):hover {
+.easter-egg:not(.visible):hover {
     bottom: -55px;
 }
 @keyframes poop-dance {
