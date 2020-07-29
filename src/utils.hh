@@ -6,9 +6,9 @@
 #include <array>
 #include <cmath>
 #include <optional>
+#include <ostream>
 #include <string>
 #include <vector>
-#include <ostream>
 
 #include "constant.hh"
 
@@ -48,6 +48,9 @@ int distance(position pos1, position pos2);
 // Return the list of cells in the grid that are at distance at most `radius`
 // from `center`. If the center is out of the grid, the output is empty.
 std::vector<position> circle(position center, int radius);
+
+// Check if a plant is allowed to jump to a given position.
+bool plant_can_jump(const plante& plant, position dest);
 
 // Return rounded result of x / q.
 int round_div(int x, int q);

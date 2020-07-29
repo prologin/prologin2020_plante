@@ -21,7 +21,9 @@ int ActionDepoter::check(const GameState& st) const
         return SANS_POT;
     if (!st.get_map().plant_at(position_depart_)->adulte)
         return PAS_ENCORE_ARROSEE;
-    // TODO check range
+    if (!plant_can_jump(*st.get_map().plant_at(position_depart_),
+                        position_arrivee_))
+        return TROP_LOIN;
     return OK;
 }
 
@@ -39,7 +41,7 @@ void ActionDepoter::apply_on(GameState* st) const
     action.action.position_depart = position_depart_;
     action.action.position_arrivee = position_arrivee_;
     action.action.position_plante = {-1, -1};
-    action.action.amelioration = (caracteristique) -1;
+    action.action.amelioration = (caracteristique)-1;
     std::ostringstream stream;
     this->dump_json(*st, stream);
     action.json = stream.str();

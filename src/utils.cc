@@ -69,6 +69,13 @@ std::vector<position> circle(position center, int radius)
     return circle;
 }
 
+bool plant_can_jump(const plante& plant, position dest)
+{
+    const int dist = distance(plant.pos, dest);
+    const int max_dist = plant.rayon_deplacement / COUT_PAR_CASE_DEPOTAGE;
+    return dist <= max_dist;
+}
+
 int round_div(int x, int q)
 {
     int result = x / q;
