@@ -56,19 +56,19 @@ extern "C" plante api_plante_sur_case(position pos)
     return api->plante_sur_case(pos);
 }
 
-extern "C" std::vector<plante> api_plantes_arrosables(int joueur)
+extern "C" std::vector<plante> api_plantes_arrosables(int jardinier)
 {
-    return api->plantes_arrosables(joueur);
+    return api->plantes_arrosables(jardinier);
 }
 
-extern "C" std::vector<plante> api_plantes_adultes(int joueur)
+extern "C" std::vector<plante> api_plantes_adultes(int jardinier)
 {
-    return api->plantes_adultes(joueur);
+    return api->plantes_adultes(jardinier);
 }
 
-extern "C" std::vector<plante> api_plantes_depotables(int joueur)
+extern "C" std::vector<plante> api_plantes_depotables(int jardinier)
 {
-    return api->plantes_depotables(joueur);
+    return api->plantes_depotables(jardinier);
 }
 
 extern "C" std::vector<int> api_ressources_sur_case(position pos)
@@ -96,9 +96,9 @@ extern "C" std::vector<action_hist> api_historique()
     return api->historique();
 }
 
-extern "C" int api_score(int id_joueur)
+extern "C" int api_score(int id_jardinier)
 {
-    return api->score(id_joueur);
+    return api->score(id_jardinier);
 }
 
 extern "C" int api_moi()
@@ -119,6 +119,41 @@ extern "C" bool api_annuler()
 extern "C" int api_tour_actuel()
 {
     return api->tour_actuel();
+}
+
+extern "C" void api_afficher_erreur(erreur v)
+{
+    api->afficher_erreur(v);
+}
+
+extern "C" void api_afficher_action_type(action_type v)
+{
+    api->afficher_action_type(v);
+}
+
+extern "C" void api_afficher_caracteristique(caracteristique v)
+{
+    api->afficher_caracteristique(v);
+}
+
+extern "C" void api_afficher_debug_chien(debug_chien v)
+{
+    api->afficher_debug_chien(v);
+}
+
+extern "C" void api_afficher_position(position v)
+{
+    api->afficher_position(v);
+}
+
+extern "C" void api_afficher_plante(plante v)
+{
+    api->afficher_plante(v);
+}
+
+extern "C" void api_afficher_action_hist(action_hist v)
+{
+    api->afficher_action_hist(v);
 }
 
 std::ostream& operator<<(std::ostream& os, erreur v)
@@ -148,6 +183,9 @@ std::ostream& operator<<(std::ostream& os, erreur v)
         break;
     case DEJA_ARROSEE:
         os << "DEJA_ARROSEE";
+        break;
+    case DEJA_BAFFEE:
+        os << "DEJA_BAFFEE";
         break;
     case PAS_ENCORE_ARROSEE:
         os << "PAS_ENCORE_ARROSEE";
@@ -200,8 +238,8 @@ std::ostream& operator<<(std::ostream& os, caracteristique v)
     case CARACTERISTIQUE_ELEGANCE:
         os << "CARACTERISTIQUE_ELEGANCE";
         break;
-    case CARACTERISTIQUE_RAYON_DEPLACEMENT:
-        os << "CARACTERISTIQUE_RAYON_DEPLACEMENT";
+    case CARACTERISTIQUE_RAYON_DEPOTAGE:
+        os << "CARACTERISTIQUE_RAYON_DEPOTAGE";
         break;
     }
     return os;
@@ -215,8 +253,8 @@ std::ostream& operator<<(std::ostream& os, debug_chien v)
 {
     switch (v)
     {
-    case AUCUN_DRAPEAU:
-        os << "AUCUN_DRAPEAU";
+    case AUCUN_CHIEN:
+        os << "AUCUN_CHIEN";
         break;
     case CHIEN_BLEU:
         os << "CHIEN_BLEU";

@@ -10,6 +10,10 @@ player_count: 2
 
 constant:
   -
+    cst_name: NB_JARDINIERS
+    cst_val: 2
+    cst_comment: Nombre de jardiniers
+  -
     cst_name: TAILLE_GRILLE
     cst_val: 20
     cst_comment: Largeur et hauteur de la grille
@@ -38,6 +42,11 @@ constant:
     cst_name: APPORT_CARACTERISTIQUE
     cst_val: 10
     cst_comment: Apport pour une caractéristique lors de l'arrosage
+  -
+    cst_name: COUT_PAR_CASE_DEPOTAGE
+    cst_val: 15
+    cst_comment: Nombre de points de caractéristiques nécessaires pour pouvoir
+                 dépoter une cases plus loins.
 
 enum:
   -
@@ -52,6 +61,7 @@ enum:
       - [mauvais_jardinier, "La plante n'appartient pas au bon jardinier"]
       - [sans_pot, "La plante est déjà dépotée"]
       - [deja_arrosee, "La plante a déjà été arrosée"]
+      - [deja_baffee, "La plante a déjà baffé ce tour ci"]
       - [pas_encore_arrosee, "La plante n'as pas encore été arrosée"]
       - [pas_encore_adulte, "La plante ne peut pas encore être arrosée"]
       - [plante_invalide, "Les caractéristiques de la plante sont invalides"]
@@ -69,12 +79,12 @@ enum:
       - [caracteristique_force, "Force"]
       - [caracteristique_vie, "Vie "]
       - [caracteristique_elegance, "Élégance"]
-      - [caracteristique_rayon_deplacement, "Portée de dépotage"]
+      - [caracteristique_rayon_depotage, "Portée de dépotage"]
   -
     enum_name: debug_chien
     enum_summary: "Types de chien de débug"
     enum_field:
-      - [aucun_drapeau, "Aucun chien, enlève le chien présent"]
+      - [aucun_chien, "Aucun chien, enlève le chien présent"]
       - [chien_bleu, "Chien bleu"]
       - [chien_vert, "Chien vert"]
       - [chien_rouge, "Chien rouge"]
@@ -189,20 +199,20 @@ function:
                  arrosées
     fct_ret_type: plante array
     fct_arg:
-      - [joueur, int, "ID du jardinier concerné"]
+      - [jardinier, int, "ID du jardinier concerné"]
   -
     fct_name: plantes_adultes
     fct_summary: Renvoie la liste des plantes du jardinier qui sont adultes
     fct_ret_type: plante array
     fct_arg:
-      - [joueur, int, "ID du jardinier concerné"]
+      - [jardinier, int, "ID du jardinier concerné"]
   -
     fct_name: plantes_depotables
     fct_summary: Renvoie la liste des plantes du jardinier qui peuvent être
                  dépotées
     fct_ret_type: plante array
     fct_arg:
-      - [joueur, int, "ID du jardinier concerné"]
+      - [jardinier, int, "ID du jardinier concerné"]
   -
     fct_name: ressources_sur_case
     fct_summary: Renvoie les ressources disponibles sur une case donnée
@@ -253,19 +263,19 @@ function:
 
   -
     fct_name: score
-    fct_summary: Renvoie le score du joueur ``id_joueur``.
-                 Renvoie -1 si le joueur est invalide.
+    fct_summary: Renvoie le score du jardinier ``id_jardinier``.
+                 Renvoie -1 si le jardinier est invalide.
     fct_ret_type: int
     fct_arg:
-        - [id_joueur, int, "Numéro du joueur"]
+        - [id_jardinier , int, "Numéro du jardinier"]
   -
     fct_name: moi
-    fct_summary: Renvoie votre numéro de joueur.
+    fct_summary: Renvoie votre numéro de jardinier.
     fct_ret_type: int
     fct_arg: []
   -
     fct_name: adversaire
-    fct_summary: Renvoie le numéro de joueur de votre adversaire.
+    fct_summary: Renvoie le numéro du jardinier adverse.
     fct_ret_type: int
     fct_arg: []
   -

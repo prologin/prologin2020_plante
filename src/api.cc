@@ -11,7 +11,7 @@ Api* api;
 
 Api::Api(std::unique_ptr<GameState> game_state,
          std::shared_ptr<rules::Player> player)
-    : rules::Api<GameState, erreur>(std::move(game_state), player)
+    : rules::Api<GameState, error>(std::move(game_state), player)
 {
     api = this;
 }
@@ -26,17 +26,17 @@ plante Api::plante_sur_case(position pos)
     // TODO
     abort();
 }
-std::vector<plante> Api::plantes_arrosables(int joueur)
+std::vector<plante> Api::plantes_arrosables(int jardinier)
 {
     // TODO
     abort();
 }
-std::vector<plante> Api::plantes_adultes(int joueur)
+std::vector<plante> Api::plantes_adultes(int jardinier)
 {
     // TODO
     abort();
 }
-std::vector<plante> Api::plantes_depotables(int joueur)
+std::vector<plante> Api::plantes_depotables(int jardinier)
 {
     // TODO
     abort();
@@ -66,7 +66,7 @@ std::vector<action_hist> Api::historique()
     // TODO
     abort();
 }
-int Api::score(int id_joueur)
+int Api::score(int id_jardinier)
 {
     // TODO
     abort();
