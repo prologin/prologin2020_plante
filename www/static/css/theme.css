@@ -18,7 +18,7 @@ body {
     --background-color-2: #eee;
     --background-darker: rgba(0,0,0,0.02);
     --border-color: #111;
-    --text-color: #000;
+    --text-color: #ffffff;
 }
 
 /**********/
@@ -71,7 +71,6 @@ body {
 }
 
 body>div.container {
-    background: url("../img/paper.png");
     background-position: top left;
     background-repeat: repeat;
     box-shadow: 0 10px 40px rgba(0,0,0,0.9);
