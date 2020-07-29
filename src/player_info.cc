@@ -39,8 +39,13 @@ void PlayerInfo::add_internal_action(internal_action action)
 
 void PlayerInfo::update_score(const Map& map)
 {
-    for (const plante& plant : map.player_plants(this->rules_player_->id))
+    const auto player_plants = map.all_plants_with([=](const plante& plant) {
+        return plant.jardinier == (int)this->rules_player_->id;
+    });
+
+    for (const plante& plant : player_plants)
         score_ += plant.elegance;
+
     sync_score();
 }
 

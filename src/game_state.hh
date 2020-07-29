@@ -44,8 +44,7 @@ public:
     void start_round();
     void end_round();
     void new_player_turn();
-    void end_player_turn(int player);
-
+    void end_player_turn(int player_id);
 
 private:
     Map map_;

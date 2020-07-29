@@ -28,24 +28,23 @@ void ActionArroser::apply_on(GameState* st) const
     st->get_map().plant_at(position_plante_)->adulte = true;
     switch (amelioration_)
     {
-        case CARACTERISTIQUE_FORCE:
-          st->get_map().plant_at(position_plante_)->force
-              += APPORT_CARACTERISTIQUE;
-          break;
-        case CARACTERISTIQUE_VIE:
-          st->get_map().plant_at(position_plante_)->vie_max
-              += APPORT_CARACTERISTIQUE;
-          st->get_map().plant_at(position_plante_)->vie
-              += APPORT_CARACTERISTIQUE;
-          break;
-        case CARACTERISTIQUE_ELEGANCE:
-          st->get_map().plant_at(position_plante_)->elegance
-              += APPORT_CARACTERISTIQUE;
-          break;
-        case CARACTERISTIQUE_RAYON_DEPLACEMENT:
-          st->get_map().plant_at(position_plante_)->rayon_deplacement
-              += APPORT_CARACTERISTIQUE;
-          break;
+    case CARACTERISTIQUE_FORCE:
+        st->get_map().plant_at(position_plante_)->force +=
+            APPORT_CARACTERISTIQUE;
+        break;
+    case CARACTERISTIQUE_VIE:
+        st->get_map().plant_at(position_plante_)->vie_max +=
+            APPORT_CARACTERISTIQUE;
+        st->get_map().plant_at(position_plante_)->vie += APPORT_CARACTERISTIQUE;
+        break;
+    case CARACTERISTIQUE_ELEGANCE:
+        st->get_map().plant_at(position_plante_)->elegance +=
+            APPORT_CARACTERISTIQUE;
+        break;
+    case CARACTERISTIQUE_RAYON_DEPLACEMENT:
+        st->get_map().plant_at(position_plante_)->rayon_deplacement +=
+            APPORT_CARACTERISTIQUE;
+        break;
     }
 
     PlayerInfo& player_ = st->get_player_by_key(player_id_);

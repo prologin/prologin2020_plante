@@ -1,6 +1,6 @@
 #include "map.hh"
-#include "utils.hh"
 #include "history.hh"
+#include "utils.hh"
 
 #include <cassert>
 #include <string>
@@ -14,6 +14,9 @@ Map::Map(std::istream& stream, std::array<int, 2> player_keys)
             std::string cell_ressources_str;
             stream >> cell_ressources_str;
             const auto cell_ressources = split(cell_ressources_str, ",");
+
+            assertm(cell_ressources.size() == 3,
+                    "wrong number of ressources for cell");
 
             for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
                 ressources[x][y][k] = std::stoi(cell_ressources[k]);
@@ -32,8 +35,8 @@ Map::Map(std::istream& stream, std::array<int, 2> player_keys)
                 plant.force >> plant.elegance >> plant.rayon_deplacement >>
                 plant.rayon_collecte;
 
-            assert(position_in_bounds(plant.pos));
-            assert(plant.vie_max > 0);
+            assertm(position_in_bounds(plant.pos), "plant position not valid");
+            assertm(plant.vie_max > 0, "max life must be strictly positive");
 
             plant.consommation.resize(NB_TYPES_RESSOURCES);
             for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
@@ -59,11 +62,9 @@ void Map::new_player_turn()
 void Map::end_player_turn(int player_id)
 {
     assert(player_id == 0 || player_id == 1);
-    const int key = player_key(player_id);
-
     breed_player_plants(player_id);
 
-    for (auto& plant : player_plants(key))
+    for (auto& plant : player_plants(player_id))
     {
         ++plant.age;
 
@@ -145,8 +146,8 @@ Grid<bool> Map::build_has_enough_ressources() const
         result[plant.pos.x][plant.pos.y] = true;
         const auto neighbours = circle(plant.pos, plant.rayon_deplacement);
 
-        for (size_t k = 0; k < NB_TYPES_RESSOURCES
-                && result[plant.pos.x][plant.pos.y]; k++)
+        for (size_t k = 0;
+             k < NB_TYPES_RESSOURCES && result[plant.pos.x][plant.pos.y]; k++)
         {
             int quotient = 0;
             int divisor = 0;
@@ -251,11 +252,11 @@ void Map::breed_player_plants(int player_id)
                 new_plant.pos = {x, y};
                 plants[x][y] = new_plant;
 
-                //PlayerInfo& player_ = st->get_player_by_key(player_id_);
+                // PlayerInfo& player_ = st->get_player_by_key(player_id_);
                 internal_action action;
                 action.type = birth;
                 action.birth.pos = {x, y};
-                //player_.add_internal_action(action);
+                // player_.add_internal_action(action);
             }
         }
 }

@@ -22,8 +22,8 @@ GameState::GameState(std::istream& map_stream, const rules::Players& players)
     : rules::GameState()
     , map_(map_stream, {(int)players[0]->id, (int)players[1]->id})
     , players_(init_players(players))
-    , init_(false)
     , round_(0)
+    , init_(false)
 {
 }
 
@@ -31,8 +31,8 @@ GameState::GameState(const GameState& st)
     : rules::GameState()
     , map_(st.map_)
     , players_(st.players_)
-    , init_(st.init_)
     , round_(st.round_)
+    , init_(st.init_)
 {
 }
 
@@ -161,9 +161,11 @@ void GameState::new_player_turn()
     map_.new_player_turn();
 }
 
-void GameState::end_player_turn(int player)
+void GameState::end_player_turn(int player_id)
 {
-    PlayerInfo& player_ = get_player_by_key(player);
+    assertm(player_id == 0 || player_id == 1, "wrong player id");
+
+    PlayerInfo& player_ = players_[player_id];
     player_.update_score(map_);
-    map_.end_player_turn(player_.get_key());
+    map_.end_player_turn(player_id);
 }

@@ -27,12 +27,16 @@ static const std::string test_map = R"(
     0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 8,0,0 8,0,3 8,0,0 8,0,0 8,0,0 8,0,0 8,0,0 8,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0
     0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 8,0,0 8,0,0 8,0,0 8,0,0 8,0,0 8,0,0 8,0,0 8,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0
     0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0
-    0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0
-    0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0
-    0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0
-    0
-    1
-    2 2 110 60 42 8 5
+    0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 999,999,999 999,999,999 999,999,999
+    0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 999,999,999 999,999,999 999,999,999
+    0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 0,0,0 999,999,999 999,999,999 999,999,999
+    2
+    17 18 110 60 0 2 2 0 110 0
+    18 17 112 62 2 2 2 0 113 0
+    3
+    2 2 110 60 42 8 5 0 0 0
+    18 19 112 62 2 2 2 0 0 0
+    19 18 112 62 2 2 2 0 0 0
 )";
 
 template <typename T>
@@ -71,13 +75,14 @@ class ApiTest : public ::testing::Test
 protected:
     virtual void SetUp()
     {
+        current_player = 0;
         int player_id_1 = 1337;
         int player_id_2 = 42;
 
         auto gs_players = make_players(player_id_1, player_id_2);
         std::unique_ptr<GameState> st(
             make_test_gamestate(test_map, gs_players));
-        st->new_player_turn();
+        st->start_round();
 
         players[0].id = player_id_1;
         players[1].id = player_id_2;
@@ -90,12 +95,30 @@ protected:
         p_api = {players[0].api, players[1].api};
     }
 
+    void next_turn()
+    {
+        for (auto api : p_api)
+        {
+            api->game_state().end_player_turn(current_player);
+            api->game_state().new_player_turn();
+
+            if (current_player == 1)
+            {
+                api->game_state().end_round();
+                api->game_state().start_round();
+            }
+        }
+
+        current_player = 1 - current_player;
+    }
+
     struct Player
     {
         int id;
         std::shared_ptr<Api> api;
     };
 
+    int current_player;
     std::array<Player, 2> players;
     std::array<std::shared_ptr<Api>, 2> p_api;
 };
