@@ -191,7 +191,7 @@ static void dump_stream(std::ostream& ss, const GameState& st)
     dump_players(ss, st);
     if (st.get_round() == 0)
         dump_map(ss, st.get_map());
-    ss << "}\n";
+    ss << "},\n";
 }
 
 void Rules::dump_state(std::ostream& ss)
