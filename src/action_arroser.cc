@@ -41,7 +41,7 @@ void ActionArroser::apply_on(GameState* st) const
         st->get_map().plant_at(position_plante_)->elegance +=
             APPORT_CARACTERISTIQUE;
         break;
-    case CARACTERISTIQUE_RAYON_DEPLACEMENT:
+    case CARACTERISTIQUE_RAYON_DEPOTAGE:
         st->get_map().plant_at(position_plante_)->rayon_deplacement +=
             APPORT_CARACTERISTIQUE;
         break;

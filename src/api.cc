@@ -34,13 +34,12 @@ plante Api::plante_sur_case(position pos)
     return game_state_->get_map().plant_at(pos).value_or(INVALID_PLANT);
 }
 
-// TODO: joueur should be called jardinier
-std::vector<plante> Api::plantes_arrosables(int joueur)
+std::vector<plante> Api::plantes_arrosables(int jardinier)
 {
-    if (!game_state_->player_valid(joueur))
+    if (!game_state_->player_valid(jardinier))
         return {};
 
-    int player_id = game_state().get_player_id_by_key(joueur);
+    int player_id = game_state().get_player_id_by_key(jardinier);
 
     const auto filter = [=](const plante& plant) {
         return plant.jardinier == player_id && plant.age >= AGE_DE_POUSSE;
@@ -48,14 +47,12 @@ std::vector<plante> Api::plantes_arrosables(int joueur)
 
     return game_state().get_map().all_plants_with(filter);
 }
-
-// TODO: joueur should be called jardinier
-std::vector<plante> Api::plantes_adultes(int joueur)
+std::vector<plante> Api::plantes_adultes(int jardinier)
 {
-    if (!game_state_->player_valid(joueur))
+    if (!game_state_->player_valid(jardinier))
         return {};
 
-    int player_id = game_state().get_player_id_by_key(joueur);
+    int player_id = game_state().get_player_id_by_key(jardinier);
 
     const auto filter = [=](const plante& plant) {
         return plant.jardinier == player_id && plant.adulte;
@@ -63,14 +60,12 @@ std::vector<plante> Api::plantes_adultes(int joueur)
 
     return game_state().get_map().all_plants_with(filter);
 }
-
-// TODO: joueur should be called jardinier
-std::vector<plante> Api::plantes_depotables(int joueur)
+std::vector<plante> Api::plantes_depotables(int jardinier)
 {
-    if (!game_state_->player_valid(joueur))
+    if (!game_state_->player_valid(jardinier))
         return {};
 
-    int player_id = game_state().get_player_id_by_key(joueur);
+    int player_id = game_state().get_player_id_by_key(jardinier);
 
     const auto filter = [=](const plante& plant) {
         return plant.jardinier == player_id && !plant.enracinee;
@@ -115,12 +110,12 @@ std::vector<action_hist> Api::historique()
     return game_state_->get_history(opponent_id);
 }
 
-int Api::score(int id_joueur)
+int Api::score(int id_jardinier)
 {
-    if (!game_state_->player_valid(id_joueur))
+    if (!game_state_->player_valid(id_jardinier))
         return -1;
 
-    return game_state_->get_player_by_key(id_joueur).get_score();
+    return game_state_->get_player_by_key(id_jardinier).get_score();
 }
 
 int Api::moi()

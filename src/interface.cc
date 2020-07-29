@@ -25,18 +25,20 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& arr)
     return os;
 }
 
-
-extern "C" erreur api_depoter(position position_depart, position position_arrivee)
+extern "C" erreur api_depoter(position position_depart,
+                              position position_arrivee)
 {
     return api->depoter(position_depart, position_arrivee);
 }
 
-extern "C" erreur api_arroser(position position_plante, caracteristique amelioration)
+extern "C" erreur api_arroser(position position_plante,
+                              caracteristique amelioration)
 {
     return api->arroser(position_plante, amelioration);
 }
 
-extern "C" erreur api_baffer(position position_baffante, position position_baffee)
+extern "C" erreur api_baffer(position position_baffante,
+                             position position_baffee)
 {
     return api->baffer(position_baffante, position_baffee);
 }
@@ -56,19 +58,19 @@ extern "C" plante api_plante_sur_case(position pos)
     return api->plante_sur_case(pos);
 }
 
-extern "C" std::vector<plante> api_plantes_arrosables(int joueur)
+extern "C" std::vector<plante> api_plantes_arrosables(int jardinier)
 {
-    return api->plantes_arrosables(joueur);
+    return api->plantes_arrosables(jardinier);
 }
 
-extern "C" std::vector<plante> api_plantes_adultes(int joueur)
+extern "C" std::vector<plante> api_plantes_adultes(int jardinier)
 {
-    return api->plantes_adultes(joueur);
+    return api->plantes_adultes(jardinier);
 }
 
-extern "C" std::vector<plante> api_plantes_depotables(int joueur)
+extern "C" std::vector<plante> api_plantes_depotables(int jardinier)
 {
-    return api->plantes_depotables(joueur);
+    return api->plantes_depotables(jardinier);
 }
 
 extern "C" std::vector<int> api_ressources_sur_case(position pos)
@@ -76,7 +78,8 @@ extern "C" std::vector<int> api_ressources_sur_case(position pos)
     return api->ressources_sur_case(pos);
 }
 
-extern "C" bool api_reproduction_possible(position pos, int rayon_collecte, std::vector<int> consommation)
+extern "C" bool api_reproduction_possible(position pos, int rayon_collecte,
+                                          std::vector<int> consommation)
 {
     return api->reproduction_possible(pos, rayon_collecte, consommation);
 }
@@ -96,9 +99,9 @@ extern "C" std::vector<action_hist> api_historique()
     return api->historique();
 }
 
-extern "C" int api_score(int id_joueur)
+extern "C" int api_score(int id_jardinier)
 {
-    return api->score(id_joueur);
+    return api->score(id_jardinier);
 }
 
 extern "C" int api_moi()
@@ -148,6 +151,9 @@ std::ostream& operator<<(std::ostream& os, erreur v)
         break;
     case DEJA_ARROSEE:
         os << "DEJA_ARROSEE";
+        break;
+    case DEJA_BAFFEE:
+        os << "DEJA_BAFFEE";
         break;
     case PAS_ENCORE_ARROSEE:
         os << "PAS_ENCORE_ARROSEE";
@@ -200,8 +206,8 @@ std::ostream& operator<<(std::ostream& os, caracteristique v)
     case CARACTERISTIQUE_ELEGANCE:
         os << "CARACTERISTIQUE_ELEGANCE";
         break;
-    case CARACTERISTIQUE_RAYON_DEPLACEMENT:
-        os << "CARACTERISTIQUE_RAYON_DEPLACEMENT";
+    case CARACTERISTIQUE_RAYON_DEPOTAGE:
+        os << "CARACTERISTIQUE_RAYON_DEPOTAGE";
         break;
     }
     return os;
@@ -215,8 +221,8 @@ std::ostream& operator<<(std::ostream& os, debug_chien v)
 {
     switch (v)
     {
-    case AUCUN_DRAPEAU:
-        os << "AUCUN_DRAPEAU";
+    case AUCUN_CHIEN:
+        os << "AUCUN_CHIEN";
         break;
     case CHIEN_BLEU:
         os << "CHIEN_BLEU";

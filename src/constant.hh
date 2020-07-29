@@ -5,6 +5,9 @@
 
 #include <vector>
 
+/// Nombre de jardiniers
+#define NB_JARDINIERS 2
+
 /// Largeur et hauteur de la grille
 #define TAILLE_GRILLE 20
 
@@ -26,6 +29,10 @@
 /// Apport pour une caractéristique lors de l'arrosage
 #define APPORT_CARACTERISTIQUE 10
 
+/// Nombre de points de caractéristiques nécessaires pour pouvoir dépoter une
+/// cases plus loins.
+#define COUT_PAR_CASE_DEPOTAGE 15
+
 /// Erreurs possibles
 typedef enum erreur
 {
@@ -37,6 +44,7 @@ typedef enum erreur
     MAUVAIS_JARDINIER,  ///< La plante n'appartient pas au bon jardinier
     SANS_POT,           ///< La plante est déjà dépotée
     DEJA_ARROSEE,       ///< La plante a déjà été arrosée
+    DEJA_BAFFEE,        ///< La plante a déjà baffé ce tour ci
     PAS_ENCORE_ARROSEE, ///< La plante n'as pas encore été arrosée
     PAS_ENCORE_ADULTE,  ///< La plante ne peut pas encore être arrosée
     PLANTE_INVALIDE,    ///< Les caractéristiques de la plante sont invalides
@@ -53,19 +61,19 @@ typedef enum action_type
 /// Caractéristiques améliorables d'une plante
 typedef enum caracteristique
 {
-    CARACTERISTIQUE_FORCE,             ///< Force
-    CARACTERISTIQUE_VIE,               ///< Vie
-    CARACTERISTIQUE_ELEGANCE,          ///< Élégance
-    CARACTERISTIQUE_RAYON_DEPLACEMENT, ///< Portée de dépotage
+    CARACTERISTIQUE_FORCE,          ///< Force
+    CARACTERISTIQUE_VIE,            ///< Vie
+    CARACTERISTIQUE_ELEGANCE,       ///< Élégance
+    CARACTERISTIQUE_RAYON_DEPOTAGE, ///< Portée de dépotage
 } caracteristique;
 
 /// Types de chien de débug
 typedef enum debug_chien
 {
-    AUCUN_DRAPEAU, ///< Aucun chien, enlève le chien présent
-    CHIEN_BLEU,    ///< Chien bleu
-    CHIEN_VERT,    ///< Chien vert
-    CHIEN_ROUGE,   ///< Chien rouge
+    AUCUN_CHIEN, ///< Aucun chien, enlève le chien présent
+    CHIEN_BLEU,  ///< Chien bleu
+    CHIEN_VERT,  ///< Chien vert
+    CHIEN_ROUGE, ///< Chien rouge
 } debug_chien;
 
 /// Position dans le jardin, donnée par deux coordonnées.

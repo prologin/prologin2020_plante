@@ -45,13 +45,13 @@ public:
     plante plante_sur_case(position pos);
 
     /// Renvoie la liste des plantes du jardinier qui peuvent être arrosées
-    std::vector<plante> plantes_arrosables(int joueur);
+    std::vector<plante> plantes_arrosables(int jardinier);
 
     /// Renvoie la liste des plantes du jardinier qui sont adultes
-    std::vector<plante> plantes_adultes(int joueur);
+    std::vector<plante> plantes_adultes(int jardinier);
 
     /// Renvoie la liste des plantes du jardinier qui peuvent être dépotées
-    std::vector<plante> plantes_depotables(int joueur);
+    std::vector<plante> plantes_depotables(int jardinier);
 
     /// Renvoie les ressources disponibles sur une case donnée
     std::vector<int> ressources_sur_case(position pos);
@@ -59,7 +59,8 @@ public:
     /// Vérifie si une plante à la position donnée aura suffisamment de
     /// ressources pour se reproduire. S'il n'y a pas déjà une plante, le
     /// calcul supposera qu'une plante est apparu à cette position
-    bool reproduction_possible(position pos, int rayon_collecte, std::vector<int> consommation);
+    bool reproduction_possible(position pos, int rayon_collecte,
+                               std::vector<int> consommation);
 
     /// Vérifie si une plante à la position donnée peut se reproduire, retourne
     /// faux s'il n'y pas de plante à la position donnée
@@ -75,14 +76,14 @@ public:
     /// pas dans cette liste.
     std::vector<action_hist> historique();
 
-    /// Renvoie le score du joueur ``id_joueur``. Renvoie -1 si le joueur est
-    /// invalide.
-    int score(int id_joueur);
+    /// Renvoie le score du jardinier ``id_jardinier``. Renvoie -1 si le
+    /// jardinier est invalide.
+    int score(int id_jardinier);
 
-    /// Renvoie votre numéro de joueur.
+    /// Renvoie votre numéro de jardinier.
     int moi();
 
-    /// Renvoie le numéro de joueur de votre adversaire.
+    /// Renvoie le numéro du jardinier adverse.
     int adversaire();
 
     /// Annule la dernière action. Renvoie faux quand il n'y a pas d'action à
@@ -112,5 +113,4 @@ public:
 
     /// Affiche le contenu d'une valeur de type action_hist
     void afficher_action_hist(action_hist v);
-
 };
