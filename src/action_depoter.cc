@@ -3,18 +3,15 @@
 
 #include "actions.hh"
 
-int ActionDepoter::check(const GameState& st) const
-{
-    // FIXME
-    return 0;
+int ActionDepoter::check(const GameState &st) const {
+  // FIXME
+  return 0;
 }
 
-void ActionDepoter::apply_on(GameState* st) const
-{
-    // FIXME
+void ActionDepoter::apply_on(GameState *st) const {
+  // FIXME
 }
 
-void ActionDepoter::dump_json(const GameState& st, std::ostream& ss) const
-{
-    // FIXME: optional function that dumps the action
+void ActionDepoter::dump_json(const GameState &st, std::ostream &ss) const {
+  // FIXME: optional function that dumps the action
 }

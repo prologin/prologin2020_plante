@@ -6,14 +6,13 @@
 #include <rules/game-state.hh>
 #include <rules/player.hh>
 
-class GameState final : public rules::GameState
-{
+class GameState final : public rules::GameState {
 public:
-    // FIXME
-    // additional parameters? for instance map
-    GameState(const rules::Players& players);
-    GameState(const GameState& st);
-    ~GameState();
+  // FIXME
+  // additional parameters? for instance map
+  GameState(const rules::Players &players);
+  GameState(const GameState &st);
+  ~GameState();
 
-    GameState* copy() const override;
+  GameState *copy() const override;
 };

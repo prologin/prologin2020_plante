@@ -3,24 +3,17 @@
 
 #include "game_state.hh"
 
-GameState::GameState(const rules::Players& players)
-    : rules::GameState(players)
-{
-    // FIXME
+GameState::GameState(const rules::Players &players)
+    : rules::GameState(players) {
+  // FIXME
 }
 
-GameState::GameState(const GameState& st)
-    : rules::GameState(st)
-{
-    // FIXME
+GameState::GameState(const GameState &st) : rules::GameState(st) {
+  // FIXME
 }
 
-GameState::~GameState()
-{
-    // FIXME
+GameState::~GameState() {
+  // FIXME
 }
 
-GameState* GameState::copy() const
-{
-    return new GameState(*this);
-}
+GameState *GameState::copy() const { return new GameState(*this); }

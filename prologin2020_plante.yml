@@ -65,6 +65,8 @@ enum:
       - [pas_encore_arrosee, "La plante n'as pas encore été arrosée"]
       - [pas_encore_adulte, "La plante ne peut pas encore être arrosée"]
       - [plante_invalide, "Les caractéristiques de la plante sont invalides"]
+      - [trop_loin, "Rayon de dépotage trop petit pour dépoter sur la case
+                     ciblée"]
   -
     enum_name: action_type
     enum_summary: "Types d'actions"

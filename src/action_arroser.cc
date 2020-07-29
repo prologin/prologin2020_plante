@@ -3,18 +3,15 @@
 
 #include "actions.hh"
 
-int ActionArroser::check(const GameState& st) const
-{
-    // FIXME
-    return 0;
+int ActionArroser::check(const GameState &st) const {
+  // FIXME
+  return 0;
 }
 
-void ActionArroser::apply_on(GameState* st) const
-{
-    // FIXME
+void ActionArroser::apply_on(GameState *st) const {
+  // FIXME
 }
 
-void ActionArroser::dump_json(const GameState& st, std::ostream& ss) const
-{
-    // FIXME: optional function that dumps the action
+void ActionArroser::dump_json(const GameState &st, std::ostream &ss) const {
+  // FIXME: optional function that dumps the action
 }

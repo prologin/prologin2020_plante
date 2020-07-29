@@ -16,23 +16,22 @@
 
 #include "api.hh"
 
-class Rules : public rules::TurnBasedRules
-{
+class Rules : public rules::TurnBasedRules {
 public:
-    explicit Rules(const rules::Options opt);
-    virtual ~Rules() {}
+  explicit Rules(const rules::Options opt);
+  virtual ~Rules() {}
 
-    rules::Actions* get_actions() override;
-    void apply_action(const rules::IAction& action) override;
-    bool is_finished() override;
+  rules::Actions *get_actions() override;
+  void apply_action(const rules::IAction &action) override;
+  bool is_finished() override;
 
 protected:
-    // FIXME: Override turnbased methods here
+  // FIXME: Override turnbased methods here
 
 private:
-    void register_actions();
+  void register_actions();
 
-    std::unique_ptr<utils::DLL> champion_dll_;
-    std::unique_ptr<Api> api_;
-    utils::Sandbox sandbox_;
+  std::unique_ptr<utils::DLL> champion_dll_;
+  std::unique_ptr<Api> api_;
+  utils::Sandbox sandbox_;
 };

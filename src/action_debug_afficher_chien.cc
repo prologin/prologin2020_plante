@@ -3,18 +3,16 @@
 
 #include "actions.hh"
 
-int ActionDebugAfficherChien::check(const GameState& st) const
-{
-    // FIXME
-    return 0;
+int ActionDebugAfficherChien::check(const GameState &st) const {
+  // FIXME
+  return 0;
 }
 
-void ActionDebugAfficherChien::apply_on(GameState* st) const
-{
-    // FIXME
+void ActionDebugAfficherChien::apply_on(GameState *st) const {
+  // FIXME
 }
 
-void ActionDebugAfficherChien::dump_json(const GameState& st, std::ostream& ss) const
-{
-    // FIXME: optional function that dumps the action
+void ActionDebugAfficherChien::dump_json(const GameState &st,
+                                         std::ostream &ss) const {
+  // FIXME: optional function that dumps the action
 }
