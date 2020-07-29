@@ -3,22 +3,25 @@
 let TILE_SIZE = 75
 
 let app = new PIXI.Application({
-    width: TILE_SIZE * 20,
+    width: TILE_SIZE * 20 + 400,
     height: TILE_SIZE * 20,
     antialias: true,
-    transparent: false,
+    transparent: true,
     resolution: 1
   }
 );
 document.body.appendChild(app.view);
 
-function square(size, color) {
+function rect(width, height, color) {
   let res = new PIXI.Graphics();
   res.lineStyle(1, 0xFFFFFF, 1);
   res.beginFill(color);
-  res.drawRect(0, 0, size, size);
+  res.drawRect(0, 0, width, height);
   res.endFill();
   return res;
+}
+function square(size, color) {
+  return rect(size, size, color);
 }
 
 class Cell {
@@ -77,6 +80,17 @@ class Map {
     this.select_square.visible = false;
     this.select_square.alpha = 0.2;
     this.sprite.addChild(this.select_square);
+
+    this.details_area = rect(400, 500, 0x222222);
+    this.details_area.x = 20 * TILE_SIZE;
+    this.sprite.addChild(this.details_area);
+
+    this.details_text = new PIXI.Text("", {font:"50px Arial", fill:"white"});
+    this.details_text.x = this.details_area.width / 2;
+    this.details_text.y = this.details_area.height / 2;
+    this.details_text.anchor.set(0.5);
+    this.details_area.addChild(this.details_text);
+
   }
 
   select_tile(x, y) {
@@ -91,6 +105,37 @@ class Map {
       this.selected_y = undefined;
       this.select_square.visible = false;
     }
+  }
+
+  render() {
+    let txt = "";
+    if (this.selected_x != undefined) {
+      let cell = this.cells[this.selected_y][this.selected_x];
+      txt += "case:\n";
+      txt += `\tchaleur: ${cell.heat}\n`;
+      txt += `\tlumière: ${cell.light}\n`;
+      txt += `\teau: ${cell.water}\n`;
+
+      function add_plant_details(p) {
+        if (p.pos_x == map.selected_x && p.pos_y == map.selected_y) {
+          txt += "\n\nplante:\n";
+          txt += `\tvie: ${p.vie_max}\n`;
+          txt += `\tforce: ${p.force}\n`;
+          txt += `\telegance: ${p.elegance}\n`;
+          txt += `\trayon déplacement: ${p.rayon_deplacement}\n`;
+          txt += `\trayon collecte: ${p.rayon_collecte}\n`;
+          txt += `\tjardinier: ${p.jardinier}\n`;
+        }
+      }
+
+      for (var p in this.p1_plants) {
+        add_plant_details(this.p1_plants[p]);
+      }
+      for (var p in this.p2_plants) {
+        add_plant_details(this.p2_plants[p]);
+      }
+    }
+    this.details_text.text = txt;
   }
 
   update_plants(dump) {
@@ -192,6 +237,7 @@ function gameLoop(delta)
       turnText.text = "turn = " + currentTurn;
   }
   lastTurn = currentTurn;
+  map.render();
 }
 
 
