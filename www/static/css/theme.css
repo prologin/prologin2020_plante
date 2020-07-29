@@ -1,7 +1,7 @@
 /*
 
 SPDX-License-Identifier: GPL-2.0-or-later
- 
+
 Copyright 2018 Alexandre Macabies
 Copyright 2019 Kilian Guillaume
 Copyright 2020 Paul Guénézan
@@ -116,4 +116,124 @@ body>div.container {
     border-color: var(--border-color);
     border-bottom: 2px dotted;
     color: var(--text-color);
+}
+
+/********************/
+/* left nav / links */
+/********************/
+
+a, a:hover, a:active {
+    color: var(--text-color);
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+    background: transparent;
+    border: 10px solid;
+    border-image: url("../img/border.png") 10;
+    padding: 0px 5px;
+}
+
+.nav > li > a:focus, .nav > li > a:hover {
+    background: transparent;
+    text-decoration: underline;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+    color: var(--text-color);
+}
+
+/**********/
+/* tables */
+/**********/
+
+table {
+    border: 1px solid var(--border-color);
+}
+
+.table > thead > tr > th {
+    border-bottom: 2px dotted var(--border-color);
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    border-top-color: var(--border-color);
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background: rgba(0,0,0,0.04);
+}
+
+/**************/
+/* pre/inputs */
+/**************/
+
+pre, input[type=text], input[type=password], textarea.form-control {
+    background: var(--background-darker);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    border-color: var(--border-color);
+    box-shadow: none;
+}
+
+/***********/
+/* buttons */
+/***********/
+
+/* primary */
+
+.btn-primary {
+    background: var(--accent-color);
+    color: var(--background-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+
+    background: var(--accent-color);
+    color: var(--background-color);
+    border: 1px solid var(--border-color);
+    text-decoration: underline;
+}
+
+/* default */
+
+.btn-default {
+    border: 1px solid var(--border-color);
+}
+
+.btn-default:hover, .btn-default:active, .btn-default:focus {
+    text-decoration: underline;
+    border-color: var(--border-color);
+}
+
+/* easter */
+.easter-peng {
+    position: fixed;
+    bottom: -128px;
+    transition: all .35s ease;
+    cursor: pointer;
+}
+.easter-peng.peak {
+    bottom: -64px;
+}
+.easter-peng.visible {
+    bottom: -12px;
+    animation: poop-dance .8s infinite alternate ease-in-out;
+}
+.easter-peng:not(.visible):hover {
+    bottom: -55px;
+}
+@keyframes poop-dance {
+    from, 49% { transform-origin: -50% 100%; }
+    50%, 75%, to { transform-origin: 150% 100%; }
+    25% { transform: rotate(-10deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(10deg); }
+}
+
+#replay::before {
+    font-size: small;
+    content: "Cliquez sur la vue puis appuyez sur F pour passer en mode plein écran";
 }
