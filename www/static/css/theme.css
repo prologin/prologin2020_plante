@@ -210,7 +210,7 @@ pre, input[type=text], input[type=password], textarea.form-control {
 /* easter */
 .easter-egg {
     position: fixed;
-    bottom: -128px;
+    bottom: -55px;
     transition: all .35s ease;
     cursor: pointer;
 }
