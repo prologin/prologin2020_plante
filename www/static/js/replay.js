@@ -9,9 +9,15 @@ $(function () {
 
     $replay.hide();
 
-    $.when(
+    $.getScript('/static/js/pixi.min.js')
+    .done(function() {
         $.getScript('/static/js/viewer.js')
-    ).done(function() {
+        .done(function() {
+            console.log('finish loading');
+            start_viewer($replay);
+            // reveal the UI
+            $replay.fadeIn('fast');
+        });
     });
 
 });
