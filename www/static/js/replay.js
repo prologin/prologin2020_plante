@@ -21,7 +21,7 @@ $(function () {
             $turnSlider.change(function () {
                 let turnIndex = parseInt($turnSlider.val());
                 $previous.prop('disabled', turnIndex <= 0);
-                $next.prop('disabled', turnIndex >= turns.length - 1);
+                $next.prop('disabled', turnIndex > 100);
                 $turnLabel.text(turnIndex);
             });
         });
