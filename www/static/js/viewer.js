@@ -14,7 +14,13 @@ function square(size, color) {
   return rect(size, size, color);
 }
 
-let app;
+let app, context;
+
+class Context {
+    constructor(turnSlider) {
+        this.turnSlider = turnSlider;
+    }
+}
 
 class Cell {
   constructor(str) {
@@ -172,7 +178,8 @@ class Map {
 }
 
 
-function start_viewer(container) {
+function start_viewer(container, turnSlider) {
+    context = new Context(turnSlider);
     app = new PIXI.Application({
         width: TILE_SIZE * 20 + 400,
         height: TILE_SIZE * 20,
@@ -239,6 +246,7 @@ function gameLoop(delta)
       console.log('currentTurn = ', currentTurn);
       map.update_plants(dump[currentTurn]);
       turnText.text = "turn = " + currentTurn;
+      context.turnSlider.val(currentTurn).trigger('change');
   }
   lastTurn = currentTurn;
   map.render();

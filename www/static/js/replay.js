@@ -14,7 +14,7 @@ $(function () {
         $.getScript('/static/js/viewer.js')
         .done(function() {
             console.log('finish loading');
-            start_viewer($replay);
+            start_viewer($replay, $turnSlider);
             // reveal the UI
             $replay.fadeIn('fast');
         });
