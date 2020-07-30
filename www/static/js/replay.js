@@ -17,6 +17,16 @@ $(function () {
             start_viewer($replay, $turnSlider);
             // reveal the UI
             $replay.fadeIn('fast');
+
+            $turnSlider.change(function () {
+                let newTurnIndex = parseInt($turnSlider.val());
+                if (turnIndex != newTurnIndex)
+                    turnForward = turnIndex < newTurnIndex;
+                turnIndex = newTurnIndex;
+                $previous.prop('disabled', turnIndex <= 0);
+                $next.prop('disabled', turnIndex >= turns.length - 1);
+                $turnLabel.text(('000' + turns[turnIndex].turn[0]).slice(-3));
+            });
         });
     });
 
