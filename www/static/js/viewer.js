@@ -32,7 +32,7 @@ class Cell {
       var index = 4;
     else
       var index = 3;
-    this.sprite = new PIXI.Sprite(PIXI.loader.resources["sprites/frame" + index + ".png"].texture);
+    this.sprite = new PIXI.Sprite(PIXI.loader.resources["frame" + index].texture);
     this.sprite.width = TILE_SIZE;
     this.sprite.height = TILE_SIZE;
   }
@@ -48,7 +48,7 @@ class Plant {
     this.rayon_deplacement = plant.rayon_déplacement;
     this.rayon_collecte = plant.rayon_collecte;
     this.jardinier = jardinier;
-    this.sprite = new PIXI.Sprite(PIXI.loader.resources["sprites/plant_" + (this.jardinier == 0 ? "a" : "b") + ".png"].texture);
+    this.sprite = new PIXI.Sprite(PIXI.loader.resources["plant_" + (this.jardinier == 0 ? "a" : "b")].texture);
     this.sprite.height = TILE_SIZE;
     this.sprite.width = TILE_SIZE;
     this.sprite.x = this.pos_x * TILE_SIZE;
@@ -181,12 +181,12 @@ function start_viewer(container) {
     );
     container.append(app.view);
 
-    PIXI.loader.add("dump", "dump.txt");
-    PIXI.loader.add("sprites/dog_blue.png");
-    PIXI.loader.add("sprites/plant_a.png");
-    PIXI.loader.add("sprites/plant_b.png");
+    PIXI.loader.add("dump", "dump");
+    PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
+    PIXI.loader.add("plant_a", "/static/img/sprites/plant_a.png");
+    PIXI.loader.add("plant_b", "/static/img/sprites/plant_b.png");
     for (var i = 1; i <= 6; ++i)
-        PIXI.loader.add("sprites/frame" + i + ".png");
+        PIXI.loader.add("frame" + i, "/static/img/sprites/frame" + i + ".png");
     PIXI.loader.load(setup);
 }
 
@@ -197,7 +197,7 @@ let lastTurn = 0;
 
 function setup(loader, resources) {
 
-  dog = new PIXI.Sprite(PIXI.loader.resources["sprites/dog_blue.png"].texture);
+  dog = new PIXI.Sprite(PIXI.loader.resources["dog_blue"].texture);
   dog.width = 75;
   dog.height = 75;
 
