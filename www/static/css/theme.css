@@ -3,7 +3,7 @@
 SPDX-License-Identifier: GPL-2.0-or-later
 
 Copyright 2018 Alexandre Macabies
-Copyright 2019 Kilian Guillaume
+Copyright 2019-2020 Kilian Guillaume
 Copyright 2020 Paul Guénézan
 
 */
@@ -14,11 +14,15 @@ Copyright 2020 Paul Guénézan
 
 body {
     --accent-color: #222;
+    --button: #cb6526;
+    --button-hover: #c4c50a;
     --background-color: #FFF;
     --background-color-2: #eee;
     --background-darker: rgba(0,0,0,0.02);
     --border-color: #111;
     --text-color: #ffffff;
+    /* the size of the outlines for buttons and the nav */
+    --outline-size: 3px;
 }
 
 /**********/
@@ -44,7 +48,6 @@ body {
     color: #ffffff;
     text-shadow: 1px 1px 0 #000000;
     background: rgba(0,0,0,0.6);
-    border-radius: 3px;
     padding: 5px;
     margin: 10px;
 }
@@ -127,8 +130,9 @@ a, a:hover, a:active {
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
     background: transparent;
-    border: 5px solid;
+    border: var(--outline-size) solid;
     padding: 0px 5px;
+    border-radius: 0;
 }
 
 .nav > li > a:focus, .nav > li > a:hover {
@@ -175,6 +179,21 @@ pre, input[type=text], input[type=password], textarea.form-control {
     box-shadow: none;
 }
 
+/* progress bars */
+.progress-bar {
+	color: #000;
+}
+
+.progress {
+	border-radius: 0;
+	background: #F00;
+}
+
+.progress-bar-success {
+	/* technically it's yellow in undertale, but since it's "bar-success", green is more fitting. */
+	#0F0;
+}
+
 /***********/
 /* buttons */
 /***********/
@@ -182,16 +201,17 @@ pre, input[type=text], input[type=password], textarea.form-control {
 /* primary */
 
 .btn-primary {
-    background: var(--accent-color);
-    color: var(--background-color);
-    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--button);
+    font-weight: 700;
+    border: var(--outline-size) solid var(--button);
+    border-radius: 0;
 }
 
 .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
-
-    background: var(--accent-color);
-    color: var(--background-color);
-    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--button-hover);
+    border-color: var(--button-hover);
     text-decoration: underline;
 }
 
