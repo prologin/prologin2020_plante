@@ -24,6 +24,9 @@ body {
     --text-color-accent: #fff;
     /* the size of the outlines for buttons and the nav */
     --outline-size: 3px;
+    /* the padding for the nav pills (default values from bootstrap) */
+    --pill-vert-padding: 10px;
+    --pill-horiz-padding: 15px;
 }
 
 /**********/
@@ -132,7 +135,8 @@ a, a:hover, a:active {
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
     background: transparent;
     border: var(--outline-size) solid;
-    padding: 0px 5px;
+    padding: calc(var(--pill-vert-padding) - var(--outline-size))
+             calc(var(--pill-horiz-padding) - var(--outline-size));
     border-radius: 0;
 }
 
@@ -142,7 +146,8 @@ a, a:hover, a:active {
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
-    color: var(--text-color);
+    color: var(--text-color-accent);
+    border-color: var(--text-color-accent);
 }
 
 /**********/
