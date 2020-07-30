@@ -27,6 +27,8 @@ body {
     /* the padding for the nav pills (default values from bootstrap) */
     --pill-vert-padding: 10px;
     --pill-horiz-padding: 15px;
+    /* when the screen is too small, parts of the logo are under the text, add a background to the text to make it readable */
+    --background-cover-fix: rgba(0, 0, 0, 0.83);
 }
 
 /**********/
@@ -90,6 +92,10 @@ body>div.container {
 /***************/
 
 .breadcrumb {
+    /* put the breadcrumbs at the right of the screen, while only taking the needed space. */
+    width: max-content;
+    margin-left: auto;
+
     text-align: right;
     background: transparent;
 }
@@ -260,4 +266,16 @@ pre, input[type=text], input[type=password], textarea.form-control {
 #replay::before {
     font-size: small;
     content: "Cliquez sur la vue puis appuyez sur F pour passer en mode plein écran";
+}
+
+/**********************/
+/* Logo too large fix */
+/**********************/
+
+h1 {
+	background: var(--background-cover-fix);
+}
+
+.breadcrumb {
+	background: var(--background-cover-fix);
 }
