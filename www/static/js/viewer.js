@@ -178,7 +178,7 @@ let app = new PIXI.Application({
   }
 );
 
-function (container) {
+function start_viewer(container) {
     container.appendChild(app.view);
 
     PIXI.loader.add("dump", "dump.txt");

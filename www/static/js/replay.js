@@ -9,4 +9,9 @@ $(function () {
 
     $replay.hide();
 
+    $.when(
+        $.getScript('/static/js/viewer.js')
+    ).done(function() {
+    });
+
 });
