@@ -14,6 +14,8 @@ function square(size, color) {
   return rect(size, size, color);
 }
 
+let app;
+
 class Cell {
   constructor(str) {
     let split = str.split(",").map(x => parseInt(x));
@@ -171,7 +173,7 @@ class Map {
 
 
 function start_viewer(container) {
-    let app = new PIXI.Application({
+    app = new PIXI.Application({
         width: TILE_SIZE * 20 + 400,
         height: TILE_SIZE * 20,
         antialias: true,
