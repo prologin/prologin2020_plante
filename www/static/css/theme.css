@@ -20,7 +20,8 @@ body {
     --background-color-2: #eee;
     --background-darker: rgba(0,0,0,0.02);
     --border-color: #111;
-    --text-color: #ffffff;
+    --text-color: #ddd;
+    --text-color-accent: #fff;
     /* the size of the outlines for buttons and the nav */
     --outline-size: 3px;
 }
@@ -91,11 +92,11 @@ body>div.container {
 }
 
 .breadcrumb > li + li::before {
-    color: #333333;
+    color: var(--text-color);
 }
 
 .breadcrumb > .active {
-    color: #222222;
+    color: var(--text-color-accent);
 }
 
 /**********/
