@@ -169,16 +169,16 @@ class Map {
   }
 }
 
-let app = new PIXI.Application({
-    width: TILE_SIZE * 20 + 400,
-    height: TILE_SIZE * 20,
-    antialias: true,
-    transparent: true,
-    resolution: 1
-  }
-);
 
 function start_viewer(container) {
+    let app = new PIXI.Application({
+        width: TILE_SIZE * 20 + 400,
+        height: TILE_SIZE * 20,
+        antialias: true,
+        transparent: true,
+        resolution: 1
+      }
+    );
     container.appendChild(app.view);
 
     PIXI.loader.add("dump", "dump.txt");
@@ -188,7 +188,6 @@ function start_viewer(container) {
     for (var i = 1; i <= 6; ++i)
         PIXI.loader.add("sprites/frame" + i + ".png");
     PIXI.loader.load(setup);
-
 }
 
 
