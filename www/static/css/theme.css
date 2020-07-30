@@ -16,10 +16,10 @@ body {
     --accent-color: #222;
     --button: #cb6526;
     --button-hover: #c4c50a;
-    --background-color: #FFF;
-    --background-color-2: #eee;
+    --background-color: #000;
+    --background-color-2: #151515;
     --background-darker: rgba(0,0,0,0.02);
-    --border-color: #111;
+    --border-color: #ddd;
     --text-color: #ddd;
     --text-color-accent: #fff;
     /* the size of the outlines for buttons and the nav */
@@ -113,14 +113,17 @@ body>div.container {
 /**********/
 
 .panel-primary, .panel-default {
-    background: var(--background-darker);
-    border-color: var(--border-color);
+    background: transparent;
+    border-color: var(--text-color-accent);
+    border-width: var(--outline-size);
+    border-radius: 0;
 }
 
 .panel-primary > .panel-heading {
-    background-color: var(--accent-color);
-    border-color: var(--border-color);
-    color: var(--background-color);
+    background: transparent;
+    border-color: var(--text-color-accent);
+    color: var(--text-color-accent);
+    border-bottom-width: var(--outline-size);
 }
 
 .panel-default > .panel-heading {
@@ -128,6 +131,7 @@ body>div.container {
     border-color: var(--border-color);
     border-bottom: 2px dotted;
     color: var(--text-color);
+    border-bottom-width: var(--outline-size);
 }
 
 /********************/
@@ -161,19 +165,26 @@ a, a:hover, a:active {
 /**********/
 
 table {
-    border: 1px solid var(--border-color);
-}
-
-.table > thead > tr > th {
-    border-bottom: 2px dotted var(--border-color);
+    border: var(--outline-size) solid var(--border-color);
 }
 
 .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    border-top-width: var(--outline-size);
     border-top-color: var(--border-color);
 }
 
+/* make the first line (under the header) dotted */
+.table > thead > tr > th {
+    border-bottom: var(--outline-size) dotted var(--border-color);
+}
+
+table > tbody > tr:first-child td {
+    border-top: none;
+}
+
+/* alternate colors on each line to be more readable */
 .table-striped > tbody > tr:nth-of-type(2n+1) {
-    background: rgba(0,0,0,0.04);
+    background: var(--background-color-2);
 }
 
 /**************/
