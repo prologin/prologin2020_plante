@@ -179,7 +179,7 @@ function start_viewer(container) {
         resolution: 1
       }
     );
-    container.appendChild(app.view);
+    container.append(app.view);
 
     PIXI.loader.add("dump", "dump.txt");
     PIXI.loader.add("sprites/dog_blue.png");
