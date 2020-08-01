@@ -218,28 +218,22 @@ function start() {
 }
 
 
-let dog, dump, map, turnText;
+let dump, map, turnText;
 
 let lastTurn = 0;
 
 function setup(loader, resources) {
-
-  dog = new PIXI.Sprite(PIXI.loader.resources["dog_blue"].texture);
-  dog.width = 75;
-  dog.height = 75;
-
   if (context.mode != 'preview')
   {
     PIXI.loader.add("dump", "dump");
     var json_str = "{\"dump\": [" + resources["dump"].data; 
     json_str = json_str.substring(0, json_str.length - 2) + "]}";
+    console.log(json_str);
     dump = JSON.parse(json_str).dump;
   }
 
   map = new Map(context);
   app.stage.addChild(map.sprite);
-
-  app.stage.addChild(dog);
 
   turnText = new PIXI.Text("turn = " + lastTurn, {font:"50px Arial", fill:"red"});
   app.stage.addChild(turnText);
@@ -262,7 +256,6 @@ let counter = 0;
 function gameLoop(delta)
 {
   counter += delta;
-  dog.x += 1;
   const currentTurn = Math.floor(counter / 60);
   if (currentTurn != lastTurn)
   {
