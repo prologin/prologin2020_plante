@@ -1,7 +1,7 @@
 $(function () {
 
     let $preview = $('#map-preview'),
-        $map_content $('#map-contents');
+        $map_content = $('#map-contents');
 
     $preview.hide();
 
