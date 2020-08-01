@@ -253,7 +253,8 @@ function setup(loader, resources) {
   app.stage.interactive = true;
   app.stage.on("pointerdown", clickHandler);
 
-  app.ticker.add(delta => gameLoop(delta));
+  if (context.mode != 'preview')
+      app.ticker.add(delta => gameLoop(delta));
 }
 
 let counter = 0;
