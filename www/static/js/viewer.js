@@ -17,15 +17,10 @@ function square(size, color) {
 let app, context;
 
 class Context {
-    constructor(container, turnSlider) {
+    constructor(mode, container, turnSlider) {
+        this.mode = mode;
         this.container = container;
         this.turnSlider = turnSlider;
-        this.mode = 'replay';
-    }
-
-    constructor(container) {
-        this.container = container;
-        this.mode = 'preview';
     }
 }
 
@@ -186,12 +181,12 @@ class Map {
 
 
 function start_viewer(container, turnSlider) {
-    context = new Context(container, turnSlider);
+    context = new Context('replay', container, turnSlider);
     start()
 }
 
 function start_preview(container) {
-    context = new Context(container);
+    context = new Context('preview', container, null);
     start()
 }
 
