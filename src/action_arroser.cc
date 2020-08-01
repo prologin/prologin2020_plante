@@ -18,8 +18,8 @@ int ActionArroser::check(const GameState& st) const
         return DEJA_ARROSEE;
     if (st.get_map().plant_at(position_plante_)->age < AGE_DE_POUSSE)
         return PAS_ENCORE_ADULTE;
-    if (amelioration_ < 0 || amelioration_ <= NB_TYPES_RESSOURCES)
-        return PLANTE_INVALIDE;
+    if (amelioration_ < 0 || amelioration_ >= 4)
+        return CARACTERISTIQUE_INVALIDE;
     return OK;
 }
 

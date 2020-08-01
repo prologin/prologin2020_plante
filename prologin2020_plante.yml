@@ -66,6 +66,8 @@ enum:
       - [pas_encore_adulte, "La plante ne peut pas encore être arrosée"]
       - [plante_invalide, "Les caractéristiques de la plante sont invalides"]
       - [trop_loin, "La plante n'a pas un assez grand rayon de dépotage"]
+      - [caracteristique_invalide, "Valeur de `Caracteristique` inconnue"]
+      - [chien_invalide, "Valeur de `Chien` inconnue"]
   -
     enum_name: action_type
     enum_summary: "Types d'actions"

@@ -8,7 +8,8 @@ int ActionDebugAfficherChien::check(const GameState& st) const
 {
     if (!position_in_bounds(pos_))
         return HORS_POTAGER;
-    // TODO check chien_
+    if (chien_ < 0 || chien_ >= 4)
+        return CHIEN_INVALIDE;
     return OK;
 }
 
