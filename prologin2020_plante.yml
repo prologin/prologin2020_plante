@@ -223,9 +223,8 @@ function:
   -
     fct_name: reproduction_possible
     fct_summary: Vérifie si une plante à la position donnée aura suffisamment
-                 de ressources pour se reproduire. S'il n'y a pas déjà une
-                plante, le calcul supposera qu'une plante est apparu à cette
-                position
+                 de ressources pour se reproduire. S'il y a déjà une plante à
+                 cette position, le calcul suposera qu'elle a été remplacée
     fct_ret_type: bool
     fct_arg:
       - [pos, position, "Case ciblée"]

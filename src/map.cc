@@ -123,7 +123,7 @@ void Map::update_plant(const plante& plant)
     plants[plant.pos.x][plant.pos.y] = plant;
 }
 
-// TODO: cache result
+// TODO: cache result, be carefull about will_have_enough_ressources
 Grid<bool> Map::build_has_enough_ressources() const
 {
     // Compute cumulated weight of close plants for all cells of the grid
@@ -166,6 +166,21 @@ Grid<bool> Map::build_has_enough_ressources() const
     }
 
     return result;
+}
+
+bool Map::will_have_enough_ressources(const plante& plant)
+{
+    // Save current cell value
+    auto current_plant = plant_at(plant.pos);
+
+    // Check result with modified map
+    update_plant(plant);
+    bool will_have_enough_ressources = has_enough_ressources(plant.pos);
+
+    // Undo map modifications
+    plants[plant.pos.x][plant.pos.y] = current_plant;
+
+    return will_have_enough_ressources;
 }
 
 bool Map::has_enough_ressources(position pos) const

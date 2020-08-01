@@ -57,8 +57,8 @@ public:
     std::vector<int> ressources_sur_case(position pos);
 
     /// Vérifie si une plante à la position donnée aura suffisamment de
-    /// ressources pour se reproduire. S'il n'y a pas déjà une plante, le
-    /// calcul supposera qu'une plante est apparu à cette position
+    /// ressources pour se reproduire. S'il y a déjà une plante à cette
+    /// position, le calcul suposera qu'elle a été remplacée
     bool reproduction_possible(position pos, int rayon_collecte,
                                std::vector<int> consommation);
 

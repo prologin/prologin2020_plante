@@ -34,6 +34,7 @@ public:
 
     Grid<bool> build_has_enough_ressources() const;
     bool has_enough_ressources(position pos) const;
+    bool will_have_enough_ressources(const plante& plant);
 
 private:
     std::array<int, 2> player_keys;

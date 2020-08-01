@@ -86,8 +86,15 @@ std::vector<int> Api::ressources_sur_case(position pos)
 bool Api::reproduction_possible(position pos, int rayon_collecte,
                                 std::vector<int> consommation)
 {
-    // TODO
-    abort();
+    if (!position_in_bounds(pos))
+        return false;
+
+    plante fake_plant;
+    fake_plant.pos = pos;
+    fake_plant.rayon_collecte = rayon_collecte;
+    fake_plant.consommation = consommation;
+
+    return game_state().get_map().will_have_enough_ressources(fake_plant);
 }
 
 bool Api::plante_reproductible(position pos)

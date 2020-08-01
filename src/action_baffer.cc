@@ -2,8 +2,8 @@
 // Copyright (c) 2012-2020 Association Prologin <association@prologin.org>
 
 #include "actions.hh"
-#include "utils.hh"
 #include "history.hh"
+#include "utils.hh"
 
 int ActionBaffer::check(const GameState& st) const
 {
@@ -19,7 +19,7 @@ int ActionBaffer::check(const GameState& st) const
     if (!st.get_map().plant_at(position_baffante_)->adulte)
         return PAS_ENCORE_ARROSEE;
     if (st.get_map().already_hit(position_baffante_))
-        ; // TODO add deja baffée ce tour
+        return DEJA_BAFFEE;
 
     return OK;
 }
@@ -44,7 +44,7 @@ void ActionBaffer::apply_on(GameState* st) const
     action.action.position_depart = {-1, -1};
     action.action.position_arrivee = {-1, -1};
     action.action.position_plante = {-1, -1};
-    action.action.amelioration = (caracteristique) -1;
+    action.action.amelioration = (caracteristique)-1;
     std::ostringstream stream;
     this->dump_json(*st, stream);
     action.json = stream.str();
