@@ -40,6 +40,10 @@ body {
     color: #ffffff;
 }
 
+canvas {
+    width: 100%;
+}
+
 /*******/
 /* nav */
 /*******/
