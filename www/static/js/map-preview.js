@@ -8,7 +8,7 @@ $(function () {
     .done(function() {
         $.getScript('/static/js/viewer.js')
         .done(function() {
-            start_preview($replay);
+            start_preview($preview);
             // reveal the UI
             $preview.fadeIn('fast');
         });
