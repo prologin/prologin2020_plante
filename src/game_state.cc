@@ -157,8 +157,12 @@ void GameState::end_round()
     ++round_;
 }
 
-void GameState::new_player_turn()
+void GameState::new_player_turn(int player_id)
 {
+    assertm(player_id == 0 || player_id == 1, "wrong player id");
+    PlayerInfo& player_ = players_[player_id];
+    player_.reset_internal_history();
+
     map_.new_player_turn();
 }
 

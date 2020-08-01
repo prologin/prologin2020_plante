@@ -124,9 +124,9 @@ void Rules::spectator_turn()
     champion_jouer_tour_();
 }
 
-void Rules::start_of_player_turn(unsigned int /* player_key */)
+void Rules::start_of_player_turn(unsigned int player_key)
 {
-    api_->game_state().new_player_turn();
+    api_->game_state().new_player_turn(player_key);
 }
 
 void Rules::end_of_player_turn(unsigned int player_id)
