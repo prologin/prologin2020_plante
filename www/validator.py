@@ -34,7 +34,6 @@ for row in range(MAP_SIZE):
 
 
 # Read plants
-
 for player in range(PLAYER_COUNT):
     nb_plants = int(input())
     if nb_plants < 0:
