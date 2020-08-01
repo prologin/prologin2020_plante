@@ -17,8 +17,15 @@ function square(size, color) {
 let app, context;
 
 class Context {
-    constructor(turnSlider) {
+    constructor(container, turnSlider) {
+        this.container = container;
         this.turnSlider = turnSlider;
+        this.mode = 'replay';
+    }
+
+    constructor(container) {
+        this.container = container;
+        this.mode = 'preview';
     }
 }
 
@@ -179,7 +186,16 @@ class Map {
 
 
 function start_viewer(container, turnSlider) {
-    context = new Context(turnSlider);
+    context = new Context(container, turnSlider);
+    start()
+}
+
+function start_preview(container) {
+    context = new Context(container);
+    start()
+}
+
+function start() {
     app = new PIXI.Application({
         width: TILE_SIZE * 20 + 400,
         height: TILE_SIZE * 20,
@@ -188,7 +204,7 @@ function start_viewer(container, turnSlider) {
         resolution: 1
       }
     );
-    container.append(app.view);
+    context.container.append(app.view);
 
     PIXI.loader.add("dump", "dump");
     PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
