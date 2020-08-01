@@ -80,7 +80,7 @@ class Map {
     else
     {
       this.load(dump[0].carte);
-      this.update_plants(dump);
+      this.update_plants(dump[0]);
     }
     this.selected_x = undefined;
     this.selected_y = undefined;
@@ -209,7 +209,7 @@ function start() {
     );
     context.container.append(app.view);
 
-    if (context.mode != 'preview')
+    if (context.mode !== 'preview')
         PIXI.loader.add("dump", "dump");
 
     PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
@@ -230,7 +230,6 @@ function setup(loader, resources) {
   {
     var json_str = "{\"dump\": [" + resources["dump"].data; 
     json_str = json_str.substring(0, json_str.length - 2) + "]}";
-    console.log(json_str);
     dump = JSON.parse(json_str).dump;
   }
 
