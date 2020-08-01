@@ -31,15 +31,15 @@ class Cell {
     this.heat = split[0];
     this.light = split[1];
     this.water = split[2];
-    if (this.heat == 0 && this.light == 0 && this.water == 0)
+    if (this.heat === 0 && this.light === 0 && this.water === 0)
       var index = 5;
-    else if (this.heat > 0 && this.water == 0)
+    else if (this.heat > 0 && this.water === 0)
       var index = 1;
-    else if (this.heat > 0 && this.water != 0)
+    else if (this.heat > 0 && this.water !== 0)
       var index = 2;
-    else if (this.heat == 0 && this.water != 0)
+    else if (this.heat === 0 && this.water !== 0)
       var index = 6;
-    else if (this.water != 0)
+    else if (this.water !== 0)
       var index = 4;
     else
       var index = 3;
@@ -59,7 +59,7 @@ class Plant {
     this.rayon_deplacement = plant.rayon_déplacement;
     this.rayon_collecte = plant.rayon_collecte;
     this.jardinier = jardinier;
-    this.sprite = new PIXI.Sprite(PIXI.loader.resources["plant_" + (this.jardinier == 0 ? "a" : "b")].texture);
+    this.sprite = new PIXI.Sprite(PIXI.loader.resources["plant_" + (this.jardinier === 0 ? "a" : "b")].texture);
     this.sprite.height = TILE_SIZE;
     this.sprite.width = TILE_SIZE;
     this.sprite.x = this.pos_x * TILE_SIZE;
@@ -73,7 +73,7 @@ class Map {
     this.p1_plants = [];
     this.p2_plants = [];
     this.sprite = square(TILE_SIZE * 20, 0x000000);
-    if (context.mode == 'preview')
+    if (context.mode === 'preview')
     {
       this.load(context.map);
     }
@@ -117,7 +117,7 @@ class Map {
 
   render() {
     let txt = "";
-    if (this.selected_x != undefined) {
+    if (this.selected_x !== undefined) {
       let cell = this.cells[this.selected_y][this.selected_x];
       txt += "case:\n";
       txt += `\tchaleur: ${cell.heat}\n`;
@@ -125,7 +125,7 @@ class Map {
       txt += `\teau: ${cell.water}\n`;
 
       function add_plant_details(p) {
-        if (p.pos_x == map.selected_x && p.pos_y == map.selected_y) {
+        if (p.pos_x === map.selected_x && p.pos_y === map.selected_y) {
           txt += "\n\nplante:\n";
           txt += `\tvie: ${p.vie_max}\n`;
           txt += `\tforce: ${p.force}\n`;
@@ -223,7 +223,7 @@ let dump, map, turnText;
 let lastTurn = 0;
 
 function setup(loader, resources) {
-  if (context.mode != 'preview')
+  if (context.mode !== 'preview')
   {
     PIXI.loader.add("dump", "dump");
     var json_str = "{\"dump\": [" + resources["dump"].data; 
@@ -248,7 +248,7 @@ function setup(loader, resources) {
   app.stage.interactive = true;
   app.stage.on("pointerdown", clickHandler);
 
-  if (context.mode != 'preview')
+  if (context.mode !== 'preview')
       app.ticker.add(delta => gameLoop(delta));
 }
 
@@ -257,7 +257,7 @@ function gameLoop(delta)
 {
   counter += delta;
   const currentTurn = Math.floor(counter / 60);
-  if (currentTurn != lastTurn)
+  if (currentTurn !== lastTurn)
   {
       console.log('currentTurn = ', currentTurn);
       map.update_plants(dump[currentTurn]);
