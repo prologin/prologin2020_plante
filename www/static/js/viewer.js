@@ -190,12 +190,6 @@ class Map {
 
 function start_viewer(container, turnSlider) {
     context = new Context('replay', container, turnSlider, null);
-
-    PIXI.loader.add("dump", "dump");
-    var json_str = "{\"dump\": [" + resources["dump"].data; 
-    json_str = json_str.substring(0, json_str.length - 2) + "]}";
-    dump = JSON.parse(json_str).dump;
-
     start()
 }
 
@@ -234,6 +228,13 @@ function setup(loader, resources) {
   dog.width = 75;
   dog.height = 75;
 
+  if (context.mode != 'preview')
+  {
+    PIXI.loader.add("dump", "dump");
+    var json_str = "{\"dump\": [" + resources["dump"].data; 
+    json_str = json_str.substring(0, json_str.length - 2) + "]}";
+    dump = JSON.parse(json_str).dump;
+  }
 
   map = new Map(context);
   app.stage.addChild(map.sprite);
