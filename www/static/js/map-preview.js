@@ -1,6 +1,7 @@
 $(function () {
 
-    let $preview = $('#map-preview');
+    let $preview = $('#map-preview'),
+        $map_content $('#map-contents');
 
     $preview.hide();
 
@@ -8,7 +9,7 @@ $(function () {
     .done(function() {
         $.getScript('/static/js/viewer.js')
         .done(function() {
-            start_preview($preview);
+            start_preview($preview, $map_content);
             // reveal the UI
             $preview.fadeIn('fast');
         });

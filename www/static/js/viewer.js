@@ -17,10 +17,11 @@ function square(size, color) {
 let app, context;
 
 class Context {
-    constructor(mode, container, turnSlider) {
+    constructor(mode, container, turnSlider, map) {
         this.mode = mode;
         this.container = container;
         this.turnSlider = turnSlider;
+        this.map = map;
     }
 }
 
@@ -67,13 +68,20 @@ class Plant {
 }
 
 class Map {
-  constructor(dump) {
+  constructor(context) {
     this.cells = [];
     this.p1_plants = [];
     this.p2_plants = [];
     this.sprite = square(TILE_SIZE * 20, 0x000000);
-    this.load(dump);
-    this.update_plants(dump);
+    if (context.mode == 'preview')
+    {
+      this.load(context.map);
+    }
+    else
+    {
+      this.load(dump[0].carte);
+      this.update_plants(dump);
+    }
     this.selected_x = undefined;
     this.selected_y = undefined;
     this.select_square = square(TILE_SIZE, 0xAA0000);
@@ -161,8 +169,8 @@ class Map {
     });
   }
 
-  load(dump) {
-    let lines = dump.carte.split("\n");
+  load(map) {
+    let lines = map.split("\n");
     let line_index = 0;
     for (; line_index < 20; line_index++) {
       let row = [];
@@ -181,12 +189,18 @@ class Map {
 
 
 function start_viewer(container, turnSlider) {
-    context = new Context('replay', container, turnSlider);
+    context = new Context('replay', container, turnSlider, null);
+
+    PIXI.loader.add("dump", "dump");
+    var json_str = "{\"dump\": [" + resources["dump"].data; 
+    json_str = json_str.substring(0, json_str.length - 2) + "]}";
+    dump = JSON.parse(json_str).dump;
+
     start()
 }
 
-function start_preview(container) {
-    context = new Context('preview', container, null);
+function start_preview(container, map) {
+    context = new Context('preview', container, null, map.text());
     start()
 }
 
@@ -201,7 +215,6 @@ function start() {
     );
     context.container.append(app.view);
 
-    PIXI.loader.add("dump", "dump");
     PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
     PIXI.loader.add("plant_a", "/static/img/sprites/plant_a.png");
     PIXI.loader.add("plant_b", "/static/img/sprites/plant_b.png");
@@ -222,10 +235,7 @@ function setup(loader, resources) {
   dog.height = 75;
 
 
-  var json_str = "{\"dump\": [" + resources["dump"].data; 
-  json_str = json_str.substring(0, json_str.length - 2) + "]}";
-  dump = JSON.parse(json_str).dump;
-  map = new Map(dump[0]);
+  map = new Map(context);
   app.stage.addChild(map.sprite);
 
   app.stage.addChild(dog);
