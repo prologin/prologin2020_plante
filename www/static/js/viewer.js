@@ -209,6 +209,9 @@ function start() {
     );
     context.container.append(app.view);
 
+    if (context.mode != 'preview')
+        PIXI.loader.add("dump", "dump");
+
     PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
     PIXI.loader.add("plant_a", "/static/img/sprites/plant_a.png");
     PIXI.loader.add("plant_b", "/static/img/sprites/plant_b.png");
@@ -225,7 +228,6 @@ let lastTurn = 0;
 function setup(loader, resources) {
   if (context.mode !== 'preview')
   {
-    PIXI.loader.add("dump", "dump");
     var json_str = "{\"dump\": [" + resources["dump"].data; 
     json_str = json_str.substring(0, json_str.length - 2) + "]}";
     console.log(json_str);
