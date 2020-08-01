@@ -25,27 +25,27 @@ int ActionArroser::check(const GameState& st) const
 
 void ActionArroser::apply_on(GameState* st) const
 {
-    st->get_map().plant_at(position_plante_)->adulte = true;
+    plante plant = *st->get_map().plant_at(position_plante_);
+    plant.adulte = true;
+
     switch (amelioration_)
     {
     case CARACTERISTIQUE_FORCE:
-        st->get_map().plant_at(position_plante_)->force +=
-            APPORT_CARACTERISTIQUE;
+        plant.force += APPORT_CARACTERISTIQUE;
         break;
     case CARACTERISTIQUE_VIE:
-        st->get_map().plant_at(position_plante_)->vie_max +=
-            APPORT_CARACTERISTIQUE;
-        st->get_map().plant_at(position_plante_)->vie += APPORT_CARACTERISTIQUE;
+        plant.vie_max += APPORT_CARACTERISTIQUE;
+        plant.vie += APPORT_CARACTERISTIQUE;
         break;
     case CARACTERISTIQUE_ELEGANCE:
-        st->get_map().plant_at(position_plante_)->elegance +=
-            APPORT_CARACTERISTIQUE;
+        plant.elegance += APPORT_CARACTERISTIQUE;
         break;
     case CARACTERISTIQUE_RAYON_DEPOTAGE:
-        st->get_map().plant_at(position_plante_)->rayon_deplacement +=
-            APPORT_CARACTERISTIQUE;
+        plant.rayon_deplacement += APPORT_CARACTERISTIQUE;
         break;
     }
+
+    st->get_map().update_plant(plant);
 
     PlayerInfo& player_ = st->get_player_by_key(player_id_);
     internal_action action;

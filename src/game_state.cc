@@ -153,6 +153,7 @@ void GameState::start_round()
 
 void GameState::end_round()
 {
+    init_ = false;
     ++round_;
 }
 
