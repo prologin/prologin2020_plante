@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (c) 2012-2020 Association Prologin <association@prologin.org>
+
 #include <gtest/gtest.h>
 
 #include "test-helpers.hh"

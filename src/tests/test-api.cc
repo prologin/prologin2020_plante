@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (c) 2012-2020 Association Prologin <association@prologin.org>
+
 #include <gtest/gtest.h>
 
 #include "test-helpers.hh"
@@ -100,7 +103,7 @@ TEST_F(ApiTest, test_score)
 TEST_F(ApiTest, test_moi)
 {
     for (auto api : p_api)
-        EXPECT_EQ(api->player()->id, api->moi());
+        EXPECT_EQ((int)api->player()->id, api->moi());
 }
 
 TEST_F(ApiTest, test_adversaire)

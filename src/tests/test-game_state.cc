@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (c) 2012-2020 Association Prologin <association@prologin.org>
+
 #include <gtest/gtest.h>
 
 #include "test-helpers.hh"
@@ -87,4 +90,9 @@ TEST_F(ApiTest, test_aging)
 
     for (auto api : p_api)
         EXPECT_EQ(-1, api->plante_sur_case({18, 19}).age);
+}
+
+TEST_F(ApiTest, test_score)
+{
+    // TODO
 }

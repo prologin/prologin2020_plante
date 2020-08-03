@@ -74,3 +74,5 @@ TEST_F(ApiTest, test_action_arroser_hors_map)
                                      position{0, 0}, CARACTERISTIQUE_ELEGANCE));
     }
 }
+
+// TODO: test stats boost
