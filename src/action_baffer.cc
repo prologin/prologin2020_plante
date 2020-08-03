@@ -12,7 +12,8 @@ int ActionBaffer::check(const GameState& st) const
     if (!position_in_bounds(position_baffante_) ||
         !position_in_bounds(position_baffee_))
         return HORS_POTAGER;
-    if (!st.get_map().plant_at(position_baffante_))
+    if (!st.get_map().plant_at(position_baffante_) ||
+        !st.get_map().plant_at(position_baffee_))
         return PAS_DE_PLANTE;
     if (st.get_map().plant_at(position_baffante_)->jardinier != player_id_)
         return MAUVAIS_JARDINIER;
@@ -20,6 +21,8 @@ int ActionBaffer::check(const GameState& st) const
         return PAS_ENCORE_ARROSEE;
     if (st.get_map().already_hit(position_baffante_))
         return DEJA_BAFFEE;
+    if (distance(position_baffante_, position_baffee_) > PORTEE_BAFFE)
+        return TROP_LOIN;
 
     return OK;
 }

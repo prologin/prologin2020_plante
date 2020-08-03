@@ -52,6 +52,8 @@ Map::Map(std::istream& stream, std::array<int, 2> player_keys)
             plants[plant.pos.x][plant.pos.y] = plant;
         }
     }
+
+    plants_already_hit = init_grid(false);
 }
 
 void Map::new_player_turn()
