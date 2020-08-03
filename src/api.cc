@@ -138,3 +138,45 @@ int Api::tour_actuel()
 {
     return game_state_->get_round();
 }
+
+std::ostream& operator<<(std::ostream& os, erreur v);
+void Api::afficher_erreur(erreur v)
+{
+    std::cerr << v << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, action_type v);
+void Api::afficher_action_type(action_type v)
+{
+    std::cerr << v << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, caracteristique v);
+void Api::afficher_caracteristique(caracteristique v)
+{
+    std::cerr << v << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, debug_chien v);
+void Api::afficher_debug_chien(debug_chien v)
+{
+    std::cerr << v << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, position v);
+void Api::afficher_position(position v)
+{
+    std::cerr << v << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, plante v);
+void Api::afficher_plante(plante v)
+{
+    std::cerr << v << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, action_hist v);
+void Api::afficher_action_hist(action_hist v)
+{
+    std::cerr << v << std::endl;
+}

@@ -91,8 +91,3 @@ TEST_F(ApiTest, test_aging)
     for (auto api : p_api)
         EXPECT_EQ(-1, api->plante_sur_case({18, 19}).age);
 }
-
-TEST_F(ApiTest, test_score)
-{
-    // TODO
-}

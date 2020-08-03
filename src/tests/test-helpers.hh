@@ -111,7 +111,7 @@ protected:
         for (auto api : p_api)
         {
             api->game_state().end_player_turn(current_player);
-            api->game_state().new_player_turn();
+            api->game_state().new_player_turn(1 - current_player);
 
             if (current_player == 1)
             {

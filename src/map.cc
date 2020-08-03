@@ -45,7 +45,6 @@ Map::Map(std::istream& stream, std::array<int, 2> player_keys)
 
             plant.jardinier = player_key;
             plant.adulte = true;
-            // TODO: add as map argument
             plant.enracinee = false;
             plant.age = AGE_DE_POUSSE;
             plant.vie = plant.vie_max;
