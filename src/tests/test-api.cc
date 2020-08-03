@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (c) 2012-2020 Association Prologin <association@prologin.org>
 
+#include <map>
+
 #include <gtest/gtest.h>
 
 #include "test-helpers.hh"
@@ -9,12 +11,24 @@
 
 TEST_F(ApiTest, test_debug_afficher_chien)
 {
-    // TODO
+    for (auto api : p_api)
+    {
+        EXPECT_EQ(OK, api->debug_afficher_chien(position{0, 0}, CHIEN_BLEU));
+        EXPECT_EQ(OK, api->debug_afficher_chien(position{0, 0}, CHIEN_ROUGE));
+    }
 }
 
 TEST_F(ApiTest, test_plantes_jardinier)
 {
-    // TODO
+    std::map<int, int> nb_plants = {{1337, 5}, {42, 6}};
+
+    for (auto api : p_api)
+    {
+        EXPECT_TRUE(api->plantes_jardinier(0).empty());
+
+        for (int player : {1337, 42})
+            EXPECT_EQ(nb_plants[player], api->plantes_jardinier(player).size());
+    }
 }
 
 TEST_F(ApiTest, test_plante_sur_case)
@@ -29,17 +43,59 @@ TEST_F(ApiTest, test_plante_sur_case)
 
 TEST_F(ApiTest, test_plantes_arrosables)
 {
-    // TODO
+    next_turn();
+    next_turn();
+
+    for (auto api : p_api)
+        for (int player : {1337, 42})
+            EXPECT_TRUE(api->plantes_arrosables(player).empty());
+
+    for (int k = 0; k < 2 * (AGE_DE_POUSSE - 1); k++)
+        next_turn();
+
+    for (auto api : p_api)
+        EXPECT_TRUE(api->plantes_arrosables(0).empty());
+
+    std::map<int, int> nb_plants = {{1337, 2}, {42, 1}};
+
+    for (auto api : p_api)
+        for (int player : {1337, 42})
+            EXPECT_EQ(nb_plants[player],
+                      api->plantes_arrosables(player).size());
 }
 
 TEST_F(ApiTest, test_plantes_adultes)
 {
-    // TODO
+    std::map<int, int> nb_plants = {{1337, 5}, {42, 6}};
+
+    for (int k = 0; k < 2 * AGE_DE_POUSSE; k++)
+        next_turn();
+
+    for (auto api : p_api)
+        EXPECT_TRUE(api->plantes_adultes(0).empty());
+
+    for (auto api : p_api)
+        for (int player : {1337, 42})
+            EXPECT_EQ(nb_plants[player], api->plantes_adultes(player).size());
 }
 
 TEST_F(ApiTest, test_plantes_depotables)
 {
-    // TODO
+    std::map<int, int> nb_plants = {{1337, 5}, {42, 6}};
+
+    for (int k = 0; k < 2 * AGE_DE_POUSSE; k++)
+        next_turn();
+
+    for (auto api : p_api)
+    {
+        EXPECT_EQ(nb_plants[api->moi()],
+                  api->plantes_depotables(api->moi()).size());
+
+        for (auto plant : api->plantes_arrosables(api->moi()))
+            EXPECT_EQ(OK, api->arroser(plant.pos, CARACTERISTIQUE_ELEGANCE));
+
+        EXPECT_EQ(7, api->plantes_depotables(api->moi()).size());
+    }
 }
 
 TEST_F(ApiTest, test_ressources_sur_case)

@@ -39,36 +39,33 @@ std::vector<plante> Api::plantes_arrosables(int jardinier)
     if (!game_state_->player_valid(jardinier))
         return {};
 
-    int player_id = game_state().get_player_id_by_key(jardinier);
-
     const auto filter = [=](const plante& plant) {
-        return plant.jardinier == player_id && plant.age >= AGE_DE_POUSSE;
+        return plant.jardinier == jardinier && plant.age >= AGE_DE_POUSSE &&
+               !plant.adulte;
     };
 
     return game_state().get_map().all_plants_with(filter);
 }
+
 std::vector<plante> Api::plantes_adultes(int jardinier)
 {
     if (!game_state_->player_valid(jardinier))
         return {};
 
-    int player_id = game_state().get_player_id_by_key(jardinier);
-
     const auto filter = [=](const plante& plant) {
-        return plant.jardinier == player_id && plant.adulte;
+        return plant.jardinier == jardinier && plant.adulte;
     };
 
     return game_state().get_map().all_plants_with(filter);
 }
+
 std::vector<plante> Api::plantes_depotables(int jardinier)
 {
     if (!game_state_->player_valid(jardinier))
         return {};
 
-    int player_id = game_state().get_player_id_by_key(jardinier);
-
     const auto filter = [=](const plante& plant) {
-        return plant.jardinier == player_id && !plant.enracinee;
+        return plant.jardinier == jardinier && plant.adulte && !plant.enracinee;
     };
 
     return game_state().get_map().all_plants_with(filter);

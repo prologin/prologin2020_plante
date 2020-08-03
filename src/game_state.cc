@@ -67,7 +67,7 @@ bool GameState::player_valid(int player_key) const
         if (get_player_key_by_id(player_id) == player_key)
             return true;
 
-    assertm(false, "unknown player_key");
+    return false;
 }
 
 int GameState::get_player_id_by_key(int player_key) const
