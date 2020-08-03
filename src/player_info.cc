@@ -40,7 +40,7 @@ void PlayerInfo::add_internal_action(internal_action action)
 void PlayerInfo::update_score(const Map& map)
 {
     const auto player_plants = map.all_plants_with([=](const plante& plant) {
-        return plant.jardinier == (int)this->rules_player_->id;
+        return plant.adulte && plant.jardinier == (int)this->rules_player_->id;
     });
 
     for (const plante& plant : player_plants)

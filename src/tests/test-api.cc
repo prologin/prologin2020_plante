@@ -153,7 +153,18 @@ TEST_F(ApiTest, test_historique)
 
 TEST_F(ApiTest, test_score)
 {
-    // TODO
+    std::map<int, int> per_turn_elegance = {{1337, 2}, {42, 46}};
+
+    for (int turn = 0; turn <= 6; turn++)
+    {
+        for (auto api : p_api)
+            for (int jardinier : {42, 1337})
+                EXPECT_EQ(turn * per_turn_elegance[jardinier],
+                          api->score(jardinier));
+
+        next_turn();
+        next_turn();
+    }
 }
 
 TEST_F(ApiTest, test_moi)
@@ -164,7 +175,6 @@ TEST_F(ApiTest, test_moi)
 
 TEST_F(ApiTest, test_adversaire)
 {
-
     for (size_t p_id : {0, 1})
     {
         auto my_api = p_api[p_id];
