@@ -167,6 +167,12 @@ std::ostream& operator<<(std::ostream& os, erreur v)
     case TROP_LOIN:
         os << "TROP_LOIN";
         break;
+    case CARACTERISTIQUE_INVALIDE:
+        os << "CARACTERISTIQUE_INVALIDE";
+        break;
+    case CHIEN_INVALIDE:
+        os << "CHIEN_INVALIDE";
+        break;
     }
     return os;
 }

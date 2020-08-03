@@ -116,9 +116,9 @@ static void dump_string(std::ostream& ss, const std::string& s)
 static void dump_map(std::ostream& ss, const Map& map)
 {
     ss << ", \"carte\": \"";
-    for (size_t y = 0; y < TAILLE_GRILLE; ++y)
+    for (int y = 0; y < TAILLE_GRILLE; ++y)
     {
-        for (size_t x = 0; x < TAILLE_GRILLE; ++x)
+        for (int x = 0; x < TAILLE_GRILLE; ++x)
         {
             const auto& res = map.ressources_at({x, y});
             for (size_t k = 0; k < NB_TYPES_RESSOURCES - 1; ++k)
@@ -148,22 +148,23 @@ static void dump_plants(std::ostream& ss, const GameState& st, int player_id)
         ss << ", \"rayon_déplacement\": " << plant.rayon_deplacement;
         ss << ", \"rayon_collecte\": " << plant.rayon_collecte;
         ss << ", \"consommation\": ";
-        dump_vector<int>(plant.consommation, ss, [](auto& ss, auto res) { ss << res; });
+        dump_vector<int>(plant.consommation, ss,
+                         [](auto& ss, auto res) { ss << res; });
         ss << ", \"age\": " << plant.age << "}";
     });
 }
 
-static void dump_history(std::ostream& ss, const GameState& st, const auto& player)
+static void dump_history(std::ostream& ss, const GameState&,
+                         const PlayerInfo& player)
 {
     const auto& actions = player.get_internal_history();
-    dump_vector<internal_action>(actions, ss, [](auto& ss, auto action) {
-        ss << action.json;
-    });
+    dump_vector<internal_action>(
+        actions, ss, [](auto& ss, auto action) { ss << action.json; });
 }
 
 static void dump_players(std::ostream& ss, const GameState& st)
 {
-    
+
     const auto& players = st.get_player_info();
     std::vector<std::pair<int, PlayerInfo>> players_vec;
 

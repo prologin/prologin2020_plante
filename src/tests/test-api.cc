@@ -20,7 +20,7 @@ TEST_F(ApiTest, test_debug_afficher_chien)
 
 TEST_F(ApiTest, test_plantes_jardinier)
 {
-    std::map<int, int> nb_plants = {{1337, 5}, {42, 6}};
+    std::map<int, size_t> nb_plants = {{1337, 5}, {42, 6}};
 
     for (auto api : p_api)
     {
@@ -56,7 +56,7 @@ TEST_F(ApiTest, test_plantes_arrosables)
     for (auto api : p_api)
         EXPECT_TRUE(api->plantes_arrosables(0).empty());
 
-    std::map<int, int> nb_plants = {{1337, 2}, {42, 1}};
+    std::map<int, size_t> nb_plants = {{1337, 2}, {42, 1}};
 
     for (auto api : p_api)
         for (int player : {1337, 42})
@@ -66,7 +66,7 @@ TEST_F(ApiTest, test_plantes_arrosables)
 
 TEST_F(ApiTest, test_plantes_adultes)
 {
-    std::map<int, int> nb_plants = {{1337, 5}, {42, 6}};
+    std::map<int, size_t> nb_plants = {{1337, 5}, {42, 6}};
 
     for (int k = 0; k < 2 * AGE_DE_POUSSE; k++)
         next_turn();
@@ -81,7 +81,7 @@ TEST_F(ApiTest, test_plantes_adultes)
 
 TEST_F(ApiTest, test_plantes_depotables)
 {
-    std::map<int, int> nb_plants = {{1337, 5}, {42, 6}};
+    std::map<int, size_t> nb_plants = {{1337, 5}, {42, 6}};
 
     for (int k = 0; k < 2 * AGE_DE_POUSSE; k++)
         next_turn();
@@ -94,7 +94,7 @@ TEST_F(ApiTest, test_plantes_depotables)
         for (auto plant : api->plantes_arrosables(api->moi()))
             EXPECT_EQ(OK, api->arroser(plant.pos, CARACTERISTIQUE_ELEGANCE));
 
-        EXPECT_EQ(7, api->plantes_depotables(api->moi()).size());
+        EXPECT_EQ((size_t)7, api->plantes_depotables(api->moi()).size());
     }
 }
 

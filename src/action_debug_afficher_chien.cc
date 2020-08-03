@@ -4,11 +4,11 @@
 #include "actions.hh"
 #include "utils.hh"
 
-int ActionDebugAfficherChien::check(const GameState& st) const
+int ActionDebugAfficherChien::check(const GameState&) const
 {
     if (!position_in_bounds(pos_))
         return HORS_POTAGER;
-    if (chien_ < 0 || chien_ >= 4)
+    if (chien_ < 0 || (int)chien_ >= 4)
         return CHIEN_INVALIDE;
     return OK;
 }
