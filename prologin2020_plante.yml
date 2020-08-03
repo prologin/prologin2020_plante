@@ -43,6 +43,11 @@ constant:
     cst_val: 10
     cst_comment: Apport pour une caractéristique lors de l'arrosage
   -
+    cst_name: COUT_PAR_CASE_COLLECTE
+    cst_val: 15
+    cst_comment: Nombre de points de caractéristiques nécessaires pour pouvoir
+                 dépoter une cases plus loins.
+  -
     cst_name: COUT_PAR_CASE_DEPOTAGE
     cst_val: 15
     cst_comment: Nombre de points de caractéristiques nécessaires pour pouvoir

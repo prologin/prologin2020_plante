@@ -3,6 +3,7 @@
 #include "utils.hh"
 
 #include <cassert>
+#include <numeric>
 #include <string>
 
 Map::Map(std::istream& stream, std::array<int, 2> player_keys)
@@ -125,6 +126,7 @@ void Map::update_plant(const plante& plant)
     plants[plant.pos.x][plant.pos.y] = plant;
 }
 
+#include <iostream>
 // TODO: cache result, be carefull about will_have_enough_ressources
 Grid<bool> Map::build_has_enough_ressources() const
 {
@@ -134,7 +136,8 @@ Grid<bool> Map::build_has_enough_ressources() const
         init_grid(std::array<int, NB_TYPES_RESSOURCES>({0, 0, 0}));
 
     for (plante plant : all_plants())
-        for (position cell : circle(plant.pos, plant.rayon_collecte))
+        for (position cell :
+             circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
             for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
                 collect_total_weight[cell.x][cell.y][k] +=
                     plant.consommation[k];
@@ -146,20 +149,28 @@ Grid<bool> Map::build_has_enough_ressources() const
     for (plante plant : all_plants())
     {
         result[plant.pos.x][plant.pos.y] = true;
-        const auto neighbours = circle(plant.pos, plant.rayon_deplacement);
+        const auto neighbours =
+            circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE);
 
         for (size_t k = 0;
              k < NB_TYPES_RESSOURCES && result[plant.pos.x][plant.pos.y]; k++)
         {
-            int quotient = 0;
-            int divisor = 0;
+            long long int divisor = 1;
 
             for (position cell : neighbours)
-            {
-                divisor += collect_total_weight[cell.x][cell.y][k];
-                quotient +=
-                    ressources[cell.x][cell.y][k] * plant.consommation[k];
-            }
+                if (collect_total_weight[cell.x][cell.y][k] != 0)
+                    divisor = std::lcm(divisor,
+                                       collect_total_weight[cell.x][cell.y][k]);
+
+            long long int quotient = 0;
+
+            for (position cell : neighbours)
+                if (collect_total_weight[cell.x][cell.y][k] != 0)
+                {
+                    quotient +=
+                        ressources[cell.x][cell.y][k] * plant.consommation[k] *
+                        (divisor / collect_total_weight[cell.x][cell.y][k]);
+                }
 
             // We need quotient / divisor >= plant.consommation[k]
             result[plant.pos.x][plant.pos.y] &=
@@ -176,7 +187,7 @@ bool Map::will_have_enough_ressources(const plante& plant)
     auto current_plant = plant_at(plant.pos);
 
     // Check result with modified map
-    update_plant(plant);
+    plants[plant.pos.x][plant.pos.y] = plant;
     bool will_have_enough_ressources = has_enough_ressources(plant.pos);
 
     // Undo map modifications

@@ -307,6 +307,7 @@ extern "C" void api_afficher_plante(plante v)
 {
     std::cerr << v << std::endl;
 }
+
 std::ostream& operator<<(std::ostream& os, action_hist v)
 {
     os << "{ ";

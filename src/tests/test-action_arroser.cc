@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright 2020 Prologin <info@prologin.org>
+
 #include <gtest/gtest.h>
 
 #include "test-helpers.hh"
@@ -11,8 +14,15 @@ TEST_F(ApiTest, test_action_arroser_ok)
 
     for (int player : {0, 1})
     {
+        const int elegance_bfor =
+            p_api[player]->plante_sur_case(player_plant[player]).elegance;
+
         EXPECT_EQ(OK, p_api[player]->arroser(player_plant[player],
                                              CARACTERISTIQUE_ELEGANCE));
+
+        EXPECT_EQ(
+            elegance_bfor + APPORT_CARACTERISTIQUE,
+            p_api[player]->plante_sur_case(player_plant[player]).elegance);
 
         EXPECT_EQ(DEJA_ARROSEE,
                   p_api[player]->arroser(player_plant[player],
@@ -74,5 +84,3 @@ TEST_F(ApiTest, test_action_arroser_hors_map)
                                      position{0, 0}, CARACTERISTIQUE_ELEGANCE));
     }
 }
-
-// TODO: test stats boost

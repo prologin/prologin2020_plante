@@ -31,6 +31,10 @@
 
 /// Nombre de points de caractéristiques nécessaires pour pouvoir dépoter une
 /// cases plus loins.
+#define COUT_PAR_CASE_COLLECTE 15
+
+/// Nombre de points de caractéristiques nécessaires pour pouvoir dépoter une
+/// cases plus loins.
 #define COUT_PAR_CASE_DEPOTAGE 15
 
 /// Erreurs possibles

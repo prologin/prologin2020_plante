@@ -118,12 +118,23 @@ TEST_F(ApiTest, test_ressources_sur_case)
 
 TEST_F(ApiTest, test_reproduction_possible)
 {
-    // TODO
+    for (auto api : p_api)
+    {
+        EXPECT_FALSE(api->reproduction_possible(
+            {0, 0}, 7 * COUT_PAR_CASE_COLLECTE, {8, 1, 4}));
+
+        EXPECT_TRUE(api->reproduction_possible(
+            {0, 0}, 8 * COUT_PAR_CASE_COLLECTE, {8, 1, 2}));
+    }
 }
 
 TEST_F(ApiTest, test_plante_reproductible)
 {
-    // TODO
+    for (auto api : p_api)
+    {
+        EXPECT_FALSE(api->plante_reproductible({0, 0}));
+        EXPECT_TRUE(api->plante_reproductible({17, 18}));
+    }
 }
 
 TEST_F(ApiTest, test_croisement)

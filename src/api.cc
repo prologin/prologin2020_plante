@@ -86,7 +86,7 @@ bool Api::reproduction_possible(position pos, int rayon_collecte,
     if (!position_in_bounds(pos))
         return false;
 
-    plante fake_plant;
+    plante fake_plant = INVALID_PLANT;
     fake_plant.pos = pos;
     fake_plant.rayon_collecte = rayon_collecte;
     fake_plant.consommation = consommation;
