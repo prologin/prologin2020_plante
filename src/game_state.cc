@@ -172,5 +172,15 @@ void GameState::end_player_turn(int player_id)
 
     PlayerInfo& player_ = players_[player_id];
     player_.update_score(map_);
-    map_.end_player_turn(player_id);
+
+    for (position death_pos : map_.end_player_turn(player_id))
+    {
+        internal_action death_action;
+        death_action.type = death;
+        death_action.death.pos = death_pos;
+        std::ostringstream stream;
+        death_dump_json(stream, death_pos);
+        death_action.json = stream.str();
+        player_.add_internal_action(death_action);
+    }
 }

@@ -3,9 +3,11 @@
 
 #pragma once
 
+#include <iostream>
 #include <string>
 
 #include "constant.hh"
+#include "utils.hh"
 
 enum internal_action_type
 {
@@ -38,10 +40,15 @@ typedef struct internal_action
     internal_action_type type;
     std::string json;
 
-    union {
+    union
+    {
         flag_info flag;
         death_info death;
         birth_info birth;
         action_hist action;
     };
 } internal_action;
+
+// Dump primitives for internal actions
+
+void death_dump_json(std::ostream& ss, position pos);

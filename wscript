@@ -26,6 +26,7 @@ def build(bld):
             src/api.cc
             src/dumper.cc
             src/entry.cc
+            src/history.cc
             src/game_state.cc
             src/interface.cc
             src/map.cc

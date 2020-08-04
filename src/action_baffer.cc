@@ -35,7 +35,9 @@ void ActionBaffer::apply_on(GameState* st) const
         internal_action death_action;
         death_action.type = death;
         death_action.death.pos = position_baffee_;
-
+        std::ostringstream stream;
+        death_dump_json(stream, position_baffee_);
+        death_action.json = stream.str();
         player_.add_internal_action(death_action);
     }
 

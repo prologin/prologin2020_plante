@@ -61,21 +61,26 @@ void Map::new_player_turn()
     plants_already_hit = init_grid(false);
 }
 
-void Map::end_player_turn(int player_id)
+std::vector<position> Map::end_player_turn(int player_id)
 {
     assert(player_id == 0 || player_id == 1);
     breed_player_plants(player_id);
+    std::vector<position> deaths;
 
     for (auto& plant : player_plants(player_id))
     {
         ++plant.age;
 
         if (plant.age >= AGE_MAX)
-            // TODO add death internal_action
+        {
             destroy_plant(plant.pos);
+            deaths.push_back(plant.pos);
+        }
         else
             update_plant(plant);
     }
+
+    return deaths;
 }
 
 std::array<int, NB_TYPES_RESSOURCES> Map::ressources_at(position pos) const
