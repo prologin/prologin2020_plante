@@ -6,7 +6,7 @@ let HEIGHT = TILE_SIZE * 20;
 
 function rect(width, height, color) {
   let res = new PIXI.Graphics();
-  res.lineStyle(1, 0xFFFFFF, 1);
+  // res.lineStyle(1, 0xFFFFFF, 1);
   res.beginFill(color);
   res.drawRect(0, 0, width, height);
   res.endFill();
@@ -91,14 +91,34 @@ class Map {
     this.select_square.alpha = 0.2;
     this.sprite.addChild(this.select_square);
 
-    this.details_area = rect(400, 500, 0x222222);
+    this.title_area = rect(400, 80, 0x111111);
+    this.title_area.x = 20 * TILE_SIZE;
+    this.sprite.addChild(this.title_area);
+
+    this.title_text = new PIXI.Text(
+        "Tour 0",
+        {
+            font: "Arial",
+            fontSize: 40,
+            fill: "white",
+            fontWeight: "bold"
+        }
+    );
+
+    this.title_text.x = this.title_area.width / 2;
+    this.title_text.y = this.title_area.height / 2;
+    this.title_text.anchor.set(0.5);
+    this.title_area.addChild(this.title_text);
+
+    this.details_area = rect(800, HEIGHT - 80, 0x222222);
     this.details_area.x = 20 * TILE_SIZE;
+    this.details_area.y = 80;
     this.sprite.addChild(this.details_area);
 
     this.details_text = new PIXI.Text("", {font:"50px Arial", fill:"white"});
-    this.details_text.x = this.details_area.width / 2;
-    this.details_text.y = this.details_area.height / 2;
-    this.details_text.anchor.set(0.5);
+    this.details_text.x = 30;
+    this.details_text.y = 30;
+    // this.details_text.anchor.set(0.5);
     this.details_area.addChild(this.details_text);
 
   }
@@ -223,7 +243,7 @@ function start() {
 }
 
 
-let dump, map, turnText;
+let dump, map;
 
 let lastTurn = 0;
 
@@ -236,9 +256,6 @@ function setup(loader, resources) {
 
     map = new Map(context);
     app.stage.addChild(map.sprite);
-
-    turnText = new PIXI.Text("turn = " + lastTurn, {font:"50px Arial", fill:"red"});
-    app.stage.addChild(turnText);
 
     let $canvas = $("#replay canvas");
 
@@ -281,7 +298,7 @@ function gameLoop(delta)
     if (currentTurn !== lastTurn)
     {
         map.update_plants(dump[currentTurn]);
-        turnText.text = "turn = " + currentTurn;
+        map.title_text.text = "Tour " + currentTurn;
         context.turnSlider.val(currentTurn).trigger('change');
     }
     lastTurn = currentTurn;
