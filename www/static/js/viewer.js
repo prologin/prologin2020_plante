@@ -1,6 +1,8 @@
 'use strict';
 
-let TILE_SIZE = 75
+let TILE_SIZE = 75;
+let WIDTH = TILE_SIZE * 20 + 400;
+let HEIGHT = TILE_SIZE * 20;
 
 function rect(width, height, color) {
   let res = new PIXI.Graphics();
@@ -200,8 +202,8 @@ function start_preview(container, map) {
 
 function start() {
     app = new PIXI.Application({
-        width: TILE_SIZE * 20 + 400,
-        height: TILE_SIZE * 20,
+        width: WIDTH,
+        height: HEIGHT,
         antialias: true,
         transparent: true,
         resolution: 1
@@ -226,45 +228,62 @@ let dump, map, turnText;
 let lastTurn = 0;
 
 function setup(loader, resources) {
-  if (context.mode !== 'preview')
-  {
-    var json_str = "{\"dump\": [" + resources["dump"].data; 
-    json_str = json_str.substring(0, json_str.length - 2) + "]}";
-    dump = JSON.parse(json_str).dump;
-  }
+    if (context.mode !== 'preview') {
+        let json_str = "{\"dump\": [" + resources["dump"].data;
+        json_str = json_str.substring(0, json_str.length - 2) + "]}";
+        dump = JSON.parse(json_str).dump;
+    }
 
-  map = new Map(context);
-  app.stage.addChild(map.sprite);
+    map = new Map(context);
+    app.stage.addChild(map.sprite);
 
-  turnText = new PIXI.Text("turn = " + lastTurn, {font:"50px Arial", fill:"red"});
-  app.stage.addChild(turnText);
+    turnText = new PIXI.Text("turn = " + lastTurn, {font:"50px Arial", fill:"red"});
+    app.stage.addChild(turnText);
 
-  var clickHandler = function(e){
-    let mouse_x = app.renderer.plugins.interaction.mouse.global.x;
-    let mouse_y = app.renderer.plugins.interaction.mouse.global.y;
-    let index_x = Math.floor(mouse_x / TILE_SIZE);
-    let index_y = Math.floor(mouse_y / TILE_SIZE);
-    map.select_tile(index_x, index_y);
-  }
-  app.stage.interactive = true;
-  app.stage.on("pointerdown", clickHandler);
+    let $canvas = $("#replay canvas");
 
-  if (context.mode !== 'preview')
-      app.ticker.add(delta => gameLoop(delta));
+    function clickHandler(e) {
+        let mouse_x = app.renderer.plugins.interaction.mouse.global.x;
+        let mouse_y = app.renderer.plugins.interaction.mouse.global.y;
+        let index_x = Math.floor(mouse_x / TILE_SIZE);
+        let index_y = Math.floor(mouse_y / TILE_SIZE);
+        map.select_tile(index_x, index_y);
+    }
+
+    function keyHandler(e) {
+        console.log(e);
+
+        if (e.key == "f") {
+            if (document.fullscreen) {
+                document.exitFullscreen();
+                $("#replay_view canvas").css('width', '100%');
+            }
+            else {
+                $("#replay_view")[0].requestFullscreen();
+                $("#replay_view canvas").css('width', 'auto');
+            }
+        }
+    }
+
+    app.stage.interactive = true;
+    app.stage.on("pointerdown", clickHandler);
+    window.addEventListener("keydown", keyHandler);
+
+    if (context.mode !== 'preview')
+        app.ticker.add(delta => gameLoop(delta));
 }
 
 let counter = 0;
 function gameLoop(delta)
 {
-  counter += delta;
-  const currentTurn = Math.floor(counter / 60);
-  if (currentTurn !== lastTurn)
-  {
-      console.log('currentTurn = ', currentTurn);
-      map.update_plants(dump[currentTurn]);
-      turnText.text = "turn = " + currentTurn;
-      context.turnSlider.val(currentTurn).trigger('change');
-  }
-  lastTurn = currentTurn;
-  map.render();
+    counter += delta;
+    const currentTurn = Math.floor(counter / 60);
+    if (currentTurn !== lastTurn)
+    {
+        map.update_plants(dump[currentTurn]);
+        turnText.text = "turn = " + currentTurn;
+        context.turnSlider.val(currentTurn).trigger('change');
+    }
+    lastTurn = currentTurn;
+    map.render();
 }

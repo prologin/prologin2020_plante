@@ -7,16 +7,26 @@ $(function () {
         $turnLabel = $('#replay-turn-label'),
         $turnSlider = $('#replay-turn-slider');
 
-    $replay.hide();
+    $replay.append('<div id="replay_view"></div>');
+    let $replay_view = $("#replay_view");
+
+
+    $replay_view.hide();
 
     $.getScript('/static/js/pixi.min.js')
     .done(function() {
         $.getScript('/static/js/viewer.js')
         .done(function() {
             console.log('finish loading');
-            start_viewer($replay, $turnSlider);
+            start_viewer($replay_view, $turnSlider);
             // reveal the UI
-            $replay.fadeIn('fast');
+            $replay_view.find('canvas').css({
+                'display': 'block',
+                'max-width': '100%',
+                'max-height': '100%',
+                'margin': 'auto',
+            });
+            $replay_view.fadeIn('fast');
 
             $turnSlider.change(function () {
                 let turnIndex = parseInt($turnSlider.val());
