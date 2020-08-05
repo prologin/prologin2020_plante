@@ -46,7 +46,7 @@ constant:
     cst_name: COUT_PAR_CASE_DEPOTAGE
     cst_val: 15
     cst_comment: Nombre de points de caractéristiques nécessaires pour pouvoir
-                 dépoter une cases plus loins.
+                 dépoter une case plus loin.
 
 enum:
   -
@@ -62,7 +62,7 @@ enum:
       - [sans_pot, "La plante est déjà dépotée"]
       - [deja_arrosee, "La plante a déjà été arrosée"]
       - [deja_baffee, "La plante a déjà baffé ce tour ci"]
-      - [pas_encore_arrosee, "La plante n'as pas encore été arrosée"]
+      - [pas_encore_arrosee, "La plante n'a pas encore été arrosée"]
       - [pas_encore_adulte, "La plante ne peut pas encore être arrosée"]
       - [plante_invalide, "Les caractéristiques de la plante sont invalides"]
       - [trop_loin, "La plante n'a pas un assez grand rayon de dépotage"]
@@ -109,9 +109,9 @@ struct:
       - [pos, position, "Position de la plante"]
       - [jardinier, int, "Jardinier ayant planté la plante"]
       - [adulte, bool, "La plante est adulte"]
-      - [enracinee, bool, "La plante a déjà déjà été dépotée"]
+      - [enracinee, bool, "La plante a déjà été dépotée"]
       - [vie, int, "Point(s) de vie restant(s) de la plante"]
-      - [vie_max, int, "Point(s) de vie maximumde la plante"]
+      - [vie_max, int, "Point(s) de vie maximum de la plante"]
       - [force, int, "Force de la baffe de la plante"]
       - [elegance, int, "Élégance de la plante"]
       - [rayon_deplacement, int, "Distance maximale parcourable par la plante
