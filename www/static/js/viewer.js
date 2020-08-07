@@ -1,8 +1,12 @@
 'use strict';
 
-let TILE_SIZE = 75;
-let WIDTH = TILE_SIZE * 20 + 400;
-let HEIGHT = TILE_SIZE * 20;
+const TILE_SIZE = 75;
+const WIDTH = TILE_SIZE * 20 + 400;
+const HEIGHT = TILE_SIZE * 20;
+
+// Number of frames used to animate an event.
+const ANIMATION_DURATION = 6;
+
 
 function rect(width, height, color) {
   let res = new PIXI.Graphics();
@@ -182,14 +186,26 @@ class Map {
         this.plant_details = null;
     }
 
-    selected_plant() {
+    // TODO: implement this with a decent time complexity
+    plant_at(x, y) {
         const all_plants = this.p1_plants.concat(this.p2_plants);
 
         for (let p in all_plants)
-            if (all_plants[p].pos_x === map.selected_x && all_plants[p].pos_y === map.selected_y)
+            if (all_plants[p].pos_x === x && all_plants[p].pos_y === y)
                 return all_plants[p];
 
         return null;
+    }
+
+    selected_plant() {
+        return this.plant_at(map.selected_x, map.selected_y);
+    }
+
+    del_plant(x, y) {
+        const plant = this.plant_at(x, y);
+        this.sprite.removeChild(plant);
+        this.p1_plants = this.p1_plants.filter(pp => pp.pos_x != x || pp.pos_y != y);
+        this.p2_plants = this.p2_plants.filter(pp => pp.pos_x != x || pp.pos_y != y);
     }
 
     update_cell_details() {
@@ -391,18 +407,70 @@ function setup(loader, resources) {
         app.ticker.add(delta => gameLoop(delta));
 }
 
-let counter = 0;
+function death(pos, frame) {
+    let plant = map.plant_at(pos.x, pos.y);
+
+    if (plant == null)
+        console.error("couldn't find plant at", pos);
+
+    plant.sprite.alpha = 1 - (1 + frame) / ANIMATION_DURATION;
+
+    if (frame + 1 == ANIMATION_DURATION) {
+        map.del_plant(pos.x, pos.y);
+        console.warn(map.plant_at(pos.x, pos.y));
+    }
+}
+
+function depoter(start, end, frame) {
+    let plant = map.plant_at(start.x, start.y);
+
+    if (plant == null)
+        console.error("couldn't find plant at", start);
+
+    plant.sprite.x = ((1 + frame) * (end.x - start.x) / ANIMATION_DURATION + start.x) * TILE_SIZE;
+    plant.sprite.y = ((1 + frame) * (end.y - start.y) / ANIMATION_DURATION + start.y) * TILE_SIZE;
+
+    if (frame + 1 == ANIMATION_DURATION) {
+        plant.pos_x = end.x;
+        plant.pos_y = end.y;
+    }
+}
+
+var turn = 0;
+var player = 0;
+var action = 0;
+var frame = 0;
+
 function gameLoop(delta)
 {
-    counter += delta;
-    const currentTurn = Math.floor(counter / 60);
-    if (currentTurn !== lastTurn)
-    {
-        map.update_plants(dump[currentTurn]);
-        map.title_text.text = "Tour " + currentTurn;
-        map.update_cell_details();
-        map.update_plant_details();
-        context.turnSlider.val(currentTurn).trigger('change');
+    while (action >= dump[turn]["joueurs"][player]["historique"].length) {
+        if (turn > 0)
+            map.update_plants(dump[turn-1]); // sync previous turn
+
+        action = 0;
+        player = 1 - player;
+        turn += 1;
+
+        map.title_text.text = "Tour " + turn / 2;
+        context.turnSlider.val(turn).trigger('change');
     }
-    lastTurn = currentTurn;
+
+    const curr_action = dump[turn]["joueurs"][player]["historique"][action];
+
+    if (curr_action["action_type"] == "dépoter")
+        depoter(curr_action["position_départ"], curr_action["position_arrivée_"], frame);
+    else if (curr_action["action_type"] == "death")
+        death(curr_action["position"], frame);
+    else
+        console.warn("unsupported action:", curr_action["action_type"]);
+
+    map.update_cell_details();
+    map.update_plant_details();
+
+    frame += 1;
+
+    if (frame >= ANIMATION_DURATION) {
+        frame = 0;
+        action += 1;
+    }
 }
