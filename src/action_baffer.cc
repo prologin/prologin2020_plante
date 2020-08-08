@@ -30,16 +30,6 @@ int ActionBaffer::check(const GameState& st) const
 void ActionBaffer::apply_on(GameState* st) const
 {
     PlayerInfo& player_ = st->get_player_by_key(player_id_);
-    if (st->get_map().hit(position_baffante_, position_baffee_))
-    {
-        internal_action death_action;
-        death_action.type = death;
-        death_action.death.pos = position_baffee_;
-        std::ostringstream stream;
-        death_dump_json(stream, position_baffee_);
-        death_action.json = stream.str();
-        player_.add_internal_action(death_action);
-    }
 
     internal_action action;
     action.type = standard_action;
@@ -54,6 +44,17 @@ void ActionBaffer::apply_on(GameState* st) const
     this->dump_json(*st, stream);
     action.json = stream.str();
     player_.add_internal_action(action);
+
+    if (st->get_map().hit(position_baffante_, position_baffee_))
+    {
+        internal_action death_action;
+        death_action.type = death;
+        death_action.death.pos = position_baffee_;
+        std::ostringstream stream;
+        death_dump_json(stream, position_baffee_);
+        death_action.json = stream.str();
+        player_.add_internal_action(death_action);
+    }
 }
 
 void ActionBaffer::dump_json(const GameState& /* st */, std::ostream& ss) const
