@@ -136,11 +136,20 @@ class Plant {
     }
 }
 
+// class PlantSprite extends PIXI.Sprite {
+//     constructor() {
+//         super();
+//
+//         this.
+//     }
+// }
+
 class Map {
     constructor(context) {
         this.cells = [];
         this.p1_plants = [];
         this.p2_plants = [];
+
         this.sprite = square(TILE_SIZE * 20, 0x000000);
         if (context.mode === 'preview')
         {
@@ -151,6 +160,11 @@ class Map {
             this.load(dump[0].carte);
             this.update_plants(dump[0]);
         }
+
+        this.seed = new PIXI.Sprite(PIXI.loader.resources["graine"].texture);
+        this.seed.alpha = 0;
+        this.sprite.addChild(this.seed);
+
         this.selected_x = undefined;
         this.selected_y = undefined;
         this.select_square = square(TILE_SIZE, 0xAA0000);
@@ -356,8 +370,11 @@ function start() {
     PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
     PIXI.loader.add("plant_a", "/static/img/sprites/plant_a.png");
     PIXI.loader.add("plant_b", "/static/img/sprites/plant_b.png");
+    PIXI.loader.add("graine", "/static/img/sprites/flowey/graine.png");
+
     for (var i = 1; i <= 6; ++i)
         PIXI.loader.add("frame" + i, "/static/img/sprites/frame" + i + ".png");
+
     PIXI.loader.load(setup);
 }
 
@@ -405,6 +422,18 @@ function setup(loader, resources) {
 
     if (context.mode !== 'preview')
         app.ticker.add(delta => gameLoop(delta));
+}
+
+function baffer(start, end, frame) {
+    if (frame == 0)
+        map.seed.alpha = 1;
+
+    if (frame + 1 == ANIMATION_DURATION)
+        map.seed.alpha = 0;
+
+    const parabola = 4 * TILE_SIZE * Math.min(frame, ANIMATION_DURATION - frame - 1) / ANIMATION_DURATION;
+    map.seed.x = ((1 + frame) * (end.x - start.x) / ANIMATION_DURATION + start.x) * TILE_SIZE;
+    map.seed.y = ((1 + frame) * (end.y - start.y) / ANIMATION_DURATION + start.y) * TILE_SIZE - parabola;
 }
 
 function death(pos, frame) {
@@ -461,6 +490,8 @@ function gameLoop(delta)
         depoter(curr_action["position_départ"], curr_action["position_arrivée_"], frame);
     else if (curr_action["action_type"] == "death")
         death(curr_action["position"], frame);
+    else if (curr_action["action_type"] == "baffer")
+        baffer(curr_action["position_baffante"], curr_action["position_baffée"], frame);
     else
         console.warn("unsupported action:", curr_action["action_type"]);
 
