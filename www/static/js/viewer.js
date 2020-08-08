@@ -3,10 +3,14 @@
 const TILE_SIZE = 75;
 const WIDTH = TILE_SIZE * 20 + 400;
 const HEIGHT = TILE_SIZE * 20;
+const MAX_SPEED = 15;
 
-// Number of frames used to animate an event.
-const ANIMATION_DURATION = 6;
+// Frames used to animate an actions is (1 + MAX_SPEED - speed)
+let speed = 10;
 
+function animation_duration() {
+    return 1 + MAX_SPEED - speed;
+}
 
 function rect(width, height, color) {
   let res = new PIXI.Graphics();
@@ -414,6 +418,12 @@ function setup(loader, resources) {
                 $("#replay_view canvas").css('width', 'auto');
             }
         }
+        else if (e.key == "+")
+            if (speed < MAX_SPEED)
+                speed += 1;
+        else if (e.key == "-")
+            if (speed > 0)
+                speed -= 1;
     }
 
     app.stage.interactive = true;
@@ -428,12 +438,12 @@ function baffer(start, end, frame) {
     if (frame == 0)
         map.seed.alpha = 1;
 
-    if (frame + 1 == ANIMATION_DURATION)
+    if (frame + 1 == animation_duration())
         map.seed.alpha = 0;
 
-    const parabola = 4 * TILE_SIZE * Math.min(frame, ANIMATION_DURATION - frame - 1) / ANIMATION_DURATION;
-    map.seed.x = ((1 + frame) * (end.x - start.x) / ANIMATION_DURATION + start.x) * TILE_SIZE;
-    map.seed.y = ((1 + frame) * (end.y - start.y) / ANIMATION_DURATION + start.y) * TILE_SIZE - parabola;
+    const parabola = 4 * TILE_SIZE * Math.min(frame, animation_duration() - frame - 1) / animation_duration();
+    map.seed.x = ((1 + frame) * (end.x - start.x) / animation_duration() + start.x) * TILE_SIZE;
+    map.seed.y = ((1 + frame) * (end.y - start.y) / animation_duration() + start.y) * TILE_SIZE - parabola;
 }
 
 function death(pos, frame) {
@@ -442,12 +452,10 @@ function death(pos, frame) {
     if (plant == null)
         console.error("couldn't find plant at", pos);
 
-    plant.sprite.alpha = 1 - (1 + frame) / ANIMATION_DURATION;
+    plant.sprite.alpha = 1 - (1 + frame) / animation_duration();
 
-    if (frame + 1 == ANIMATION_DURATION) {
+    if (frame + 1 == animation_duration())
         map.del_plant(pos.x, pos.y);
-        console.warn(map.plant_at(pos.x, pos.y));
-    }
 }
 
 function depoter(start, end, frame) {
@@ -456,10 +464,10 @@ function depoter(start, end, frame) {
     if (plant == null)
         console.error("couldn't find plant at", start);
 
-    plant.sprite.x = ((1 + frame) * (end.x - start.x) / ANIMATION_DURATION + start.x) * TILE_SIZE;
-    plant.sprite.y = ((1 + frame) * (end.y - start.y) / ANIMATION_DURATION + start.y) * TILE_SIZE;
+    plant.sprite.x = ((1 + frame) * (end.x - start.x) / animation_duration() + start.x) * TILE_SIZE;
+    plant.sprite.y = ((1 + frame) * (end.y - start.y) / animation_duration() + start.y) * TILE_SIZE;
 
-    if (frame + 1 == ANIMATION_DURATION) {
+    if (frame + 1 == animation_duration()) {
         plant.pos_x = end.x;
         plant.pos_y = end.y;
     }
@@ -500,7 +508,7 @@ function gameLoop(delta)
 
     frame += 1;
 
-    if (frame >= ANIMATION_DURATION) {
+    if (frame >= animation_duration()) {
         frame = 0;
         action += 1;
     }
