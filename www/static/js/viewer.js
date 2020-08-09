@@ -138,7 +138,17 @@ class Plant {
 
     update_sprite() {
         this.sprite.removeChildren();
-        this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources["plant_" + this.jardinier].texture));
+
+        const face_id = Math.round(4 * this.vie / this.vie_max);
+        this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources["face_" + face_id].texture));
+
+        const hat_id = Math.min(2, Math.round(this.elegance / 50));
+        const hat_texture = "hat_" + this.jardinier + "_" + hat_id;
+        this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources[hat_texture].texture));
+
+        const body_id = Math.min(2, Math.round(this.force / 50));
+        const body_texture = "body_" + body_id;
+        this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources[body_texture].texture));
 
         if (!this.enracinee)
             this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources["pot"].texture));
@@ -428,6 +438,22 @@ function start() {
     PIXI.loader.add("plant_1", "/static/img/sprites/plant_b.png");
     PIXI.loader.add("graine", "/static/img/sprites/flowey/graine.png");
     PIXI.loader.add("pot", "/static/img/sprites/flowey/pot.png");
+
+    for (let i = 0 ; i <= 4 ; i++)
+        PIXI.loader.add("face_" + i, "/static/img/sprites/flowey/face_" + i + ".png");
+
+    for (let player of [0, 1])
+        for (let i = 0 ; i <= 2 ; i++)
+            PIXI.loader.add(
+                "hat_" + player + "_" + i,
+                "/static/img/sprites/flowey/fleur_" + (player + 1) + "_" + (i + 1) + ".png"
+            );
+
+    for (let i = 0 ; i <= 2 ; i++)
+        PIXI.loader.add(
+            "body_" + i,
+            "/static/img/sprites/flowey/pied_" + (i + 1) + ".png"
+        );
 
     for (var i = 1; i <= 6; ++i)
         PIXI.loader.add("frame" + i, "/static/img/sprites/frame" + i + ".png");
