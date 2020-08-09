@@ -51,7 +51,7 @@ class StatsBox extends PIXI.Container {
 
         for (let i in fields) {
             let line = fields[i];
-            let text_back = rect(this.WIDTH - 4, 38);
+            let text_back = rect(this.WIDTH - 4, 38, 0x111111);
             text_back.x = 2;
             text_back.y = 62 + i * 40;
             this.addChild(text_back);
@@ -150,6 +150,14 @@ class Plant {
         this.update_sprite();
     }
 
+    clone() {
+        let clone = Object.assign({}, this);
+        Object.setPrototypeOf(clone, Plant.prototype);
+        clone.sprite = new PIXI.Container();
+        clone.update_sprite();
+        return clone;
+    }
+
     update_sprite() {
         this.sprite.removeChildren();
 
@@ -241,6 +249,12 @@ class Map {
         );
         this.sprite.addChild(this.plant_details);
 
+        this.plant_portrait = rect(128, 128, 0x111111);
+        this.plant_portrait.x = 20 * TILE_SIZE + 136;
+        this.plant_portrait.y = 1150;
+        this.plant_portrait.visible = false;
+        this.sprite.addChild(this.plant_portrait);
+
         this.speed_info = new PIXI.Text(
             "", {
                 font: "Arial",
@@ -328,6 +342,7 @@ class Map {
 
     update_plant_details() {
         this.plant_details.visible = this.selected_plant() !== null;
+        this.plant_portrait.visible = this.plant_details.visible;
 
         if (!this.plant_details.visible)
             return;
@@ -348,6 +363,13 @@ class Map {
             "consommation de lumière": plant.consommation[1],
             "consommation d'eau": plant.consommation[2],
         });
+
+        let clone = plant.clone();
+        clone.sprite.x = clone.sprite.y = 0;
+        clone.sprite.width = 128;
+        clone.sprite.height = 128;
+        this.plant_portrait.removeChildren();
+        this.plant_portrait.addChild(clone.sprite);
     }
 
     select_tile(x, y) {
