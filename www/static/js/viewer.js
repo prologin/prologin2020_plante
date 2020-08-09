@@ -21,61 +21,75 @@ function rect(width, height, color) {
   return res;
 }
 
-function stats_box(title, infos, width) {
-    let height = 60 + 40 * infos.length;
-    let back = rect(width, height, 0x1b1b43);
+class StatsBox extends PIXI.Container {
+    constructor(title, fields, y_offset) {
+        super();
+        this.visible = false;
 
-    let title_w = new PIXI.Text(
-        title,
-        {
-            font: "Arial",
-            fontSize: 32,
-            fill: "white"
+        this.WIDTH = 380;
+        this.HEIGHT = 60 + 40 * fields.length;
+        this.x = 20 * TILE_SIZE + 10;
+        this.y = y_offset;
+
+        this.addChild(rect(this.WIDTH, this.HEIGHT, 0x1b1b43));
+
+        let title_w = new PIXI.Text(
+            title,
+            {
+               font: "Arial",
+                fontSize: 32,
+                fill: "white"
+            }
+        );
+
+        title_w.x = this.WIDTH / 2;
+        title_w.y = 30;
+        title_w.anchor.set(0.5);
+        this.addChild(title_w);
+
+        this.lines = {};
+
+        for (let i in fields) {
+            let line = fields[i];
+            let text_back = rect(this.WIDTH - 4, 38);
+            text_back.x = 2;
+            text_back.y = 62 + i * 40;
+            this.addChild(text_back);
+
+            let key = new PIXI.Text(
+                line, {
+                    font: "Arial",
+                    fontSize: 24,
+                    fontWeight: "bold",
+                    fill: "white"
+                }
+            );
+            key.y = 20;
+            key.x = 10 + key.width / 2;
+            key.anchor.set(0.5);
+            text_back.addChild(key);
+
+            let val = new PIXI.Text(
+                "", {
+                    font: "Arial",
+                    fontSize: 24,
+                    fill: "white"
+                }
+            );
+            val.y = 20;
+            val.anchor.set(0.5);
+            text_back.addChild(val);
+
+            this.lines[line] = val;
         }
-    );
-
-    title_w.x = width / 2;
-    title_w.y = 30;
-    title_w.anchor.set(0.5);
-    back.addChild(title_w);
-
-    for (let i = 0 ; i < infos.length ; i++) {
-        let line = infos[i];
-
-        let text_back = rect(width - 4, 38);
-        text_back.x = 2;
-        text_back.y = 62 + i * 40;
-        back.addChild(text_back);
-
-        let key = new PIXI.Text(
-            line[0],
-            {
-                font: "Arial",
-                fontSize: 24,
-                fontWeight: "bold",
-                fill: "white"
-            }
-        );
-        key.y = 20;
-        key.x = 10 + key.width / 2;
-        key.anchor.set(0.5);
-        text_back.addChild(key);
-
-        let val = new PIXI.Text(
-            line[1],
-            {
-                font: "Arial",
-                fontSize: 24,
-                fill: "white"
-            }
-        );
-        val.x = text_back.width - 10 - val.width / 2;
-        val.y = 20;
-        val.anchor.set(0.5);
-        text_back.addChild(val);
     }
 
-    return back;
+    update(values) {
+        for (let [key, val] of Object.entries(values)) {
+            this.lines[key].text = val;
+            this.lines[key].x = this.WIDTH - this.lines[key].width / 2 - 10;
+        }
+    }
 }
 
 function square(size, color) {
@@ -210,8 +224,22 @@ class Map {
         this.details_area.y = 80;
         this.sprite.addChild(this.details_area);
 
-        this.cell_details = null;
-        this.plant_details = null;
+        this.cell_details = new StatsBox(
+            "Terrain",
+            ["position", "chaleur", "lumière", "humidité"],
+            160,
+        );
+        this.sprite.addChild(this.cell_details);
+
+        this.plant_details = new StatsBox(
+            "Plante",
+            ["jardinier", "âge", "vie", "vie max", "force", "élégance",
+                "rayon de déplacement", "rayon de collecte", "adulte",
+                "enracinée", "consommation de chaleur",
+                "consommation de lumière", "consommation d'eau"],
+            this.cell_details.y + this.cell_details.height + 10,
+        );
+        this.sprite.addChild(this.plant_details);
 
         this.speed_info = new PIXI.Text(
             "", {
@@ -288,65 +316,38 @@ class Map {
     }
 
     update_cell_details() {
-        if (!this.cells[this.selected_y] || !this.cells[this.selected_y][this.selected_x])
-            return;
-
-        let cell = this.cells[this.selected_y][this.selected_x];
-
-        if (this.cell_details != null)
-            this.sprite.removeChild(this.cell_details);
-
-        this.cell_details = stats_box(
-            "Terrain",
-            [
-                ["position", "(" + this.selected_x + ", " + this.selected_y + ")"],
-                ["chaleur", cell.heat],
-                ["lumière", cell.light],
-                ["humidité", cell.water]
-            ],
-            380
-        );
-
-        this.cell_details.x = 20 * TILE_SIZE + 10;
-        this.cell_details.y = 160;
-        this.sprite.addChild(this.cell_details);
+        const cell = this.cells[this.selected_y][this.selected_x];
+        this.cell_details.visible = true;
+        this.cell_details.update({
+            position: "(" + this.selected_x + ", " + this.selected_y + ")",
+            chaleur: cell.heat,
+            lumière: cell.light,
+            humidité: cell.water,
+        });
     }
 
     update_plant_details() {
-        if (!this.cells[this.selected_y] || !this.cells[this.selected_y][this.selected_x])
-            return;
+        this.plant_details.visible = this.selected_plant() !== null;
 
-        if (this.plant_details != null)
-            this.sprite.removeChild(this.plant_details);
-
-        if (this.selected_plant() == null)
+        if (!this.plant_details.visible)
             return;
 
         const plant = this.selected_plant();
-
-        this.plant_details = stats_box(
-            "Plante",
-            [
-                ["jardinier", plant.jardinier],
-                ["age", plant.age],
-                ["vie", plant.vie],
-                ["vie max", plant.vie_max],
-                ["force", plant.force],
-                ["elegance", plant.elegance],
-                ["rayon de deplacement", plant.rayon_deplacement],
-                ["rayon de collecte", plant.rayon_collecte],
-                ["adulte", plant.adulte ? "oui" : "non"],
-                ["enracinee", plant.enracinee ? "oui" : "non"],
-                ["consommation chaleur", plant.consommation[0]],
-                ["consommation lumière", plant.consommation[1]],
-                ["consommation eau", plant.consommation[2]],
-            ],
-            380
-        );
-
-        this.plant_details.x = 20 * TILE_SIZE + 10;
-        this.plant_details.y = this.cell_details.height + this.cell_details.y + 10;
-        this.sprite.addChild(this.plant_details);
+        this.plant_details.update({
+            "jardinier": plant.jardinier,
+            "âge": plant.age,
+            "vie": plant.vie,
+            "vie max": plant.vie_max,
+            "force": plant.force,
+            "élégance": plant.elegance,
+            "rayon de déplacement": plant.rayon_deplacement,
+            "rayon de collecte": plant.rayon_collecte,
+            "adulte": plant.adulte ? "oui" : "non",
+            "enracinée": plant.enracinee ? "oui" : "non",
+            "consommation de chaleur": plant.consommation[0],
+            "consommation de lumière": plant.consommation[1],
+            "consommation d'eau": plant.consommation[2],
+        });
     }
 
     select_tile(x, y) {
@@ -595,8 +596,10 @@ function gameLoop(delta)
     else
         console.warn("unsupported action:", curr_action["action_type"]);
 
-    map.update_cell_details();
-    map.update_plant_details();
+    if (map.selected_x && map.selected_y) {
+        map.update_cell_details();
+        map.update_plant_details();
+    }
 
     frame += 1;
 
