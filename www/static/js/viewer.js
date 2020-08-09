@@ -132,21 +132,23 @@ class Plant {
         this.enracinee = plant.enracinée;
         this.consommation = plant.consommation;
         this.jardinier = jardinier;
-        this.sprite = new PIXI.Sprite(PIXI.loader.resources["plant_" + (this.jardinier === 0 ? "a" : "b")].texture);
+        this.sprite = new PIXI.Container();
+        this.update_sprite();
+    }
+
+    update_sprite() {
+        this.sprite.removeChildren();
+        this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources["plant_" + this.jardinier].texture));
+
+        if (!this.enracinee)
+            this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources["pot"].texture));
+
         this.sprite.height = TILE_SIZE;
         this.sprite.width = TILE_SIZE;
         this.sprite.x = this.pos_x * TILE_SIZE;
         this.sprite.y = this.pos_y * TILE_SIZE;
     }
 }
-
-// class PlantSprite extends PIXI.Sprite {
-//     constructor() {
-//         super();
-//
-//         this.
-//     }
-// }
 
 class Map {
     constructor(context) {
@@ -164,7 +166,7 @@ class Map {
         }
 
         this.seed = new PIXI.Sprite(PIXI.loader.resources["graine"].texture);
-        this.seed.alpha = 0;
+        this.seed.visible = false;
         this.sprite.addChild(this.seed);
 
         this.selected_x = undefined;
@@ -363,6 +365,7 @@ class Map {
             plant.sprite.visible = false;
             app.stage.removeChild(plant.sprite);
         });
+
         this.p1_plants = [];
         this.p2_plants = [];
         dump.joueurs[0].plantes.forEach(plant => {
@@ -421,9 +424,10 @@ function start() {
         PIXI.loader.add("dump", "dump");
 
     PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
-    PIXI.loader.add("plant_a", "/static/img/sprites/plant_a.png");
-    PIXI.loader.add("plant_b", "/static/img/sprites/plant_b.png");
+    PIXI.loader.add("plant_0", "/static/img/sprites/plant_a.png");
+    PIXI.loader.add("plant_1", "/static/img/sprites/plant_b.png");
     PIXI.loader.add("graine", "/static/img/sprites/flowey/graine.png");
+    PIXI.loader.add("pot", "/static/img/sprites/flowey/pot.png");
 
     for (var i = 1; i <= 6; ++i)
         PIXI.loader.add("frame" + i, "/static/img/sprites/frame" + i + ".png");
@@ -491,10 +495,10 @@ function setup(loader, resources) {
 
 function baffer(start, end, frame) {
     if (frame == 0)
-        map.seed.alpha = 1;
+        map.seed.visible = true;
 
     if (frame + 1 == animation_duration())
-        map.seed.alpha = 0;
+        map.seed.visible = false;
 
     const parabola = 4 * TILE_SIZE * Math.min(frame, animation_duration() - frame - 1) / animation_duration();
     map.seed.x = ((1 + frame) * (end.x - start.x) / animation_duration() + start.x) * TILE_SIZE;
@@ -518,6 +522,11 @@ function depoter(start, end, frame) {
 
     if (plant == null)
         console.error("couldn't find plant at", start);
+
+    if (frame === 0) {
+        plant.enracinee = true;
+        plant.update_sprite();
+    }
 
     plant.sprite.x = ((1 + frame) * (end.x - start.x) / animation_duration() + start.x) * TILE_SIZE;
     plant.sprite.y = ((1 + frame) * (end.y - start.y) / animation_duration() + start.y) * TILE_SIZE;
