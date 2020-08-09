@@ -23,7 +23,7 @@ function rect(width, height, color) {
 
 function stats_box(title, infos, width) {
     let height = 60 + 40 * infos.length;
-    let back = rect(width, height, 0x3D0E0E);
+    let back = rect(width, height, 0x1b1b43);
 
     let title_w = new PIXI.Text(
         title,
@@ -153,14 +153,12 @@ class Map {
         this.cells = [];
         this.p1_plants = [];
         this.p2_plants = [];
-
         this.sprite = square(TILE_SIZE * 20, 0x000000);
-        if (context.mode === 'preview')
-        {
+
+        if (context.mode === 'preview') {
             this.load(context.map);
         }
-        else
-        {
+        else {
             this.load(dump[0].carte);
             this.update_plants(dump[0]);
         }
@@ -202,6 +200,57 @@ class Map {
 
         this.cell_details = null;
         this.plant_details = null;
+
+        this.speed_info = new PIXI.Text(
+            "", {
+                font: "Arial",
+                fontsize: 16,
+                fill: "white",
+            }
+        )
+        this.speed_info.x = 20 * TILE_SIZE + 200;
+        this.speed_info.y = 20 * TILE_SIZE - 40;
+        this.speed_info.anchor.set(0.5);
+        this.update_speed_info();
+        this.sprite.addChild(this.speed_info);
+
+        let score_frames = [
+            rect(185, 60, 0x9B870C),
+            rect(185, 60, 0xa00f17),
+        ];
+
+        score_frames[0].x = 20 * TILE_SIZE + 10;
+        score_frames[1].x = 20 * TILE_SIZE + 185 + 20;
+
+        for (let i of [0, 1]) {
+            score_frames[i].y = 90;
+            this.sprite.addChild(score_frames[i]);
+        }
+
+        this.scores = score_frames.map(frame => {
+            let score = new PIXI.Text(
+                "0", {
+                    font: "Arial",
+                    fontsize: 16,
+                    fill: "white",
+                }
+            );
+
+            score.anchor.set(0.5);
+            score.x = frame.x + frame.width / 2;
+            score.y = frame.y + frame.height / 2;
+            this.sprite.addChild(score);
+            return score;
+        });
+    }
+
+    update_speed_info() {
+        this.speed_info.text = "vitesse: " + (60 / animation_duration()).toFixed(1) + " action/s (+/-)";
+    }
+
+    update_scores(scores) {
+        for (let i of [0, 1])
+            this.scores[i].text = scores[i];
     }
 
     // TODO: implement this with a decent time complexity
@@ -247,7 +296,7 @@ class Map {
         );
 
         this.cell_details.x = 20 * TILE_SIZE + 10;
-        this.cell_details.y = 90;
+        this.cell_details.y = 160;
         this.sprite.addChild(this.cell_details);
     }
 
@@ -418,12 +467,18 @@ function setup(loader, resources) {
                 $("#replay_view canvas").css('width', 'auto');
             }
         }
-        else if (e.key == "+")
-            if (speed < MAX_SPEED)
+        else if (e.key == "+") {
+            if (speed < MAX_SPEED) {
                 speed += 1;
-        else if (e.key == "-")
-            if (speed > 0)
+                map.update_speed_info();
+            }
+        }
+        else if (e.key == "-") {
+            if (speed > 0) {
                 speed -= 1;
+                map.update_speed_info();
+            }
+        }
     }
 
     app.stage.interactive = true;
@@ -481,8 +536,10 @@ var frame = 0;
 function gameLoop(delta)
 {
     while (action >= dump[turn]["joueurs"][player]["historique"].length) {
-        if (turn > 0)
+        if (turn > 0) {
             map.update_plants(dump[turn-1]); // sync previous turn
+            map.update_scores(dump[turn-1].joueurs.map(p => p.score));
+        }
 
         action = 0;
         player = 1 - player;
