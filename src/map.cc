@@ -177,6 +177,10 @@ Grid<bool> Map::build_has_enough_ressources() const
                 }
 
             // We need quotient / divisor >= plant.consommation[k]
+            // std::cerr << "val " << (float)quotient / (float)divisor << " ("
+            //           << (quotient >= plant.consommation[k] * divisor) << ")"
+            //           << std::endl;
+
             result[plant.pos.x][plant.pos.y] &=
                 quotient >= plant.consommation[k] * divisor;
         }
@@ -200,9 +204,12 @@ bool Map::will_have_enough_ressources(const plante& plant)
     return will_have_enough_ressources;
 }
 
+#include <iostream>
 bool Map::has_enough_ressources(position pos) const
 {
     assert(position_in_bounds(pos));
+    std::cerr << pos.x << ',' << pos.y << ": "
+              << build_has_enough_ressources()[pos.x][pos.y] << std::endl;
     return build_has_enough_ressources()[pos.x][pos.y];
 }
 

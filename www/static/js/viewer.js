@@ -5,6 +5,76 @@ const WIDTH = TILE_SIZE * 20 + 400;
 const HEIGHT = TILE_SIZE * 20;
 const MAX_SPEED = 15;
 
+
+const tile_map = {
+    gravel: {
+        ressources: [0, 0, 0],
+        back: [29, 30, 31],
+    },
+    desert: {
+        ressources: [1, 0, 0],
+        back: [40, 41, 42, 43, 44, 45],
+        in_border: [32, 34, 35, 36, 33, 37, 39, 38]
+    },
+    grass: {
+        ressources: [0, 1, 0],
+        back: [9, 10, 11, 12, 13, 14, 15, 16, 17],
+        in_border: [1, 3, 4, 5, 2, 6, 8, 7]
+    },
+    ocean: {
+        ressources: [0, 0, 1],
+        back: [27, 28],
+        out_border: [[19, 20, 21], 22, [84, 85, 86], 26, [24, 25], 23, [81, 82, 83]]
+    },
+    artic: {
+        ressources: [0, 1, 1],
+        back: [93, 94, 95, 96, 97, 98, 99],
+        in_border: [107, 105, 104, 103, 106, 102, 100, 101]
+    },
+    lava: {
+        ressources: [1, 1, 0],
+        back: [62, 63],
+        out_border: [57, 58, 92, 61, 60, 59, 91, 56]
+    },
+    oasis: {
+        ressources: [1, 0, 1],
+        back: [54, 55],
+        out_border: [[47, 48], 49, [89, 90], 53, [51, 52], 50, [87, 88], 46]
+    },
+    jungle: {
+        ressources: [1, 1, 1],
+        back: [72, 73, 74, 75, 76, 77, 78, 79, 80],
+        in_border: [64, 66, 67, 68, 65, 69, 71, 70]
+    }
+};
+
+// ---
+// --- Utilities
+// ---
+
+function norm(vec) {
+    return vec.reduce((x, y) => x + y, 0);
+}
+
+function normalize(vec) {
+    const div = norm(vec);
+    return vec.map(x => x / div);
+}
+
+function dist(vec1, vec2) {
+    console.assert(vec1.length === vec2.length);
+    let dist = 0;
+
+    for (let k = 0 ; k < vec1.length ; k++)
+        dist += Math.abs(vec1[k] - vec2[k]);
+
+    return dist;
+}
+
+// ---
+// --- Animation
+// ---
+
 // Frames used to animate an actions is (1 + MAX_SPEED - speed)
 let speed = 10;
 
@@ -12,9 +82,27 @@ function animation_duration() {
     return 1 + MAX_SPEED - speed;
 }
 
+function tile_kind(tile_ressources) {
+    tile_ressources = normalize(tile_ressources);
+    let best = null;
+    let best_dist = Infinity;
+
+    for (const [name, meta] of Object.entries(tile_map))
+    {
+        const new_dist = dist(tile_ressources, normalize(meta.ressources));
+
+        if (new_dist < best_dist)
+        {
+            best = name;
+            best_dist = new_dist;
+        }
+    }
+
+    return best;
+}
+
 function rect(width, height, color) {
   let res = new PIXI.Graphics();
-  // res.lineStyle(1, 0xFFFFFF, 1);
   res.beginFill(color);
   res.drawRect(0, 0, width, height);
   res.endFill();
@@ -107,25 +195,27 @@ class Context {
     }
 }
 
+
+let random = 0;
+
 class Cell {
   constructor(str) {
-    let split = str.split(",").map(x => parseInt(x));
-    this.heat = split[0];
-    this.light = split[1];
-    this.water = split[2];
-    if (this.heat === 0 && this.light === 0 && this.water === 0)
-      var index = 5;
-    else if (this.heat > 0 && this.water === 0)
-      var index = 1;
-    else if (this.heat > 0 && this.water !== 0)
-      var index = 2;
-    else if (this.heat === 0 && this.water !== 0)
-      var index = 6;
-    else if (this.water !== 0)
-      var index = 4;
-    else
-      var index = 3;
-    this.sprite = new PIXI.Sprite(PIXI.loader.resources["frame" + index].texture);
+    const ressources = str.split(",").map(x => parseInt(x));
+    this.heat = ressources[0];
+    this.light = ressources[1];
+    this.water = ressources[2];
+
+
+    const kind = tile_kind(ressources);
+    let frame_id = tile_map[kind].back;
+
+    if (typeof frame_id === "object")
+    {
+        random = (9661 + 9677 * random) % 11587;
+        frame_id = frame_id[random % frame_id.length];
+    }
+
+    this.sprite = new PIXI.Sprite(PIXI.loader.resources[`frame_${frame_id}`].texture);
     this.sprite.width = TILE_SIZE;
     this.sprite.height = TILE_SIZE;
   }
@@ -461,6 +551,11 @@ function start() {
     PIXI.loader.add("plant_1", "/static/img/sprites/plant_b.png");
     PIXI.loader.add("graine", "/static/img/sprites/flowey/graine.png");
     PIXI.loader.add("pot", "/static/img/sprites/flowey/pot.png");
+
+    for (let i = 1 ; i <= 107 ; i++) {
+        const filename = ("" + i).padStart(2, "0");
+        PIXI.loader.add(`frame_${i}`, `/static/img/sprites/bg/${filename}.png`);
+    }
 
     for (let i = 0 ; i <= 4 ; i++)
         PIXI.loader.add("face_" + i, "/static/img/sprites/flowey/face_" + i + ".png");

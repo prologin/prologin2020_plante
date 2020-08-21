@@ -65,6 +65,10 @@ fn depoter(depart: (i32, i32), arrivee: (i32, i32)) -> Result<(), Erreur> {
     api::depoter(depart, arrivee).into()
 }
 
+fn debug_afficher_chien(pos: (i32, i32), chien: DebugChien) -> Result<(), Erreur> {
+    api::debug_afficher_chien(pos, chien).into()
+}
+
 // --- Extra API functions
 
 fn case_pleine(pos: (i32, i32)) -> bool {
@@ -148,6 +152,14 @@ pub fn jouer_tour() {
 
         if let Some(victim) = candidates.first() {
             baffer(plant.pos, victim.pos).expect("baffe failed");
+        }
+    }
+
+    // Display a debug flag on every growable plot
+
+    for pos in full_grid() {
+        if reproduction_possible(pos, 1, &[300; 3]) {
+            debug_afficher_chien(pos, DebugChien::ChienBleu).expect("debug chien failed");
         }
     }
 
