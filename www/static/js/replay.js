@@ -1,5 +1,7 @@
 $(function () {
 
+    const is_local = typeof local !== 'undefined' && local;
+
     let $replay = $('#replay'),
         $playPause = $('#replay-playpause'),
         $previous = $('#replay-previous'),
@@ -18,7 +20,7 @@ $(function () {
         $.getScript('/static/js/viewer.js')
         .done(function() {
             console.log('finish loading');
-            start_viewer($replay_view, $turnSlider);
+            start_viewer($replay_view, $turnSlider, is_local);
             // reveal the UI
             $replay_view.find('canvas').css({
                 'display': 'block',

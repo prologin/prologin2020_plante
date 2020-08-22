@@ -83,6 +83,9 @@ function animation_duration() {
 }
 
 function tile_kind(tile_ressources) {
+    if (tile_ressources.reduce((a, b) => a + b, 0) == 0)
+        return 'gravel';
+
     tile_ressources = normalize(tile_ressources);
     let best = null;
     let best_dist = Infinity;
@@ -187,11 +190,12 @@ function square(size, color) {
 let app, context;
 
 class Context {
-    constructor(mode, container, turnSlider, map) {
+    constructor(mode, container, turnSlider, map, is_local) {
         this.mode = mode;
         this.container = container;
         this.turnSlider = turnSlider;
         this.map = map;
+        this.is_local = is_local;
     }
 }
 
@@ -229,11 +233,11 @@ class Plant {
         this.vie = plant.vie;
         this.vie_max = plant.vie_max;
         this.force = plant.force;
-        this.elegance = plant.élégance;
-        this.rayon_deplacement = plant.rayon_déplacement;
+        this.elegance = plant.elegance;
+        this.rayon_deplacement = plant.rayon_deplacement;
         this.rayon_collecte = plant.rayon_collecte;
         this.adulte = plant.adulte;
-        this.enracinee = plant.enracinée;
+        this.enracinee = plant.enracinee;
         this.consommation = plant.consommation;
         this.jardinier = jardinier;
         this.sprite = new PIXI.Container();
@@ -522,15 +526,51 @@ class Map {
 }
 
 
-function start_viewer(container, turnSlider) {
-    context = new Context('replay', container, turnSlider, null);
+function start_viewer(container, turnSlider, is_local) {
+    context = new Context('replay', container, turnSlider, null, is_local);
     start()
 }
 
 function start_preview(container, map) {
-    context = new Context('preview', container, null, map.text());
+    context = new Context('preview', container, null, map.text(), false);
     start()
 }
+
+var socket;
+function connect_socket()
+{
+    socket = new WebSocket('ws://' + window.location.host);
+    var backoff = 1;
+    socket.onopen = () => {
+        backoff = 1;
+        console.log('connected to server');
+        send(socket, 'hello');
+    };
+    socket.onerror = (e) => {
+        console.warn(e);
+        // check error code, don't reconnect if not needed
+        backoff = Math.min(4, backoff + 1);
+        setTimeout(connect_socket, 1000 * Math.pow(1.5, backoff));
+    };
+    socket.onmessage = (msg) => {
+        msg = JSON.parse(msg.data);
+        console.log('ws >', msg);
+        if (msg.c === 'whatsup') {
+            // TODO
+        } else if (msg.c === 'end') {
+            // TODO: show game end
+        } else if (msg.c === 'turn') {
+            dump = msg.state;
+        }
+    };
+}
+
+function send(socket, cmd, data) {
+    let msg = $.extend({c: cmd}, data);
+    console.log('ws <', msg);
+    socket.send(JSON.stringify(msg));
+}
+
 
 function start() {
     app = new PIXI.Application({
@@ -543,8 +583,10 @@ function start() {
     );
     context.container.append(app.view);
 
-    if (context.mode !== 'preview')
+    if (context.mode !== 'preview' && !context.is_local)
         PIXI.loader.add("dump", "dump");
+    if (context.is_local)
+        connect_socket();
 
     PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
     PIXI.loader.add("plant_0", "/static/img/sprites/plant_a.png");
@@ -585,7 +627,7 @@ let dump, map;
 let lastTurn = 0;
 
 function setup(loader, resources) {
-    if (context.mode !== 'preview') {
+    if (context.mode !== 'preview' && !context.is_local) {
         let json_str = "{\"dump\": [" + resources["dump"].data;
         json_str = json_str.substring(0, json_str.length - 2) + "]}";
         dump = JSON.parse(json_str).dump;
@@ -688,6 +730,7 @@ var frame = 0;
 
 function gameLoop(delta)
 {
+    return;
     while (action >= dump[turn]["joueurs"][player]["historique"].length) {
         if (turn > 0) {
             map.update_plants(dump[turn-1]); // sync previous turn
@@ -704,12 +747,12 @@ function gameLoop(delta)
 
     const curr_action = dump[turn]["joueurs"][player]["historique"][action];
 
-    if (curr_action["action_type"] == "dépoter")
-        depoter(curr_action["position_départ"], curr_action["position_arrivée_"], frame);
+    if (curr_action["action_type"] == "depoter")
+        depoter(curr_action["position_depart"], curr_action["position_arrivee_"], frame);
     else if (curr_action["action_type"] == "death")
         death(curr_action["position"], frame);
     else if (curr_action["action_type"] == "baffer")
-        baffer(curr_action["position_baffante"], curr_action["position_baffée"], frame);
+        baffer(curr_action["position_baffante"], curr_action["position_baffee"], frame);
     else
         console.warn("unsupported action:", curr_action["action_type"]);
 

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prologin 2020</title>
+  <link rel="stylesheet" href="static/css/theme.css">
+</head>
+<body>
+
+<section id="sp-waiting" class="splash">
+  <p>En attente d'un joueur…</p>
+</section>
+
+<section id="sp-connecting" class="splash">
+  <p>Connexion à l'échec…</p>
+</section>
+
+<section id="sp-gameover" class="splash">
+  <div class="go-player player-a">
+    <div class="go-player-name"></div>
+    <div class="go-player-score"></div>
+  </div>
+  <div class="separator"></div>
+  <div class="go-player player-b">
+    <div class="go-player-name"></div>
+    <div class="go-player-score"></div>
+  </div>
+</section>
+
+<section id="main" role="main"></section>
+
+<section id="sidebar" role="status">
+  <div id="logo"></div>
+  <h1 class="brand">Prologin 2020</h1>
+
+  <section id="information">
+    <section>
+      <div class="ui-player player-a">
+        <div class="ui-player-marker"></div>
+        <span class="ui-player-name"></span>
+        <div class="ui-player-score"></div>
+      </div>
+      <div class="ui-player player-b">
+        <div class="ui-player-marker"></div>
+        <span class="ui-player-name"></span>
+        <div class="ui-player-score"></div>
+      </div>
+    </section>
+
+    <section id="replay_view" style="flex-grow: 1">
+    </section>
+
+    <section style="margin-bottom: 1em;">
+      <div>
+        Tour <span id="ui-turn" class="ui-hl"></span> <span class="ui-minor">sur <span
+        id="ui-turn-max"></span></span>
+      </div>
+    </section>
+
+    <section id="controls" style="margin-top: 0">
+      <button class="btn btn-default btn-xs" id="ui-playpause"><span class="icon">&blacktriangleright;</span></button>
+      <button class="btn btn-default btn-xs" id="ui-previous">&lsaquo;</button>
+      <button class="btn btn-default btn-xs" id="ui-next">&rsaquo;</button>
+      <input type="range" id="ui-turn-slider"/>
+    </section>
+  </section>
+
+</section>
+
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+<script>
+    const local = true;
+</script>
+<script src="static/js/replay.js"></script>
+
+</body>
+</html>
