@@ -225,6 +225,33 @@ class Cell {
   }
 }
 
+class Dog {
+    constructor(pos) {
+        this.color = 0;
+        this.frame = 0;
+        this.sprite = new PIXI.Container();
+        this.sprite.x = pos.x * TILE_SIZE;
+        this.sprite.y = pos.y * TILE_SIZE;
+        this.sprite.height = TILE_SIZE;
+        this.sprite.width = TILE_SIZE;
+    }
+
+    update_sprite() {
+        this.frame = (this.frame + 1) % 6;
+        this.sprite.removeChildren();
+
+        if (this.color != 0) {
+            this.sprite.addChild(
+                new PIXI.Sprite(PIXI.loader.resources[`dog_${this.frame}`].texture)
+            );
+
+            this.sprite.addChild(
+                new PIXI.Sprite(PIXI.loader.resources[`colar_${this.color}`].texture)
+            );
+        }
+    }
+}
+
 class Plant {
     constructor(plant, jardinier) {
         this.pos_x = plant.pos.x;
@@ -241,6 +268,8 @@ class Plant {
         this.consommation = plant.consommation;
         this.jardinier = jardinier;
         this.sprite = new PIXI.Container();
+        this.sprite.height = TILE_SIZE;
+        this.sprite.width = TILE_SIZE;
         this.update_sprite();
     }
 
@@ -269,8 +298,6 @@ class Plant {
         if (!this.enracinee)
             this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources["pot"].texture));
 
-        this.sprite.height = TILE_SIZE;
-        this.sprite.width = TILE_SIZE;
         this.sprite.x = this.pos_x * TILE_SIZE;
         this.sprite.y = this.pos_y * TILE_SIZE;
     }
@@ -282,6 +309,16 @@ class Map {
         this.p1_plants = [];
         this.p2_plants = [];
         this.sprite = square(TILE_SIZE * 20, 0x000000);
+        this.grid = new PIXI.Container();
+        this.sprite.addChild(this.grid);
+        this.dogs = Array(20).fill(null).map(_ => new Array(20));
+
+        for (let x = 0 ; x < 20 ; x++) {
+            for (let y = 0 ; y < 20 ; y++) {
+                this.dogs[x][y] = new Dog({x, y});
+                this.sprite.addChild(this.dogs[x][y].sprite);
+            }
+        }
 
         if (context.mode === 'preview') {
             this.load(context.map);
@@ -392,6 +429,12 @@ class Map {
         });
     }
 
+    clear_debug_chiens() {
+        for (let x = 0 ; x < 20 ; x++)
+            for (let y = 0 ; y < 20 ; y++)
+                this.dogs[x][y].color = 0;
+    }
+
     update_speed_info() {
         this.speed_info.text = "vitesse: " + (60 / animation_duration()).toFixed(1) + " action/s (+/-)";
     }
@@ -418,7 +461,7 @@ class Map {
 
     del_plant(x, y) {
         const plant = this.plant_at(x, y);
-        this.sprite.removeChild(plant);
+        this.grid.removeChild(plant);
         this.p1_plants = this.p1_plants.filter(pp => pp.pos_x != x || pp.pos_y != y);
         this.p2_plants = this.p2_plants.filter(pp => pp.pos_x != x || pp.pos_y != y);
     }
@@ -466,6 +509,12 @@ class Map {
         this.plant_portrait.addChild(clone.sprite);
     }
 
+    update_animations() {
+        for (let x = 0 ; x < 20 ; x++)
+            for (let y = 0 ; y < 20 ; y++)
+                this.dogs[x][y].update_sprite();
+    }
+
     select_tile(x, y) {
         if (x < 20 && y < 20 && x >= 0 && y >= 0) {
             this.selected_x = x;
@@ -498,26 +547,26 @@ class Map {
         dump.joueurs[0].plantes.forEach(plant => {
             let plant_obj = new Plant(plant, 0);
             this.p1_plants.push(plant_obj);
-            this.sprite.addChild(plant_obj.sprite);
+            this.grid.addChild(plant_obj.sprite);
         });
         dump.joueurs[1].plantes.forEach(plant => {
             let plant_obj = new Plant(plant, 1);
             this.p2_plants.push(plant_obj);
-            this.sprite.addChild(plant_obj.sprite);
+            this.grid.addChild(plant_obj.sprite);
         });
     }
 
     load(map) {
         let lines = map.split("\n");
-        let line_index = 0;
-        for (; line_index < 20; line_index++) {
+
+        for (let line_index = 0; line_index < 20; line_index++) {
             let row = [];
             let line_split = lines[line_index].split(" ");
             for (const i in line_split) {
                 let cell = new Cell(line_split[i]);
                 cell.sprite.x = i * TILE_SIZE;
                 cell.sprite.y = line_index * TILE_SIZE;
-                this.sprite.addChild(cell.sprite);
+                this.grid.addChild(cell.sprite);
                 row.push(cell);
             }
             this.cells.push(row);
@@ -588,35 +637,38 @@ function start() {
     if (context.is_local)
         connect_socket();
 
-    PIXI.loader.add("dog_blue", "/static/img/sprites/dog_blue.png");
-    PIXI.loader.add("plant_0", "/static/img/sprites/plant_a.png");
-    PIXI.loader.add("plant_1", "/static/img/sprites/plant_b.png");
     PIXI.loader.add("graine", "/static/img/sprites/flowey/graine.png");
     PIXI.loader.add("pot", "/static/img/sprites/flowey/pot.png");
 
+    // Read tiles
     for (let i = 1 ; i <= 107 ; i++) {
         const filename = ("" + i).padStart(2, "0");
         PIXI.loader.add(`frame_${i}`, `/static/img/sprites/bg/${filename}.png`);
     }
 
+    // Read dog parts
+    for (let i = 0 ; i < 6 ; i++)
+        PIXI.loader.add(`dog_${i}`, `/static/img/sprites/dog/frames/${i}.png`);
+
+    for (let i = 1 ; i <= 3 ; i++)
+        PIXI.loader.add(`colar_${i}`, `/static/img/sprites/dog/colar/${i}.png`);
+
+    // Read flower parts
     for (let i = 0 ; i <= 4 ; i++)
-        PIXI.loader.add("face_" + i, "/static/img/sprites/flowey/face_" + i + ".png");
+        PIXI.loader.add(`face_${i}`, `/static/img/sprites/flowey/face_${i}.png`);
 
     for (let player of [0, 1])
         for (let i = 0 ; i <= 2 ; i++)
             PIXI.loader.add(
-                "hat_" + player + "_" + i,
-                "/static/img/sprites/flowey/fleur_" + (player + 1) + "_" + (i + 1) + ".png"
+                `hat_${player}_${i}`,
+                `/static/img/sprites/flowey/fleur_${player + 1}_${i + 1}.png`
             );
 
     for (let i = 0 ; i <= 2 ; i++)
         PIXI.loader.add(
-            "body_" + i,
-            "/static/img/sprites/flowey/pied_" + (i + 1) + ".png"
+            `body_${i}`,
+            `/static/img/sprites/flowey/pied_${i + 1}.png`
         );
-
-    for (var i = 1; i <= 6; ++i)
-        PIXI.loader.add("frame" + i, "/static/img/sprites/frame" + i + ".png");
 
     PIXI.loader.load(setup);
 }
@@ -723,6 +775,10 @@ function depoter(start, end, frame) {
     }
 }
 
+function afficher_debug_chien(pos, color, frame) {
+    map.dogs[pos.x][pos.y].color = color;
+}
+
 var turn = 0;
 var player = 0;
 var action = 0;
@@ -741,11 +797,13 @@ function gameLoop(delta)
         player = 1 - player;
         turn += 1;
 
+        map.clear_debug_chiens();
         map.title_text.text = "Tour " + turn / 2;
         context.turnSlider.val(turn).trigger('change');
     }
 
-    const curr_action = dump[turn]["joueurs"][player]["historique"][action];
+    const history = dump[turn]["joueurs"][player]["historique"];
+    const curr_action = history[action];
 
     if (curr_action["action_type"] == "depoter")
         depoter(curr_action["position_depart"], curr_action["position_arrivee_"], frame);
@@ -753,8 +811,25 @@ function gameLoop(delta)
         death(curr_action["position"], frame);
     else if (curr_action["action_type"] == "baffer")
         baffer(curr_action["position_baffante"], curr_action["position_baffee"], frame);
+    else if (curr_action["action_type"] == "afficher_debug_chien") {
+        afficher_debug_chien(
+            curr_action.position,
+            curr_action.debug_chien,
+            frame
+        );
+
+        // Actually update all consecutive debug dogs at once
+        for (; action + 1 < history.length && history[action + 1].action_type == "afficher_debug_chien" ; action++)
+            afficher_debug_chien(
+                history[action + 1].position,
+                history[action + 1].debug_chien,
+                frame
+            );
+    }
     else
         console.warn("unsupported action:", curr_action["action_type"]);
+
+    map.update_animations();
 
     if (map.selected_x && map.selected_y) {
         map.update_cell_details();

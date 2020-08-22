@@ -91,6 +91,20 @@ fn dist(pos1: (i32, i32), pos2: (i32, i32)) -> i32 {
     (pos1.0 - pos2.0).abs() + (pos1.1 - pos2.1).abs()
 }
 
+fn depotage_priority(plant: &Plante, dest: (i32, i32)) -> impl Ord {
+    let can_reproduce = reproduction_possible(dest, plant.rayon_collecte, &plant.consommation);
+
+    let closest_plant = plantes_jardinier(moi())
+        .into_iter()
+        .map(|plant| plant.pos)
+        .filter(|&plant_pos| plant_pos != dest)
+        .map(|plant_pos| dist(plant.pos, plant_pos))
+        .min()
+        .unwrap_or(i32::MAX);
+
+    (can_reproduce, closest_plant)
+}
+
 /// Fonction appelée au début de la partie.
 pub fn partie_init() {
     println!("=== Start: {} vs. {}", moi(), adversaire());
@@ -125,15 +139,7 @@ pub fn jouer_tour() {
                 .filter(|&pos| !case_pleine(pos))
                 .collect();
 
-        candidates.sort_by_key(|&pos| {
-            plantes_jardinier(moi())
-                .into_iter()
-                .map(|plant| plant.pos)
-                .filter(|&plant_pos| plant_pos != pos)
-                .map(|plant_pos| dist(pos, plant_pos))
-                .min()
-                .unwrap_or(i32::MAX)
-        });
+        candidates.sort_by_key(|&pos| depotage_priority(&plant, pos));
 
         if let Some(&dest) = candidates.first() {
             depoter(plant.pos, dest).expect("depotage failed");
@@ -158,7 +164,9 @@ pub fn jouer_tour() {
     // Display a debug flag on every growable plot
 
     for pos in full_grid() {
-        if reproduction_possible(pos, 1, &[300; 3]) {
+        if plante_reproductible(pos) {
+            debug_afficher_chien(pos, DebugChien::ChienVert).expect("debug chien failed");
+        } else if reproduction_possible(pos, 45, &[300; 3]) {
             debug_afficher_chien(pos, DebugChien::ChienBleu).expect("debug chien failed");
         }
     }
