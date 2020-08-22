@@ -67,5 +67,5 @@ void ActionArroser::dump_json(const GameState& /* st */, std::ostream& ss) const
 {
     ss << "{ \"action_type\": \"arroser\", \"position\": ";
     to_json(ss, position_plante_);
-    ss << ", \"amélioration\": \"" << amelioration_ << "\"}";
+    ss << ", \"amelioration\": \"" << amelioration_ << "\"}";
 }

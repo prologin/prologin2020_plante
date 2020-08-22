@@ -50,9 +50,9 @@ void ActionDepoter::apply_on(GameState* st) const
 
 void ActionDepoter::dump_json(const GameState& /* st */, std::ostream& ss) const
 {
-    ss << "{ \"action_type\": \"dépoter\", \"position_départ\": ";
+    ss << "{ \"action_type\": \"depoter\", \"position_depart\": ";
     to_json(ss, position_depart_);
-    ss << ", \"position_arrivée_\": ";
+    ss << ", \"position_arrivee_\": ";
     to_json(ss, position_arrivee_);
     ss << "}";
 }

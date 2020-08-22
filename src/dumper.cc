@@ -140,12 +140,12 @@ static void dump_plants(std::ostream& ss, const GameState& st, int player_id)
         ss << "{\"pos\": ";
         to_json(ss, plant.pos);
         ss << ", \"adulte\": " << plant.adulte;
-        ss << ", \"enracinée\": " << plant.enracinee;
+        ss << ", \"enracinee\": " << plant.enracinee;
         ss << ", \"vie\": " << plant.vie;
         ss << ", \"vie_max\": " << plant.vie_max;
         ss << ", \"force\": " << plant.force;
-        ss << ", \"élégance\": " << plant.elegance;
-        ss << ", \"rayon_déplacement\": " << plant.rayon_deplacement;
+        ss << ", \"elegance\": " << plant.elegance;
+        ss << ", \"rayon_deplacement\": " << plant.rayon_deplacement;
         ss << ", \"rayon_collecte\": " << plant.rayon_collecte;
         ss << ", \"consommation\": ";
         dump_vector<int>(plant.consommation, ss,
