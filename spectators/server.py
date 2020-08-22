@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import asyncio
 import functools
 from http import HTTPStatus

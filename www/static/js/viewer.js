@@ -585,6 +585,9 @@ function start_preview(container, map) {
     start()
 }
 
+let dump = [], map;
+var wait_for_next_turn = false;
+
 var socket;
 function connect_socket()
 {
@@ -593,7 +596,7 @@ function connect_socket()
     socket.onopen = () => {
         backoff = 1;
         console.log('connected to server');
-        send(socket, 'hello');
+        send('hello');
     };
     socket.onerror = (e) => {
         console.warn(e);
@@ -607,14 +610,16 @@ function connect_socket()
         if (msg.c === 'whatsup') {
             // TODO
         } else if (msg.c === 'end') {
-            // TODO: show game end
+           alert('end');
         } else if (msg.c === 'turn') {
-            dump = msg.state;
+            alert(msg.state[0]);
+            dump.push(msg.state[0]);
+            wait_for_next_turn = false;
         }
     };
 }
 
-function send(socket, cmd, data) {
+function send(cmd, data) {
     let msg = $.extend({c: cmd}, data);
     console.log('ws <', msg);
     socket.send(JSON.stringify(msg));
@@ -672,9 +677,6 @@ function start() {
 
     PIXI.loader.load(setup);
 }
-
-
-let dump, map;
 
 let lastTurn = 0;
 
@@ -786,20 +788,32 @@ var frame = 0;
 
 function gameLoop(delta)
 {
+    if (wait_for_next_turn)
+        return;
+
     while (action >= dump[turn]["joueurs"][player]["historique"].length) {
         if (turn > 0) {
-            map.update_plants(dump[turn-1]); // sync previous turn
-            map.update_scores(dump[turn-1].joueurs.map(p => p.score));
+            map.update_plants(dump[turn - 1]); // sync previous turn
+            map.update_scores(dump[turn - 1].joueurs.map(p => p.score));
         }
 
         action = 0;
         player = 1 - player;
         turn += 1;
+        if (context.is_local)
+        {
+            send("next");
+            wait_for_next_turn = true;
+        }
 
         map.clear_debug_chiens();
         map.title_text.text = "Tour " + turn / 2;
         context.turnSlider.val(turn).trigger('change');
+
+        if (context.is_local && wait_for_next_turn)
+            return;
     }
+
 
     const history = dump[turn]["joueurs"][player]["historique"];
     const curr_action = history[action];
