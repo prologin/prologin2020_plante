@@ -365,17 +365,17 @@ class Map {
 
         this.cell_details = new StatsBox(
             "Terrain",
-            ["position", "chaleur", "lumière", "humidité"],
+            ["position", "chaleur", "lumiere", "humidite"],
             160,
         );
         this.sprite.addChild(this.cell_details);
 
         this.plant_details = new StatsBox(
             "Plante",
-            ["jardinier", "âge", "vie", "vie max", "force", "élégance",
-                "rayon de déplacement", "rayon de collecte", "adulte",
-                "enracinée", "consommation de chaleur",
-                "consommation de lumière", "consommation d'eau"],
+            ["jardinier", "age", "vie", "vie max", "force", "elegance",
+                "rayon de deplacement", "rayon de collecte", "adulte",
+                "enracinee", "consommation de chaleur",
+                "consommation de lumiere", "consommation d'eau"],
             this.cell_details.y + this.cell_details.height + 10,
         );
         this.sprite.addChild(this.plant_details);
@@ -472,8 +472,8 @@ class Map {
         this.cell_details.update({
             position: "(" + this.selected_x + ", " + this.selected_y + ")",
             chaleur: cell.heat,
-            lumière: cell.light,
-            humidité: cell.water,
+            lumiere: cell.light,
+            humidite: cell.water,
         });
     }
 
@@ -487,17 +487,17 @@ class Map {
         const plant = this.selected_plant();
         this.plant_details.update({
             "jardinier": plant.jardinier,
-            "âge": plant.age,
+            "age": plant.age,
             "vie": plant.vie,
             "vie max": plant.vie_max,
             "force": plant.force,
-            "élégance": plant.elegance,
-            "rayon de déplacement": plant.rayon_deplacement,
+            "elegance": plant.elegance,
+            "rayon de deplacement": plant.rayon_deplacement,
             "rayon de collecte": plant.rayon_collecte,
             "adulte": plant.adulte ? "oui" : "non",
-            "enracinée": plant.enracinee ? "oui" : "non",
+            "enracinee": plant.enracinee ? "oui" : "non",
             "consommation de chaleur": plant.consommation[0],
-            "consommation de lumière": plant.consommation[1],
+            "consommation de lumiere": plant.consommation[1],
             "consommation d'eau": plant.consommation[2],
         });
 
@@ -786,7 +786,6 @@ var frame = 0;
 
 function gameLoop(delta)
 {
-    return;
     while (action >= dump[turn]["joueurs"][player]["historique"].length) {
         if (turn > 0) {
             map.update_plants(dump[turn-1]); // sync previous turn
