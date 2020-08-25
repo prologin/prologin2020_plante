@@ -1,4 +1,5 @@
 'use strict';
+// TODO: afficher quand c'est en pause
 
 const TILE_SIZE = 75;
 const WIDTH = TILE_SIZE * 20 + 400;
@@ -707,7 +708,21 @@ function setup(loader, resources) {
     }
 
     function keyHandler(e) {
-        if (e.key == "f") {
+        if (e.key == "p" || e.key == "Space") {
+            paused = !paused;
+        }
+        else if (e.key == "ArrowRight") {
+            if (turn < 200)
+                setTurn(turn + 1);
+        }
+        else if (e.key == "ArrowLeft") {
+            if (turn > 1)
+                setTurn(turn - 1);
+        }
+        else if (e.key == "a") {
+            setTurn(2);
+        }
+        else if (e.key == "f") {
             if (document.fullscreen) {
                 document.exitFullscreen();
                 $("#replay_view canvas").css('width', '100%');
@@ -787,38 +802,39 @@ function afficher_debug_chien(pos, color, frame) {
     map.dogs[pos.x][pos.y].color = color;
 }
 
-var turn = 0;
-var player = 0;
-var action = 0;
-var frame = 0;
+let paused = false;
+let turn = 0;
+let player = 0;
+let action = 0;
+let frame = 0;
+
+function setTurn(new_turn) {
+    action = 0;
+    turn = new_turn;
+    player = turn % 2;
+
+    if (turn > 1) {
+        map.update_plants(dump[turn-2]);
+        map.update_scores(dump[turn-2].joueurs.map(p => p.score));
+    }
+
+    map.clear_debug_chiens();
+    map.title_text.text = "Tour " + turn / 2;
+    context.turnSlider.val(turn / 2).trigger("change");
+
+    if (map.selected_x && map.selected_y) {
+        map.update_cell_details();
+        map.update_plant_details();
+    }
+}
 
 function gameLoop(delta)
 {
-    if (wait_for_next_turn)
+    if (paused || wait_for_next_turn)
         return;
 
-    while (action >= dump[turn]["joueurs"][player]["historique"].length) {
-        if (turn > 0) {
-            map.update_plants(dump[turn - 1]); // sync previous turn
-            map.update_scores(dump[turn - 1].joueurs.map(p => p.score));
-        }
-
-        action = 0;
-        player = 1 - player;
-        turn += 1;
-        if (context.is_local)
-        {
-            send("next");
-            wait_for_next_turn = true;
-        }
-
-        map.clear_debug_chiens();
-        map.title_text.text = "Tour " + turn / 2;
-        context.turnSlider.val(turn).trigger('change');
-
-        if (context.is_local && wait_for_next_turn)
-            return;
-    }
+    while (action >= dump[turn]["joueurs"][player]["historique"].length)
+        setTurn(turn + 1);
 
 
     const history = dump[turn]["joueurs"][player]["historique"];
