@@ -1,0 +1,37 @@
+# Maintainer: Prologin <serveur@prologin.org>
+
+_url=git@github.com/prologin
+pkgname=prologin2020_plante
+pkgrel=1
+pkgver=r113
+pkgdesc="Stechec2 game: ${pkgname}"
+arch=('x86_64')
+url="http://prologin.org/"
+license=('GPL')
+depends=('stechec2' 'gflags' 'zeromq' 'python-yaml')
+makedepends=('git')
+source=("git+ssh://${_url}/stechec2"
+        "git+ssh://${_url}/${pkgname}")
+sha512sums=(SKIP
+            SKIP)
+
+pkgver() {
+    cd "$pkgname"
+    echo r$(git rev-list --count HEAD)
+}
+
+prepare() {
+    cd stechec2
+    ln --force --symbolic "$srcdir/$pkgname" games/
+}
+
+build() {
+    cd stechec2
+    ./waf.py configure build --prefix=/usr --libdir=/usr/lib \
+                             --with-games="$pkgname" --games-only
+}
+
+package() {
+    cd stechec2
+    ./waf.py install --destdir="$pkgdir"
+}
