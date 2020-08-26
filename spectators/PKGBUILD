@@ -25,5 +25,5 @@ package() {
     mkdir -p "$pkgdir/usr/share/stechec2/prologin2020_plante/gui"
     cp -r ../www "$pkgdir/usr/share/stechec2/prologin2020_plante/gui"
     cp -r . "$pkgdir/usr/share/stechec2/prologin2020_plante/gui"
-    install -Dm755 prologin2020_plante-replay "$pkgdir/usr/bin/prologin2020-replay"
+    install -Dm755 prologin2020_plante-replay "$pkgdir/usr/bin/prologin2020_plante_replay"
 }

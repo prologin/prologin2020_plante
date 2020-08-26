@@ -214,7 +214,7 @@ class DumpReader(Reader):
         self.dump_file = dump_file
 
         self.turn = -1
-        self.turns = [json.loads(line) for line in dump_file]
+        self.turns = [json.loads(line.strip()[:-1]) for line in dump_file]
 
         self.is_ended_bool = False
         self.go_next()
