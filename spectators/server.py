@@ -24,6 +24,8 @@ async def process_request(sever_root, path, request_headers):
         ('Connection', 'close'),
     ]
 
+    if '/' == path:
+        path = '/index.html'
     if '?' in path:
         path = path[:path.find('?')]
     if not path.startswith('/www/'):
