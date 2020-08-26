@@ -1,3 +1,4 @@
+#include <iomanip>
 #include "rules.hh"
 
 template <typename T>
