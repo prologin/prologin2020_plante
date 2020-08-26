@@ -591,7 +591,13 @@ var wait_for_next_turn = false;
 var socket;
 function connect_socket()
 {
-    socket = new WebSocket('ws://' + window.location.host);
+    try
+    {
+        socket = new WebSocket('ws://' + window.location.host);
+    } catch (error)
+    {
+        socket = new WebSocket('wss://' + window.location.host);
+    }
     var backoff = 1;
     socket.onopen = () => {
         backoff = 1;
