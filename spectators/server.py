@@ -4,6 +4,7 @@ from http import HTTPStatus
 import logging
 import json
 import mimetypes
+from os import environ
 import os.path
 import websockets
 import threading
@@ -23,6 +24,9 @@ async def process_request(sever_root, path, request_headers):
         ('Server', 'asyncio websocket server'),
         ('Connection', 'close'),
     ]
+
+    if 'GITPOD_INSTANCE_ID' in environ:
+        sever_root = '/gui'
 
     if '/' == path:
         path = '/index.html'
