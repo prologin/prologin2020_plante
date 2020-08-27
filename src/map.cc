@@ -19,8 +19,10 @@ Map::Map(std::istream& stream, std::array<int, 2> player_keys)
             assertm(cell_ressources.size() == 3,
                     "wrong number of ressources for cell");
 
-            for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++){
                 ressources[x][y][k] = std::stoi(cell_ressources[k]);
+                weight_plant_draining[x][y][k] = 0;
+            }
         }
 
     for (const int player_key : player_keys)
@@ -54,6 +56,14 @@ Map::Map(std::istream& stream, std::array<int, 2> player_keys)
     }
 
     plants_already_hit = init_grid(false);
+
+    //Initialize the drainage of plants for all cells
+    for (plante plant : all_plants())
+        for (position cell :
+             circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
+            for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+                weight_plant_draining[cell.x][cell.y][k] +=
+                    plant.consommation[k];
 }
 
 void Map::new_player_turn()
@@ -130,57 +140,13 @@ void Map::update_plant(const plante& plant)
     plants[plant.pos.x][plant.pos.y] = plant;
 }
 
-#include <iostream>
-// TODO: cache result, be carefull about will_have_enough_ressources
+
 Grid<bool> Map::build_has_enough_ressources() const
 {
-    // Compute cumulated weight of close plants for all cells of the grid
-
-    Grid<std::array<int, NB_TYPES_RESSOURCES>> collect_total_weight =
-        init_grid(std::array<int, NB_TYPES_RESSOURCES>({0, 0, 0}));
-
-    for (plante plant : all_plants())
-        for (position cell :
-             circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
-            for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-                collect_total_weight[cell.x][cell.y][k] +=
-                    plant.consommation[k];
-
     // Check if plants have enough ressources
-
     Grid<bool> result = init_grid(false);
-
     for (plante plant : all_plants())
-    {
-        result[plant.pos.x][plant.pos.y] = true;
-        const auto neighbours =
-            circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE);
-
-        for (size_t k = 0;
-             k < NB_TYPES_RESSOURCES && result[plant.pos.x][plant.pos.y]; k++)
-        {
-            long long int divisor = 1;
-
-            for (position cell : neighbours)
-                if (collect_total_weight[cell.x][cell.y][k] != 0)
-                    divisor = std::lcm(divisor,
-                                       collect_total_weight[cell.x][cell.y][k]);
-
-            long long int quotient = 0;
-
-            for (position cell : neighbours)
-                if (collect_total_weight[cell.x][cell.y][k] != 0)
-                {
-                    quotient +=
-                        ressources[cell.x][cell.y][k] * plant.consommation[k] *
-                        (divisor / collect_total_weight[cell.x][cell.y][k]);
-                }
-
-            // We need quotient / divisor >= plant.consommation[k]
-            result[plant.pos.x][plant.pos.y] &=
-                quotient >= plant.consommation[k] * divisor;
-        }
-    }
+        result[plant.pos.x][plant.pos.y] = has_enough_ressources(plant.pos);
 
     return result;
 }
@@ -192,19 +158,58 @@ bool Map::will_have_enough_ressources(const plante& plant)
 
     // Check result with modified map
     plants[plant.pos.x][plant.pos.y] = plant;
+    // Update the drainage in the area
+    for (position cell :
+         circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            weight_plant_draining[cell.x][cell.y][k] +=
+                plant.consommation[k];
     bool will_have_enough_ressources = has_enough_ressources(plant.pos);
-
+    for (position cell :
+         circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            weight_plant_draining[cell.x][cell.y][k] -=
+                plant.consommation[k];
     // Undo map modifications
     plants[plant.pos.x][plant.pos.y] = current_plant;
 
     return will_have_enough_ressources;
 }
 
-#include <iostream>
 bool Map::has_enough_ressources(position pos) const
 {
     assert(position_in_bounds(pos));
-    return build_has_enough_ressources()[pos.x][pos.y];
+    if (!plants[pos.x][pos.y]) return false;
+
+    plante plant = *plants[pos.x][pos.y];
+    bool result = true;
+    const auto neighbours =
+        circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE);
+
+    for (size_t k = 0;
+         k < NB_TYPES_RESSOURCES; k++)
+    {
+        long long int divisor = 1;
+
+        for (position cell : neighbours)
+            if (weight_plant_draining[cell.x][cell.y][k] != 0)
+                divisor = std::lcm(divisor,
+                                   weight_plant_draining[cell.x][cell.y][k]);
+
+        long long int quotient = 0;
+
+        for (position cell : neighbours)
+            if (weight_plant_draining[cell.x][cell.y][k] != 0)
+            {
+                quotient +=
+                    ressources[cell.x][cell.y][k] * plant.consommation[k] *
+                    (divisor / weight_plant_draining[cell.x][cell.y][k]);
+            }
+
+        // We need quotient / divisor >= plant.consommation[k]
+        result &=quotient >= plant.consommation[k] * divisor;
+    }
+    return result;
 }
 
 bool Map::already_hit(position pos) const
@@ -221,7 +226,19 @@ void Map::move_plant(position from, position to)
     assert(!plants[to.x][to.y]);
 
     plants[from.x][from.y].swap(plants[to.x][to.y]);
+    for (position cell :
+         circle(plants[to.x][to.y]->pos, plants[to.x][to.y]->rayon_collecte / COUT_PAR_CASE_COLLECTE))
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            weight_plant_draining[cell.x][cell.y][k] -=
+                plants[to.x][to.y]->consommation[k];
+
+    ;
     plants[to.x][to.y]->pos = to;
+    for (position cell :
+         circle(plants[to.x][to.y]->pos, plants[to.x][to.y]->rayon_collecte / COUT_PAR_CASE_COLLECTE))
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            weight_plant_draining[cell.x][cell.y][k] +=
+                plants[to.x][to.y]->consommation[k];
     plants[to.x][to.y]->enracinee = true;
 }
 

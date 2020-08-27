@@ -41,6 +41,7 @@ private:
     Grid<std::array<int, NB_TYPES_RESSOURCES>> ressources;
     Grid<std::optional<plante>> plants;
     Grid<bool> plants_already_hit;
+    Grid<std::array<int, NB_TYPES_RESSOURCES>> weight_plant_draining;
 
     int player_key(int player_id) const;
 };
