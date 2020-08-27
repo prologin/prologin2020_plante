@@ -811,11 +811,11 @@ let frame = 0;
 function setTurn(new_turn) {
     action = 0;
     turn = new_turn;
-    player = turn % 2;
+    player = (1 + turn) % 2;
 
-    if (turn > 1) {
-        map.update_plants(dump[turn-2]);
-        map.update_scores(dump[turn-2].joueurs.map(p => p.score));
+    if (turn > 0) {
+        map.update_plants(dump[turn - 1]);
+        map.update_scores(dump[turn - 1].joueurs.map(p => p.score));
     }
 
     map.clear_debug_chiens();
