@@ -15,4 +15,6 @@ RUN ( cd /prologin/stechec2 && python3 ./waf.py configure --with-games=prologin2
 
 RUN rm -rf /prologin/stechec2 prologin2020_plante-master prologin2020_plante-master.zip
 
+RUN apt-get install -y python3-pip && pip3 install websockets
+
 RUN stechec2-generator player prologin2020_plante /prologin
