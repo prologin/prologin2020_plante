@@ -289,19 +289,30 @@ class Plant {
     update_sprite(boost_opacity = 1) {
         this.sprite.removeChildren();
 
-        const face_id = Math.round(4 * this.vie / this.vie_max);
-        this.sprite.addChild(new PIXI.Sprite(sprites.textures[`flowey/face_${face_id}.png`]));
+        if (this.adulte) {
+            const face_id = Math.round(4 * this.vie / this.vie_max);
+            this.sprite.addChild(new PIXI.Sprite(sprites.textures[`flowey/face_${face_id}.png`]));
 
-        const hat_id = Math.min(2, Math.round(this.elegance / 50));
-        const hat_texture = `flowey/fleur_${this.jardinier + 1}_${hat_id + 1}.png`;
-        this.sprite.addChild(new PIXI.Sprite(sprites.textures[hat_texture]));
+            const hat_id = Math.min(2, Math.round(this.elegance / 50));
+            const hat_texture = `flowey/fleur_${this.jardinier + 1}_${hat_id + 1}.png`;
+            this.sprite.addChild(new PIXI.Sprite(sprites.textures[hat_texture]));
 
-        const body_id = Math.min(2, Math.round(this.force / 50));
-        const body_texture = `flowey/pied_${body_id + 1}.png`;
-        this.sprite.addChild(new PIXI.Sprite(sprites.textures[body_texture]));
+            const body_id = Math.min(2, Math.round(this.force / 50));
+            const body_texture = `flowey/pied_${body_id + 1}.png`;
+            this.sprite.addChild(new PIXI.Sprite(sprites.textures[body_texture]));
 
-        if (!this.enracinee)
-            this.sprite.addChild(new PIXI.Sprite(sprites.textures["flowey/pot.png"]));
+            if (!this.enracinee)
+                this.sprite.addChild(new PIXI.Sprite(sprites.textures["flowey/pot.png"]));
+        } else {
+            const frame = Math.min(3, this.age);
+
+            console.log(`flowey/pousse_${this.jardinier + 1}_${frame}.png`);
+            this.sprite.addChild(
+                new PIXI.Sprite(
+                    sprites.textures[`flowey/pousse_${this.jardinier + 1}_${frame}.png`]
+                )
+            );
+        }
 
         if (this.boosting) {
             let sprite = new PIXI.Sprite(
@@ -794,6 +805,7 @@ function depoter(start, end, frame) {
 
 function arroser(pos, carac) {
     let plant = map.plant_at(pos.x, pos.y);
+    plant.adulte = true;
 
     if (carac == "0")
         plant.boosting = "strength";

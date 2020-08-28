@@ -331,6 +331,12 @@
             <key type="filename">www/static/img/sprites/flowey/pied_2.png</key>
             <key type="filename">www/static/img/sprites/flowey/pied_3.png</key>
             <key type="filename">www/static/img/sprites/flowey/pot.png</key>
+            <key type="filename">www/static/img/sprites/flowey/pousse_1_1.png</key>
+            <key type="filename">www/static/img/sprites/flowey/pousse_1_2.png</key>
+            <key type="filename">www/static/img/sprites/flowey/pousse_1_3.png</key>
+            <key type="filename">www/static/img/sprites/flowey/pousse_2_1.png</key>
+            <key type="filename">www/static/img/sprites/flowey/pousse_2_2.png</key>
+            <key type="filename">www/static/img/sprites/flowey/pousse_2_3.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
