@@ -1,0 +1,132 @@
+map_size: 20
+
+default_cell_type: gravier
+
+cell_types:
+    gravier:
+        sprite: bg/gravier.png
+        serialize:
+            method: ascii
+            ascii: '0,0,0 '
+
+    desert:
+        sprite: bg/desert.png
+        serialize:
+            method: ascii
+            ascii: '100,0,0 '
+
+    prairie:
+        sprite: bg/prairie.png
+        serialize:
+            method: ascii
+            ascii: '0,100,0 '
+
+    ocean:
+        sprite: bg/ocean.png
+        serialize:
+            method: ascii
+            ascii: '0,0,100 '
+
+    oasis:
+        sprite: bg/oasis.png
+        serialize:
+            method: ascii
+            ascii: '100,0,100 '
+
+    lave:
+        sprite: bg/lave.png
+        serialize:
+            method: ascii
+            ascii: '100,100,0 '
+
+    glace:
+        sprite: bg/glace.png
+        serialize:
+            method: ascii
+            ascii: '0,100,100 '
+
+    jungle:
+        sprite: bg/jungle.png
+        serialize:
+            method: ascii
+            ascii: '100,100,100 '
+
+    plante_jaune:
+        extra: ['vie_max', 'force', 'elegance', 'rayon', 'collecte', 'chaud', 'lumiere', 'eau']
+        serialize:
+            method: list
+            order: 0
+        presets:
+            normal:
+                sprite: plante_jaune/normal.png
+                default:
+                    vie_max: 100
+                    force: 50
+                    elegance: 50
+                    rayon: 45
+                    collecte: 45
+                    chaud: 300
+                    lumiere: 300
+                    eau: 300
+            beauty:
+                sprite: plante_jaune/beauty.png
+                default:
+                    vie_max: 50
+                    force: 10
+                    elegance: 100
+                    rayon: 30
+                    collecte: 45
+                    chaud: 0
+                    lumiere: 300
+                    eau: 300
+            beast:
+                sprite: plante_jaune/beast.png
+                default:
+                    vie_max: 50
+                    force: 100
+                    elegance: 10
+                    rayon: 60
+                    collecte: 45
+                    chaud: 300
+                    lumiere: 0
+                    eau: 300
+
+    plante_rouge:
+        extra: ['vie_max', 'force', 'elegance', 'rayon', 'collecte', 'chaud', 'lumiere', 'eau']
+        serialize:
+            method: list
+            order: 1
+        presets:
+            normal:
+                sprite: plante_rouge/normal.png
+                default:
+                    vie_max: 100
+                    force: 50
+                    elegance: 50
+                    rayon: 45
+                    collecte: 45
+                    chaud: 300
+                    lumiere: 300
+                    eau: 300
+            beauty:
+                sprite: plante_rouge/beauty.png
+                default:
+                    vie_max: 50
+                    force: 10
+                    elegance: 100
+                    rayon: 30
+                    collecte: 45
+                    chaud: 0
+                    lumiere: 300
+                    eau: 300
+            beast:
+                sprite: plante_rouge/beast.png
+                default:
+                    vie_max: 50
+                    force: 100
+                    elegance: 10
+                    rayon: 60
+                    collecte: 45
+                    chaud: 300
+                    lumiere: 0
+                    eau: 300
