@@ -6,50 +6,50 @@ cell_types:
     gravier:
         sprite: bg/gravier.png
         serialize:
-            method: ascii
-            ascii: '0,0,0 '
+            method: ascii_space
+            ascii_space: '0,0,0'
 
     desert:
         sprite: bg/desert.png
         serialize:
-            method: ascii
-            ascii: '100,0,0 '
+            method: ascii_space
+            ascii_space: '100,0,0'
 
     prairie:
         sprite: bg/prairie.png
         serialize:
-            method: ascii
-            ascii: '0,100,0 '
+            method: ascii_space
+            ascii_space: '0,100,0'
 
     ocean:
         sprite: bg/ocean.png
         serialize:
-            method: ascii
-            ascii: '0,0,100 '
+            method: ascii_space
+            ascii_space: '0,0,100'
 
     oasis:
         sprite: bg/oasis.png
         serialize:
-            method: ascii
-            ascii: '100,0,100 '
+            method: ascii_space
+            ascii_space: '100,0,100'
 
     lave:
         sprite: bg/lave.png
         serialize:
-            method: ascii
-            ascii: '100,100,0 '
+            method: ascii_space
+            ascii_space: '100,100,0'
 
     glace:
         sprite: bg/glace.png
         serialize:
-            method: ascii
-            ascii: '0,100,100 '
+            method: ascii_space
+            ascii_space: '0,100,100'
 
     jungle:
         sprite: bg/jungle.png
         serialize:
-            method: ascii
-            ascii: '100,100,100 '
+            method: ascii_space
+            ascii_space: '100,100,100'
 
     plante_jaune:
         extra: ['vie_max', 'force', 'elegance', 'rayon', 'collecte', 'chaud', 'lumiere', 'eau']

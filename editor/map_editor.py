@@ -110,6 +110,21 @@ class Cell():
                 SPRITES[self.cell_type], master=self.master)
             self.master.create_image((x, y), image=self.img)
 
+class Plante():
+    def __init__(self, master, row, col, type):
+        self.master = master
+        self.x = col
+        self.y = row
+        self.type = type
+        self.img = None
+
+    def draw(self):
+        x = self.x * MAP_CELL_SIZE + MAP_CELL_SIZE // 2
+        y = self.y * MAP_CELL_SIZE + MAP_CELL_SIZE // 2
+
+        self.img = ImageTk.PhotoImage(
+            SPRITES[self.type], master=self.master)
+        self.master.create_image((x, y), image=self.img)
 
 class Grid():
     def __init__(self, master):
@@ -132,6 +147,7 @@ class Grid():
 
         self.grid = [[Cell(self.canvas, row, col) for col in range(MAP_SIZE)]
                      for row in range(MAP_SIZE)]
+        self.plant_grid = [[None for col in range(MAP_SIZE)] for row in range(MAP_SIZE)]
 
         self.canvas.bind("<Button-1>", self.event_set_cell)
         self.canvas.bind("<B1-Motion>", self.event_set_cell)
@@ -165,6 +181,16 @@ class Grid():
         for row in self.grid:
             for cell in row:
                 cell.draw()
+        self.display_plants()
+        #for elem in self.plant_list:
+        #    Cell(self.canvas, elem[0], elem[1])
+        #    cell.set(elem[3])
+
+    def display_plants(self):
+        for row in self.plant_grid:
+            for plant in row:
+                if plant:
+                    plant.draw()
 
     #    ____     _ _
     #   / ___|___| | |___
@@ -178,7 +204,16 @@ class Grid():
         return 0 <= row < MAP_SIZE and 0 <= col < MAP_SIZE
 
     def set_cell(self, row, col):
-        self.grid[row][col].set(self.draw_type.get())
+        #print(self.draw_type.get())
+        #print('plante' in self.draw_type.get())
+        if 'plante' in self.draw_type.get():
+            if not self.plant_grid[row][col]:
+                self.plant_grid[row][col] = Plante(self.canvas,row,col,self.draw_type.get())
+            else:
+                self.plant_grid[row][col] = None
+        else:
+            self.grid[row][col].set(self.draw_type.get())
+        self.display_plants()
 
         opp = get_opp((row, col), self.symetry.get())
         if opp is not None:
@@ -242,9 +277,25 @@ class Grid():
                     # Serialization of the grid
                     if 'ascii' in conf['serialize']:
                         f.write(conf['serialize']['ascii'])
-                    else:
-                        f.write(CELL_TYPES[DEFAULT_CELL_TYPE]
-                                ['serialize']['ascii'])
+                    elif 'ascii_space' in conf['serialize']:
+                        f.write(conf['serialize']['ascii_space'])
+                        if not col == MAP_SIZE-1:
+                            f.write(' ')
+
+                f.write('\n')
+
+            # Serialize the grid and catch raw and list outputs
+            for row, row_data in enumerate(self.plant_grid):
+                for col, plant in enumerate(row_data):
+                    if not plant:
+                        continue
+                    conf = get_type_conf(plant.type)
+                    data = [row, col]
+
+                    # Add extra infos if necessary
+                    if 'extra' in conf:
+                        data += [conf['default'][field]
+                                 for field in conf['extra']]
 
                     # Register for raw and list outputs
                     if conf['serialize']['method'] == 'raw':
@@ -252,7 +303,7 @@ class Grid():
                     elif conf['serialize']['method'] == 'list':
                         list_output[conf['serialize']['order']].append(data)
 
-                f.write('\n')
+
 
             # Serialize raw and list outputs
             order_keys = sorted(list(raw_output.keys()) +
@@ -275,6 +326,11 @@ class Grid():
         from_ascii = {conf['serialize']['ascii']: name
                       for name, conf in CELL_TYPES.items()
                       if conf['serialize']['method'] == 'ascii'}
+
+        # Ascii separated by space
+        from_ascii_space = {conf['serialize']['ascii_space']: name
+                      for name, conf in CELL_TYPES.items()
+                      if conf['serialize']['method'] == 'ascii_space'}
 
         # Ordered list of items to catch after reading the grid
         from_raw_or_list = [(name, conf['serialize']['order'])
@@ -301,10 +357,16 @@ class Grid():
         with open(filename, 'r') as f:
             # Read the grid
             for row in range(MAP_SIZE):
-                for col, char in enumerate(f.readline()):
-                    if self.inside_grid(row, col) and char in from_ascii:
-                        self.grid[row][col].set(from_ascii[char])
-
+                if bool(from_ascii):
+                    for col, char in enumerate(f.readline()):
+                        if self.inside_grid(row, col) and char in from_ascii:
+                            self.grid[row][col].set(from_ascii[char])
+                elif bool(from_ascii_space):
+                    chars = f.readline().rstrip().split(' ')
+                    for col, char in enumerate(chars):
+                        #print(col,char,self.inside_grid(row, col))
+                        if self.inside_grid(row, col) and char in from_ascii_space:
+                            self.grid[row][col].set(from_ascii_space[char])
             # Read raw and list infos
             for name in from_raw_or_list:
                 conf = CELL_TYPES[name]
@@ -315,11 +377,21 @@ class Grid():
                 elif conf['serialize']['method'] == 'list':
                     n = int(f.readline())
                     for _ in range(n):
-                        row, col, *extra = map(int, f.readline().split(' '))
+                        if 'plante' in name:
+                            values = list(map(int, f.readline().split(' ')))
+                            row,col = values[0:2]
+                            vie,force,elegance = values[2:5]
+                            type =""
+                            if vie >= 100:
+                                type = "normal"
+                            elif force >= 100:
+                                type = "beast"
+                            else :
+                                type = "beauty"
 
-                        identifier = (name, ) + tuple(extra)
-                        if identifier in fullname_index:
-                            self.grid[row][col].set(fullname_index[identifier])
+                            type_plant = name+":"+type
+                            self.plant_grid[row][col]=Plante(self.canvas,row,col,type_plant)
+
 
         self.draw()
 
