@@ -28,3 +28,18 @@ TEST(MapTest, Deserialize)
     EXPECT_EQ(plant.age, AGE_DE_POUSSE);
     EXPECT_EQ(plant.vie, 110);
 }
+
+TEST(MapTest, drainage_test) {
+    std::istringstream map_buff(test_map);
+    Map map(map_buff, {42, 1337});
+    plante plant = *map.plant_at({2, 2});
+    EXPECT_EQ(map.has_enough_ressources(plant.pos),true);
+    EXPECT_EQ(map.will_have_enough_ressources(plant),true);
+    EXPECT_EQ(map.has_enough_ressources(plant.pos),true);
+
+    plant.pos = {0, 0};
+    plant.rayon_collecte = 7 * COUT_PAR_CASE_COLLECTE;
+    plant.consommation = {8, 1, 4};
+    EXPECT_EQ(map.will_have_enough_ressources(plant),false);
+
+}

@@ -60,11 +60,7 @@ Map::Map(std::istream& stream, std::array<int, 2> player_keys)
 
     // Initialize the drainage of plants for all cells
     for (plante plant : all_plants())
-        for (position cell :
-             circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
-            for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-                weight_plant_draining[cell.x][cell.y][k] +=
-                    plant.consommation[k];
+        add_drainage(plant);
 }
 
 void Map::new_player_turn()
@@ -308,6 +304,7 @@ void Map::breed_player_plants(int player_id)
                 plante new_plant = *breed(adjacents);
                 new_plant.pos = {x, y};
                 plants[x][y] = new_plant;
+                add_drainage(new_plant);
 
                 // PlayerInfo& player_ = st->get_player_by_key(player_id_);
                 internal_action action;
