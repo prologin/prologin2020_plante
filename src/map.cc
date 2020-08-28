@@ -164,14 +164,27 @@ bool Map::will_have_enough_ressources(const plante& plant)
         for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
             weight_plant_draining[cell.x][cell.y][k] +=
                 plant.consommation[k];
+
+    for (position cell :
+         circle(plant.pos, current_plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            weight_plant_draining[cell.x][cell.y][k] -=
+                current_plant.consommation[k];
+
     bool will_have_enough_ressources = has_enough_ressources(plant.pos);
+
+    // Undo map modifications
+    plants[plant.pos.x][plant.pos.y] = current_plant;
     for (position cell :
          circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
         for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
             weight_plant_draining[cell.x][cell.y][k] -=
                 plant.consommation[k];
-    // Undo map modifications
-    plants[plant.pos.x][plant.pos.y] = current_plant;
+    for (position cell :
+         circle(plant.pos, current_plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            weight_plant_draining[cell.x][cell.y][k] +=
+                current_plant.consommation[k];
 
     return will_have_enough_ressources;
 }
