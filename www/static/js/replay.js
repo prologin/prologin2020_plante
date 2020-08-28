@@ -19,7 +19,6 @@ $(function () {
     .done(function() {
         $.getScript('/static/js/viewer.js')
         .done(function() {
-            console.log('finish loading');
             start_viewer($replay_view, $turnSlider, is_local);
             // reveal the UI
             $replay_view.find('canvas').css({

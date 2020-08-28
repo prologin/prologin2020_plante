@@ -1,6 +1,7 @@
 'use strict';
 // TODO: afficher quand c'est en pause
 
+let loader = PIXI.Loader.shared;
 const TILE_SIZE = 75;
 const WIDTH = TILE_SIZE * 20 + 400;
 const HEIGHT = TILE_SIZE * 20;
@@ -220,7 +221,7 @@ class Cell {
         frame_id = frame_id[random % frame_id.length];
     }
 
-    this.sprite = new PIXI.Sprite(PIXI.loader.resources[`frame_${frame_id}`].texture);
+    this.sprite = new PIXI.Sprite(loader.resources[`frame_${frame_id}`].texture);
     this.sprite.width = TILE_SIZE;
     this.sprite.height = TILE_SIZE;
   }
@@ -243,11 +244,11 @@ class Dog {
 
         if (this.color != 0) {
             this.sprite.addChild(
-                new PIXI.Sprite(PIXI.loader.resources[`dog_${this.frame}`].texture)
+                new PIXI.Sprite(loader.resources[`dog_${this.frame}`].texture)
             );
 
             this.sprite.addChild(
-                new PIXI.Sprite(PIXI.loader.resources[`colar_${this.color}`].texture)
+                new PIXI.Sprite(loader.resources[`colar_${this.color}`].texture)
             );
         }
     }
@@ -271,6 +272,7 @@ class Plant {
         this.sprite = new PIXI.Container();
         this.sprite.height = TILE_SIZE;
         this.sprite.width = TILE_SIZE;
+        this.boosting = null;
         this.update_sprite();
     }
 
@@ -282,22 +284,33 @@ class Plant {
         return clone;
     }
 
-    update_sprite() {
+    update_sprite(boost_opacity = 1) {
         this.sprite.removeChildren();
 
         const face_id = Math.round(4 * this.vie / this.vie_max);
-        this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources["face_" + face_id].texture));
+        this.sprite.addChild(new PIXI.Sprite(loader.resources["face_" + face_id].texture));
 
         const hat_id = Math.min(2, Math.round(this.elegance / 50));
         const hat_texture = "hat_" + this.jardinier + "_" + hat_id;
-        this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources[hat_texture].texture));
+        this.sprite.addChild(new PIXI.Sprite(loader.resources[hat_texture].texture));
 
         const body_id = Math.min(2, Math.round(this.force / 50));
         const body_texture = "body_" + body_id;
-        this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources[body_texture].texture));
+        this.sprite.addChild(new PIXI.Sprite(loader.resources[body_texture].texture));
 
         if (!this.enracinee)
-            this.sprite.addChild(new PIXI.Sprite(PIXI.loader.resources["pot"].texture));
+            this.sprite.addChild(new PIXI.Sprite(loader.resources["pot"].texture));
+
+        if (this.boosting) {
+            let sprite = new PIXI.Sprite(
+                loader.resources[`boost_${this.boosting}`].texture
+            );
+            sprite.width = sprite.height = 3 * TILE_SIZE / 4;
+            sprite.x = TILE_SIZE / 3;
+            sprite.y = -TILE_SIZE / 8;
+            sprite.alpha = boost_opacity;
+            this.sprite.addChild(sprite);
+        }
 
         this.sprite.x = this.pos_x * TILE_SIZE;
         this.sprite.y = this.pos_y * TILE_SIZE;
@@ -329,7 +342,7 @@ class Map {
             this.update_plants(dump[0]);
         }
 
-        this.seed = new PIXI.Sprite(PIXI.loader.resources["graine"].texture);
+        this.seed = new PIXI.Sprite(loader.resources["graine"].texture);
         this.seed.visible = false;
         this.sprite.addChild(this.seed);
 
@@ -645,44 +658,48 @@ function start() {
     context.container.append(app.view);
 
     if (context.mode !== 'preview' && !context.is_local)
-        PIXI.loader.add("dump", "dump");
+        loader.add("dump", "dump");
     if (context.is_local)
         connect_socket();
 
-    PIXI.loader.add("graine", "/static/img/sprites/flowey/graine.png");
-    PIXI.loader.add("pot", "/static/img/sprites/flowey/pot.png");
+    loader.add("graine", "/static/img/sprites/flowey/graine.png");
+    loader.add("pot", "/static/img/sprites/flowey/pot.png");
+    loader.add("boost_health", "/static/img/sprites/flowey/boost_health.png");
+    loader.add("boost_jump", "/static/img/sprites/flowey/boost_jump.png");
+    loader.add("boost_strength", "/static/img/sprites/flowey/boost_strength.png");
+    loader.add("boost_style", "/static/img/sprites/flowey/boost_style.png");
 
     // Read tiles
     for (let i = 1 ; i <= 107 ; i++) {
         const filename = ("" + i).padStart(2, "0");
-        PIXI.loader.add(`frame_${i}`, `/static/img/sprites/bg/${filename}.png`);
+        loader.add(`frame_${i}`, `/static/img/sprites/bg/${filename}.png`);
     }
 
     // Read dog parts
     for (let i = 0 ; i < 6 ; i++)
-        PIXI.loader.add(`dog_${i}`, `/static/img/sprites/dog/frames/${i}.png`);
+        loader.add(`dog_${i}`, `/static/img/sprites/dog/frames/${i}.png`);
 
     for (let i = 1 ; i <= 3 ; i++)
-        PIXI.loader.add(`colar_${i}`, `/static/img/sprites/dog/colar/${i}.png`);
+        loader.add(`colar_${i}`, `/static/img/sprites/dog/colar/${i}.png`);
 
     // Read flower parts
     for (let i = 0 ; i <= 4 ; i++)
-        PIXI.loader.add(`face_${i}`, `/static/img/sprites/flowey/face_${i}.png`);
+        loader.add(`face_${i}`, `/static/img/sprites/flowey/face_${i}.png`);
 
     for (let player of [0, 1])
         for (let i = 0 ; i <= 2 ; i++)
-            PIXI.loader.add(
+            loader.add(
                 `hat_${player}_${i}`,
                 `/static/img/sprites/flowey/fleur_${player + 1}_${i + 1}.png`
             );
 
     for (let i = 0 ; i <= 2 ; i++)
-        PIXI.loader.add(
+        loader.add(
             `body_${i}`,
             `/static/img/sprites/flowey/pied_${i + 1}.png`
         );
 
-    PIXI.loader.load(setup);
+    loader.load(setup);
 }
 
 let lastTurn = 0;
@@ -712,15 +729,22 @@ function setup(loader, resources) {
             paused = !paused;
         }
         else if (e.key == "ArrowRight") {
-            if (turn < 200)
+            if (e.shiftKey)
+                setTurn(Math.min(turn + 20, 200));
+            else if (turn < 200)
                 setTurn(turn + 1);
         }
         else if (e.key == "ArrowLeft") {
-            if (turn > 1)
+            if (e.shiftKey)
+                setTurn(Math.max(turn - 20, 0));
+            else if (turn > 0)
                 setTurn(turn - 1);
         }
         else if (e.key == "a") {
-            setTurn(2);
+            setTurn(1);
+        }
+        else if (e.key == "e") {
+            setTurn(200);
         }
         else if (e.key == "f") {
             if (document.fullscreen) {
@@ -798,6 +822,21 @@ function depoter(start, end, frame) {
     }
 }
 
+function arroser(pos, carac) {
+    let plant = map.plant_at(pos.x, pos.y);
+
+    if (carac == "0")
+        plant.boosting = "strength";
+    else if (carac == "1")
+        plant.boosting = "health";
+    else if (carac == "2")
+        plant.boosting = "style";
+    else if (carac = "3")
+        plant.boosting = "jump";
+
+    plant.update_sprite((1 + frame) / animation_duration());
+}
+
 function afficher_debug_chien(pos, color, frame) {
     map.dogs[pos.x][pos.y].color = color;
 }
@@ -819,7 +858,7 @@ function setTurn(new_turn) {
     }
 
     map.clear_debug_chiens();
-    map.title_text.text = "Tour " + turn / 2;
+    map.title_text.text = "Tour " + (1 + turn) / 2;
     context.turnSlider.val(turn / 2).trigger("change");
 
     if (map.selected_x && map.selected_y) {
@@ -833,9 +872,12 @@ function gameLoop(delta)
     if (paused || wait_for_next_turn)
         return;
 
-    while (action >= dump[turn]["joueurs"][player]["historique"].length)
-        setTurn(turn + 1);
-
+    while (action >= dump[turn]["joueurs"][player]["historique"].length) {
+        if (turn < 200)
+            setTurn(turn + 1);
+        else
+            return;
+    }
 
     const history = dump[turn]["joueurs"][player]["historique"];
     const curr_action = history[action];
@@ -861,6 +903,8 @@ function gameLoop(delta)
                 frame
             );
     }
+    else if (curr_action.action_type == "arroser")
+        arroser(curr_action.position, curr_action.amelioration);
     else
         console.warn("unsupported action:", curr_action["action_type"]);
 
