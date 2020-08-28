@@ -213,11 +213,18 @@ class Grid():
                 self.plant_grid[row][col] = None
         else:
             self.grid[row][col].set(self.draw_type.get())
-        self.display_plants()
+
 
         opp = get_opp((row, col), self.symetry.get())
         if opp is not None:
-            self.grid[opp[0]][opp[1]].set(self.draw_type.get())
+            if 'plante' in self.draw_type.get():
+                if not self.plant_grid[opp[0]][opp[1]]:
+                    self.plant_grid[opp[0]][opp[1]] = Plante(self.canvas,opp[0],opp[1],self.draw_type.get())
+                else:
+                    self.plant_grid[opp[0]][opp[1]] = None
+            else:
+                self.grid[opp[0]][opp[1]].set(self.draw_type.get())
+        self.display_plants()
 
     def fill_grid(self):
         for row in self.grid:
