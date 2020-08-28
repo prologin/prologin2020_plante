@@ -30,11 +30,15 @@ $(function () {
             });
             $replay_view.fadeIn('fast');
 
-            $turnSlider.change(function () {
+            $turnSlider.change(function (e) {
                 let turnIndex = parseInt($turnSlider.val());
                 $previous.prop('disabled', turnIndex <= 0);
                 $next.prop('disabled', turnIndex > 100);
                 $turnLabel.text(turnIndex);
+
+                // Trigger update iff the event was trigger by the UI
+                if (e.originalEvent)
+                    setTurn(2 * turnIndex);
             });
         });
     });
