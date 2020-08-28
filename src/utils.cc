@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <functional>
+#include <unordered_set>
 
 #include "utils.hh"
 

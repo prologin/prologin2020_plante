@@ -212,22 +212,27 @@ bool Map::already_hit(position pos) const
     return plants_already_hit[pos.x][pos.y];
 }
 
-void Map::remove_drainage(std::optional<plante> plante){
-    if (!plante) return;
+#include <iostream>
+void Map::remove_drainage(std::optional<plante> plante)
+{
+    if (!plante)
+        return;
+
     for (position cell :
          circle(plante->pos, plante->rayon_collecte / COUT_PAR_CASE_COLLECTE))
         for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-            weight_plant_draining[cell.x][cell.y][k] -=
-                plante->consommation[k];
+            weight_plant_draining[cell.x][cell.y][k] -= plante->consommation[k];
 }
 
-void Map::add_drainage(std::optional<plante> plante){
-    if (!plante) return;
+void Map::add_drainage(std::optional<plante> plante)
+{
+    if (!plante)
+        return;
+
     for (position cell :
          circle(plante->pos, plante->rayon_collecte / COUT_PAR_CASE_COLLECTE))
         for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-            weight_plant_draining[cell.x][cell.y][k] +=
-                plante->consommation[k];
+            weight_plant_draining[cell.x][cell.y][k] += plante->consommation[k];
 }
 
 void Map::move_plant(position from, position to)
@@ -237,8 +242,8 @@ void Map::move_plant(position from, position to)
     assert(plants[from.x][from.y]);
     assert(!plants[to.x][to.y]);
 
+    remove_drainage(plants[from.x][from.y]);
     plants[from.x][from.y].swap(plants[to.x][to.y]);
-    remove_drainage(plants[to.x][to.y]);
     plants[to.x][to.y]->pos = to;
     add_drainage(plants[to.x][to.y]);
     plants[to.x][to.y]->enracinee = true;

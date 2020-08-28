@@ -2,6 +2,8 @@
 // TODO: afficher quand c'est en pause
 
 let loader = PIXI.Loader.shared;
+let sprites = null;
+
 const TILE_SIZE = 75;
 const WIDTH = TILE_SIZE * 20 + 400;
 const HEIGHT = TILE_SIZE * 20;
@@ -221,7 +223,7 @@ class Cell {
         frame_id = frame_id[random % frame_id.length];
     }
 
-    this.sprite = new PIXI.Sprite(loader.resources[`frame_${frame_id}`].texture);
+    this.sprite = new PIXI.Sprite(sprites.textures[`bg/${frame_id}.png`]);
     this.sprite.width = TILE_SIZE;
     this.sprite.height = TILE_SIZE;
   }
@@ -244,11 +246,11 @@ class Dog {
 
         if (this.color != 0) {
             this.sprite.addChild(
-                new PIXI.Sprite(loader.resources[`dog_${this.frame}`].texture)
+                new PIXI.Sprite(sprites.textures[`dog/frames/${this.frame}.png`])
             );
 
             this.sprite.addChild(
-                new PIXI.Sprite(loader.resources[`colar_${this.color}`].texture)
+                new PIXI.Sprite(sprites.textures[`dog/colar/${this.color}.png`])
             );
         }
     }
@@ -288,22 +290,22 @@ class Plant {
         this.sprite.removeChildren();
 
         const face_id = Math.round(4 * this.vie / this.vie_max);
-        this.sprite.addChild(new PIXI.Sprite(loader.resources["face_" + face_id].texture));
+        this.sprite.addChild(new PIXI.Sprite(sprites.textures[`flowey/face_${face_id}.png`]));
 
         const hat_id = Math.min(2, Math.round(this.elegance / 50));
-        const hat_texture = "hat_" + this.jardinier + "_" + hat_id;
-        this.sprite.addChild(new PIXI.Sprite(loader.resources[hat_texture].texture));
+        const hat_texture = `flowey/fleur_${this.jardinier + 1}_${hat_id + 1}.png`;
+        this.sprite.addChild(new PIXI.Sprite(sprites.textures[hat_texture]));
 
         const body_id = Math.min(2, Math.round(this.force / 50));
-        const body_texture = "body_" + body_id;
-        this.sprite.addChild(new PIXI.Sprite(loader.resources[body_texture].texture));
+        const body_texture = `flowey/pied_${body_id + 1}.png`;
+        this.sprite.addChild(new PIXI.Sprite(sprites.textures[body_texture]));
 
         if (!this.enracinee)
-            this.sprite.addChild(new PIXI.Sprite(loader.resources["pot"].texture));
+            this.sprite.addChild(new PIXI.Sprite(sprites.textures["flowey/pot.png"]));
 
         if (this.boosting) {
             let sprite = new PIXI.Sprite(
-                loader.resources[`boost_${this.boosting}`].texture
+                sprites.textures[`flowey/boost_${this.boosting}.png`]
             );
             sprite.width = sprite.height = 3 * TILE_SIZE / 4;
             sprite.x = TILE_SIZE / 3;
@@ -342,7 +344,7 @@ class Map {
             this.update_plants(dump[0]);
         }
 
-        this.seed = new PIXI.Sprite(loader.resources["graine"].texture);
+        this.seed = new PIXI.Sprite(sprites.textures["flowey/graine.png"]);
         this.seed.visible = false;
         this.sprite.addChild(this.seed);
 
@@ -650,61 +652,29 @@ function start() {
     app = new PIXI.Application({
         width: WIDTH,
         height: HEIGHT,
-        antialias: true,
+        antialias: false,
         transparent: true,
         resolution: 1
       }
     );
+
     context.container.append(app.view);
 
     if (context.mode !== 'preview' && !context.is_local)
         loader.add("dump", "dump");
+
     if (context.is_local)
         connect_socket();
 
-    loader.add("graine", "/static/img/sprites/flowey/graine.png");
-    loader.add("pot", "/static/img/sprites/flowey/pot.png");
-    loader.add("boost_health", "/static/img/sprites/flowey/boost_health.png");
-    loader.add("boost_jump", "/static/img/sprites/flowey/boost_jump.png");
-    loader.add("boost_strength", "/static/img/sprites/flowey/boost_strength.png");
-    loader.add("boost_style", "/static/img/sprites/flowey/boost_style.png");
-
-    // Read tiles
-    for (let i = 1 ; i <= 107 ; i++) {
-        const filename = ("" + i).padStart(2, "0");
-        loader.add(`frame_${i}`, `/static/img/sprites/bg/${filename}.png`);
-    }
-
-    // Read dog parts
-    for (let i = 0 ; i < 6 ; i++)
-        loader.add(`dog_${i}`, `/static/img/sprites/dog/frames/${i}.png`);
-
-    for (let i = 1 ; i <= 3 ; i++)
-        loader.add(`colar_${i}`, `/static/img/sprites/dog/colar/${i}.png`);
-
-    // Read flower parts
-    for (let i = 0 ; i <= 4 ; i++)
-        loader.add(`face_${i}`, `/static/img/sprites/flowey/face_${i}.png`);
-
-    for (let player of [0, 1])
-        for (let i = 0 ; i <= 2 ; i++)
-            loader.add(
-                `hat_${player}_${i}`,
-                `/static/img/sprites/flowey/fleur_${player + 1}_${i + 1}.png`
-            );
-
-    for (let i = 0 ; i <= 2 ; i++)
-        loader.add(
-            `body_${i}`,
-            `/static/img/sprites/flowey/pied_${i + 1}.png`
-        );
-
+    loader.add("sprites", "/static/img/sprites.json");
     loader.load(setup);
 }
 
 let lastTurn = 0;
 
 function setup(loader, resources) {
+    sprites = loader.resources["sprites"].spritesheet;
+
     if (context.mode !== 'preview' && !context.is_local) {
         let json_str = "{\"dump\": [" + resources["dump"].data;
         json_str = json_str.substring(0, json_str.length - 2) + "]}";

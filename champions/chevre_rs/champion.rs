@@ -112,8 +112,6 @@ pub fn partie_init() {
 
 /// Fonction appelée à chaque tour.
 pub fn jouer_tour() {
-    println!("--- Tour {}", tour_actuel());
-
     // Arrosage
 
     let mut boosted_carac = [
