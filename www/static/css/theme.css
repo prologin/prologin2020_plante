@@ -222,7 +222,8 @@ pre, pre.prettyprint, input[type=text], input[type=password], textarea.form-cont
 }
 
 /* selects */
-.select2-dropdown.select2-dropdown--below {
+/* we need to specify both --below and --above, in order to have enough specificity to override bootstrap's theme */
+.select2-dropdown.select2-dropdown--below, .select2-dropdown.select2-dropdown--above {
   background: var(--background-color);
   border-radius: 0;
   border: solid var(--outline-size) var(--border-color);
