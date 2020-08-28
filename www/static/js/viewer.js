@@ -305,8 +305,6 @@ class Plant {
                 this.sprite.addChild(new PIXI.Sprite(sprites.textures["flowey/pot.png"]));
         } else {
             const frame = Math.min(3, this.age);
-
-            console.log(`flowey/pousse_${this.jardinier + 1}_${frame}.png`);
             this.sprite.addChild(
                 new PIXI.Sprite(
                     sprites.textures[`flowey/pousse_${this.jardinier + 1}_${frame}.png`]
