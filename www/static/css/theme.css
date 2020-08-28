@@ -221,6 +221,13 @@ pre, pre.prettyprint, input[type=text], input[type=password], textarea.form-cont
 	#0F0;
 }
 
+/* selects */
+.select2-dropdown.select2-dropdown--below {
+  background: var(--background-color);
+  border-radius: 0;
+  border: solid var(--outline-size) var(--border-color);
+}
+
 /***********/
 /* buttons */
 /***********/
