@@ -44,4 +44,6 @@ private:
     Grid<std::array<int, NB_TYPES_RESSOURCES>> weight_plant_draining;
 
     int player_key(int player_id) const;
+    void add_drainage(std::optional<plante>);
+    void remove_drainage(std::optional<plante>);
 };

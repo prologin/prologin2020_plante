@@ -160,34 +160,16 @@ bool Map::will_have_enough_ressources(const plante& plant)
     plants[plant.pos.x][plant.pos.y] = plant;
 
     // Update the drainage in the area
-    for (position cell :
-         circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
-        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-            weight_plant_draining[cell.x][cell.y][k] += plant.consommation[k];
-
-    if (current_plant)
-        for (position cell : circle(plant.pos, current_plant->rayon_collecte /
-                                                   COUT_PAR_CASE_COLLECTE))
-            for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-                weight_plant_draining[cell.x][cell.y][k] -=
-                    current_plant->consommation[k];
+    add_drainage(plant);
+    remove_drainage(current_plant);
 
     bool will_have_enough_ressources = has_enough_ressources(plant.pos);
 
     // Undo map modifications
     plants[plant.pos.x][plant.pos.y] = current_plant;
 
-    for (position cell :
-         circle(plant.pos, plant.rayon_collecte / COUT_PAR_CASE_COLLECTE))
-        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-            weight_plant_draining[cell.x][cell.y][k] -= plant.consommation[k];
-
-    if (current_plant)
-        for (position cell : circle(plant.pos, current_plant->rayon_collecte /
-                                                   COUT_PAR_CASE_COLLECTE))
-            for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-                weight_plant_draining[cell.x][cell.y][k] +=
-                    current_plant->consommation[k];
+    remove_drainage(plant);
+    add_drainage(current_plant);
 
     return will_have_enough_ressources;
 }
@@ -234,6 +216,24 @@ bool Map::already_hit(position pos) const
     return plants_already_hit[pos.x][pos.y];
 }
 
+void Map::remove_drainage(std::optional<plante> plante){
+    if (!plante) return;
+    for (position cell :
+         circle(plante->pos, plante->rayon_collecte / COUT_PAR_CASE_COLLECTE))
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            weight_plant_draining[cell.x][cell.y][k] -=
+                plante->consommation[k];
+}
+
+void Map::add_drainage(std::optional<plante> plante){
+    if (!plante) return;
+    for (position cell :
+         circle(plante->pos, plante->rayon_collecte / COUT_PAR_CASE_COLLECTE))
+        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
+            weight_plant_draining[cell.x][cell.y][k] +=
+                plante->consommation[k];
+}
+
 void Map::move_plant(position from, position to)
 {
     assert(position_in_bounds(from));
@@ -242,21 +242,9 @@ void Map::move_plant(position from, position to)
     assert(!plants[to.x][to.y]);
 
     plants[from.x][from.y].swap(plants[to.x][to.y]);
-    for (position cell :
-         circle(plants[to.x][to.y]->pos,
-                plants[to.x][to.y]->rayon_collecte / COUT_PAR_CASE_COLLECTE))
-        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-            weight_plant_draining[cell.x][cell.y][k] -=
-                plants[to.x][to.y]->consommation[k];
-
-    ;
+    remove_drainage(plants[to.x][to.y]);
     plants[to.x][to.y]->pos = to;
-    for (position cell :
-         circle(plants[to.x][to.y]->pos,
-                plants[to.x][to.y]->rayon_collecte / COUT_PAR_CASE_COLLECTE))
-        for (size_t k = 0; k < NB_TYPES_RESSOURCES; k++)
-            weight_plant_draining[cell.x][cell.y][k] +=
-                plants[to.x][to.y]->consommation[k];
+    add_drainage(plants[to.x][to.y]);
     plants[to.x][to.y]->enracinee = true;
 }
 
@@ -284,6 +272,7 @@ bool Map::hit(position attacker_pos, position victim_pos)
 void Map::destroy_plant(position pos)
 {
     assert(position_in_bounds(pos));
+    remove_drainage(plants[pos.x][pos.y]);
     plants[pos.x][pos.y].reset();
 }
 
