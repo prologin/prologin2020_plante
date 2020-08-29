@@ -90,6 +90,7 @@ bool Api::reproduction_possible(position pos, int rayon_collecte,
     fake_plant.pos = pos;
     fake_plant.rayon_collecte = rayon_collecte;
     fake_plant.consommation = consommation;
+    fake_plant.adulte = true;
 
     return game_state().get_map().will_have_enough_ressources(fake_plant);
 }
