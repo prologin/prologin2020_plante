@@ -191,6 +191,23 @@ table > tbody > tr:first-child td {
     background: var(--background-color-2);
 }
 
+/* table "danger" background" */
+/* I kept the bootstrap selector for specificity, but it's ridiculously long. */
+.table>tbody>tr.danger>td,
+.table>tbody>tr.danger>th,
+.table>tbody>tr>td.danger,
+.table>tbody>tr>th.danger,
+.table>tfoot>tr.danger>td,
+.table>tfoot>tr.danger>th,
+.table>tfoot>tr>td.danger,
+.table>tfoot>tr>th.danger,
+.table>thead>tr.danger>td,
+.table>thead>tr.danger>th,
+.table>thead>tr>td.danger,
+.table>thead>tr>th.danger {
+ background-color:#340000;
+}
+
 /**************/
 /* pre/inputs */
 /**************/
