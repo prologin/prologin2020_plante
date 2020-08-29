@@ -9,6 +9,9 @@ const WIDTH = TILE_SIZE * 20 + 400;
 const HEIGHT = TILE_SIZE * 20;
 const MAX_SPEED = 15;
 
+PIXI.settings.RESOLUTION = window.devicePixelRatio;
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+
 
 const tile_map = {
     gravel: {
@@ -452,6 +455,9 @@ class Map {
             this.sprite.addChild(score);
             return score;
         });
+
+        splash = new EndScreen();
+        this.sprite.addChild(splash.sprite);
     }
 
     clear_debug_chiens() {
@@ -599,6 +605,51 @@ class Map {
     }
 }
 
+class EndScreen {
+    constructor() {
+        this.sprite = new PIXI.Container();
+        this.sprite.visible = false;
+    }
+
+    show(winer) {
+        if (this.sprite.visible)
+            return;
+
+        const win_color = winer == 1 ? "jaune" : "rouge";
+
+        this.sprite.removeChildren();
+        this.sprite.visible = true;
+        const looser = winer == 1 ? 2 : 1;
+
+        let back = rect(20 * TILE_SIZE, 20 * TILE_SIZE, 0x000000);
+        back.alpha = 0.7;
+        this.sprite.addChild(back);
+
+        {
+            const anim = new PIXI.AnimatedSprite(sprites.animations[`flowey/victory/${winer}`]);
+            this.sprite.addChild(anim);
+            anim.y = 512;
+            anim.x = 256;
+            anim.width = anim.height = 512;
+            anim.animationSpeed = 0.1;
+            anim.play();
+        }
+
+        {
+            const anim = new PIXI.AnimatedSprite(sprites.animations[`flowey/defeat/${looser}`]);
+            this.sprite.addChild(anim);
+            anim.y = 512;
+            anim.x = 768;
+            anim.width = anim.height = 512;
+            anim.animationSpeed = 0.1;
+            anim.play();
+        }
+    }
+
+    hide() {
+        this.sprite.visible = false;
+    }
+}
 
 function start_viewer(container, turnSlider, is_local) {
     context = new Context('replay', container, turnSlider, null, is_local);
@@ -610,7 +661,7 @@ function start_preview(container, map) {
     start()
 }
 
-let dump = [], map;
+let dump = [], map, splash;
 var wait_for_next_turn = false;
 
 var socket;
@@ -660,10 +711,7 @@ function send(cmd, data) {
 function start() {
     app = new PIXI.Application({
         width: WIDTH,
-        height: HEIGHT,
-        antialias: false,
-        transparent: true,
-        resolution: 1
+        height: HEIGHT
       }
     );
 
@@ -692,6 +740,7 @@ function setup(loader, resources) {
 
     map = new Map(context);
     app.stage.addChild(map.sprite);
+
 
     let $canvas = $("#replay canvas");
 
@@ -853,10 +902,18 @@ function gameLoop(delta)
         return;
 
     while (action >= dump[turn]["joueurs"][player]["historique"].length) {
-        if (turn < 200)
+        if (turn < 200) {
+            splash.hide();
             setTurn(turn + 1);
-        else
+        }
+        else {
+            if (dump[200].joueurs[0].score > dump[200].joueurs[1].score)
+                splash.show(1);
+            else
+                splash.show(2);
+
             return;
+        }
     }
 
     const history = dump[turn]["joueurs"][player]["historique"];
