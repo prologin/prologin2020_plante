@@ -74,7 +74,7 @@
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
-        <uint>1</uint>
+        <uint>0</uint>
         <key>webpQualityLevel</key>
         <uint>101</uint>
         <key>textureSubPath</key>
@@ -290,7 +290,7 @@
             <key type="filename">www/static/img/sprites/bg/99.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>spriteScale</key>
                 <double>1</double>
                 <key>scale9Enabled</key>
@@ -315,6 +315,26 @@
             <key type="filename">www/static/img/sprites/flowey/boost_jump.png</key>
             <key type="filename">www/static/img/sprites/flowey/boost_strength.png</key>
             <key type="filename">www/static/img/sprites/flowey/boost_style.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/1.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/10.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/2.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/3.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/4.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/5.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/6.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/7.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/8.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/1/9.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/1.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/10.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/2.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/3.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/4.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/5.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/6.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/7.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/8.png</key>
+            <key type="filename">www/static/img/sprites/flowey/defeat/2/9.png</key>
             <key type="filename">www/static/img/sprites/flowey/face_0.png</key>
             <key type="filename">www/static/img/sprites/flowey/face_1.png</key>
             <key type="filename">www/static/img/sprites/flowey/face_2.png</key>
@@ -337,40 +357,6 @@
             <key type="filename">www/static/img/sprites/flowey/pousse_2_1.png</key>
             <key type="filename">www/static/img/sprites/flowey/pousse_2_2.png</key>
             <key type="filename">www/static/img/sprites/flowey/pousse_2_3.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>19,19,37,37</rect>
-                <key>scale9Paddings</key>
-                <rect>19,19,37,37</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/1.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/10.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/2.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/3.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/4.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/5.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/6.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/7.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/8.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/1/9.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/1.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/10.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/2.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/3.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/4.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/5.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/6.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/7.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/8.png</key>
-            <key type="filename">www/static/img/sprites/flowey/defeat/2/9.png</key>
             <key type="filename">www/static/img/sprites/flowey/victory/1/1.png</key>
             <key type="filename">www/static/img/sprites/flowey/victory/1/10.png</key>
             <key type="filename">www/static/img/sprites/flowey/victory/1/2.png</key>

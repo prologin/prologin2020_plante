@@ -25,7 +25,7 @@ const tile_map = {
     },
     grass: {
         ressources: [0, 1, 0],
-        back: [9, 10, 11, 12, 13, 14, 15, 16, 17],
+        back: [10, 11, 12, 13, 14, 15, 16, 17],
         in_border: [1, 3, 4, 5, 2, 6, 8, 7]
     },
     ocean: {
@@ -298,6 +298,7 @@ class Plant {
 
             const hat_id = Math.min(2, Math.round(this.elegance / 50));
             const hat_texture = `flowey/fleur_${this.jardinier + 1}_${hat_id + 1}.png`;
+            console.info(hat_texture);
             this.sprite.addChild(new PIXI.Sprite(sprites.textures[hat_texture]));
 
             const body_id = Math.min(2, Math.round(this.force / 50));
