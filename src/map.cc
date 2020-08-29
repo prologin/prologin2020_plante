@@ -212,7 +212,6 @@ bool Map::already_hit(position pos) const
     return plants_already_hit[pos.x][pos.y];
 }
 
-#include <iostream>
 void Map::remove_drainage(std::optional<plante> plante)
 {
     if (!plante)
@@ -298,6 +297,7 @@ void Map::breed_player_plants(int player_id)
                 if (adj_pos != position{x, y} &&
                     plant_at(adj_pos).has_value() &&
                     plant_at(adj_pos)->jardinier == key &&
+                    plant_at(adj_pos)->adulte &&
                     has_enough_ressources[adj_pos.x][adj_pos.y])
                 {
                     adjacents.push_back(*plant_at(adj_pos));
