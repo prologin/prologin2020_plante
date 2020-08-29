@@ -327,3 +327,22 @@ h1 {
 .breadcrumb {
 	background: var(--background-cover-fix);
 }
+
+.easter-egg-42 {
+    position: fixed;
+    top: 0;
+    transition: 2s linear;
+    left: -128px;
+}
+
+.easter-egg-42 .dogo {
+    width: 128px;
+}
+
+.easter-egg-42.right .dogo {
+    transform: scaleX(-1);
+}
+
+.easter-egg-42.right {
+    transform: translate(calc(128px + 100vw), 0);
+}
