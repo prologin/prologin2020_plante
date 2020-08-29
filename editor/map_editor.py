@@ -111,7 +111,7 @@ class Cell():
             self.master.create_image((x, y), image=self.img)
 
 class Plante():
-    def __init__(self, master, row, col, type):
+    def __init__(self, master, col, row, type):
         self.master = master
         self.x = col
         self.y = row
@@ -208,7 +208,7 @@ class Grid():
         #print('plante' in self.draw_type.get())
         if 'plante' in self.draw_type.get():
             if not self.plant_grid[row][col]:
-                self.plant_grid[row][col] = Plante(self.canvas,row,col,self.draw_type.get())
+                self.plant_grid[row][col] = Plante(self.canvas,col,row,self.draw_type.get())
             else:
                 self.plant_grid[row][col] = None
         else:
@@ -297,7 +297,7 @@ class Grid():
                     if not plant:
                         continue
                     conf = get_type_conf(plant.type)
-                    data = [row, col]
+                    data = [col, row]
 
                     # Add extra infos if necessary
                     if 'extra' in conf:
@@ -397,7 +397,7 @@ class Grid():
                                 type = "beauty"
 
                             type_plant = name+":"+type
-                            self.plant_grid[row][col]=Plante(self.canvas,row,col,type_plant)
+                            self.plant_grid[row][col]=Plante(self.canvas,col,row,type_plant)
 
 
         self.draw()
