@@ -223,6 +223,14 @@ pre, pre.prettyprint, input[type=text], input[type=password], textarea.form-cont
     box-shadow: none;
 }
 
+/* disabled inputs */
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+    background-color:var(--background-color-2);
+}
+
+
 /* progress bars */
 .progress-bar {
 	color: #000;
