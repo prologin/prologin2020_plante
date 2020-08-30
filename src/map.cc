@@ -212,6 +212,12 @@ bool Map::already_hit(position pos) const
     return plants_already_hit[pos.x][pos.y];
 }
 
+bool& Map::already_hit(position pos)
+{
+    assert(position_in_bounds(pos));
+    return plants_already_hit[pos.x][pos.y];
+}
+
 void Map::remove_drainage(std::optional<plante> plante)
 {
     if (!plante)
@@ -246,6 +252,7 @@ void Map::move_plant(position from, position to)
     plants[to.x][to.y]->pos = to;
     add_drainage(plants[to.x][to.y]);
     plants[to.x][to.y]->enracinee = true;
+    std::swap(already_hit(from), already_hit(to));
 }
 
 bool Map::hit(position attacker_pos, position victim_pos)

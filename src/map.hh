@@ -25,6 +25,7 @@ public:
     std::vector<plante> player_plants(int player) const;
     std::optional<plante> plant_at(position pos) const;
     bool already_hit(position pos) const;
+    bool& already_hit(position pos);
 
     void update_plant(const plante& plant);
     void move_plant(position from, position to);
